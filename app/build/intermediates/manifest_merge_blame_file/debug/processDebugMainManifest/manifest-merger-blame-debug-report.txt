@@ -1,0 +1,176 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="co.edu.unipiloto.aplicaciondestiondecombustibles"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+9        android:targetSdkVersion="36" />
+10
+11    <permission
+11-->[androidx.core:core:1.16.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\93e524dc39efe45e4035b34aca0af72a\workspace\transformed\core-1.16.0\AndroidManifest.xml:22:5-24:47
+12        android:name="co.edu.unipiloto.aplicaciondestiondecombustibles.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+12-->[androidx.core:core:1.16.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\93e524dc39efe45e4035b34aca0af72a\workspace\transformed\core-1.16.0\AndroidManifest.xml:23:9-81
+13        android:protectionLevel="signature" />
+13-->[androidx.core:core:1.16.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\93e524dc39efe45e4035b34aca0af72a\workspace\transformed\core-1.16.0\AndroidManifest.xml:24:9-44
+14
+15    <uses-permission android:name="co.edu.unipiloto.aplicaciondestiondecombustibles.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+15-->[androidx.core:core:1.16.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\93e524dc39efe45e4035b34aca0af72a\workspace\transformed\core-1.16.0\AndroidManifest.xml:26:5-97
+15-->[androidx.core:core:1.16.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\93e524dc39efe45e4035b34aca0af72a\workspace\transformed\core-1.16.0\AndroidManifest.xml:26:22-94
+16
+17    <application
+17-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:5:5-39:19
+18        android:allowBackup="true"
+18-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:6:9-35
+19        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+19-->[androidx.core:core:1.16.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\93e524dc39efe45e4035b34aca0af72a\workspace\transformed\core-1.16.0\AndroidManifest.xml:28:18-86
+20        android:dataExtractionRules="@xml/data_extraction_rules"
+20-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:7:9-65
+21        android:debuggable="true"
+22        android:extractNativeLibs="false"
+23        android:fullBackupContent="@xml/backup_rules"
+23-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:8:9-54
+24        android:icon="@mipmap/ic_launcher"
+24-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:9:9-43
+25        android:label="@string/app_name"
+25-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:10:9-41
+26        android:roundIcon="@mipmap/ic_launcher_round"
+26-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:11:9-54
+27        android:supportsRtl="true"
+27-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:12:9-35
+28        android:testOnly="true"
+29        android:theme="@style/Theme.AplicacionDestionDeCombustibles" >
+29-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:13:9-69
+30
+31        <!-- AUTH (compartido) -->
+32        <activity
+32-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:16:9-23:20
+33            android:name="co.edu.unipiloto.aplicaciondestiondecombustibles.UI.auth.LoginActivity"
+33-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:17:13-50
+34            android:exported="true" >
+34-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:18:13-36
+35            <intent-filter>
+35-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:19:13-22:29
+36                <action android:name="android.intent.action.MAIN" />
+36-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:20:17-69
+36-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:20:25-66
+37
+38                <category android:name="android.intent.category.LAUNCHER" />
+38-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:21:17-77
+38-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:21:27-74
+39            </intent-filter>
+40        </activity>
+41        <activity
+41-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:24:9-88
+42            android:name="co.edu.unipiloto.aplicaciondestiondecombustibles.UI.auth.RegisterActivity"
+42-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:24:19-59
+43            android:exported="false" />
+43-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:24:62-86
+44        <activity
+44-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:25:9-88
+45            android:name="co.edu.unipiloto.aplicaciondestiondecombustibles.UI.auth.TwoFactorActivity"
+45-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:25:19-60
+46            android:exported="false" />
+46-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:25:62-86
+47
+48        <!-- USUARIO -->
+49        <activity
+49-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:28:9-105
+50            android:name="co.edu.unipiloto.aplicaciondestiondecombustibles.UI.usuario.UsuarioDashboardActivity"
+50-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:28:19-70
+51            android:exported="false" />
+51-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:28:79-103
+52
+53        <!-- ESTACIÓN DE SERVICIO -->
+54        <activity
+54-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:31:9-105
+55            android:name="co.edu.unipiloto.aplicaciondestiondecombustibles.UI.estacion.EstacionDashboardActivity"
+55-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:31:19-72
+56            android:exported="false" />
+56-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:31:79-103
+57
+58        <!-- DISTRIBUIDOR -->
+59        <activity
+59-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:34:9-107
+60            android:name="co.edu.unipiloto.aplicaciondestiondecombustibles.UI.distribuidor.DistribuidorDashboardActivity"
+60-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:34:19-80
+61            android:exported="false" />
+61-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:34:81-105
+62
+63        <!-- ENTIDAD REGULADORA -->
+64        <activity
+64-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:37:9-105
+65            android:name="co.edu.unipiloto.aplicaciondestiondecombustibles.UI.regulador.ReguladorDashboardActivity"
+65-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:37:19-74
+66            android:exported="false" />
+66-->C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\app\src\main\AndroidManifest.xml:37:79-103
+67
+68        <provider
+68-->[androidx.emoji2:emoji2:1.3.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\c61e500a7a0623efa7323771a6a02e58\workspace\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+69            android:name="androidx.startup.InitializationProvider"
+69-->[androidx.emoji2:emoji2:1.3.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\c61e500a7a0623efa7323771a6a02e58\workspace\transformed\emoji2-1.3.0\AndroidManifest.xml:25:13-67
+70            android:authorities="co.edu.unipiloto.aplicaciondestiondecombustibles.androidx-startup"
+70-->[androidx.emoji2:emoji2:1.3.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\c61e500a7a0623efa7323771a6a02e58\workspace\transformed\emoji2-1.3.0\AndroidManifest.xml:26:13-68
+71            android:exported="false" >
+71-->[androidx.emoji2:emoji2:1.3.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\c61e500a7a0623efa7323771a6a02e58\workspace\transformed\emoji2-1.3.0\AndroidManifest.xml:27:13-37
+72            <meta-data
+72-->[androidx.emoji2:emoji2:1.3.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\c61e500a7a0623efa7323771a6a02e58\workspace\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+73                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+73-->[androidx.emoji2:emoji2:1.3.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\c61e500a7a0623efa7323771a6a02e58\workspace\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
+74                android:value="androidx.startup" />
+74-->[androidx.emoji2:emoji2:1.3.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\c61e500a7a0623efa7323771a6a02e58\workspace\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
+75            <meta-data
+75-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\PC\.gradle\caches\9.2.1\transforms\9b584f18554ce9136e87e403accf7991\workspace\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:29:13-31:52
+76                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+76-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\PC\.gradle\caches\9.2.1\transforms\9b584f18554ce9136e87e403accf7991\workspace\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:30:17-78
+77                android:value="androidx.startup" />
+77-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\PC\.gradle\caches\9.2.1\transforms\9b584f18554ce9136e87e403accf7991\workspace\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:31:17-49
+78            <meta-data
+78-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:29:13-31:52
+79                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+79-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:30:17-85
+80                android:value="androidx.startup" />
+80-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:31:17-49
+81        </provider>
+82
+83        <receiver
+83-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:34:9-52:20
+84            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+84-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:35:13-76
+85            android:directBootAware="false"
+85-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:36:13-44
+86            android:enabled="true"
+86-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:37:13-35
+87            android:exported="true"
+87-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:38:13-36
+88            android:permission="android.permission.DUMP" >
+88-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:39:13-57
+89            <intent-filter>
+89-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:40:13-42:29
+90                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+90-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:17-91
+90-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:25-88
+91            </intent-filter>
+92            <intent-filter>
+92-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:43:13-45:29
+93                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+93-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:17-85
+93-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:25-82
+94            </intent-filter>
+95            <intent-filter>
+95-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:46:13-48:29
+96                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+96-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:17-88
+96-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:25-85
+97            </intent-filter>
+98            <intent-filter>
+98-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:49:13-51:29
+99                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+99-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:17-95
+99-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\PC\.gradle\caches\9.2.1\transforms\f4e8809b00020123c767a62783d2b08b\workspace\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:25-92
+100            </intent-filter>
+101        </receiver>
+102    </application>
+103
+104</manifest>

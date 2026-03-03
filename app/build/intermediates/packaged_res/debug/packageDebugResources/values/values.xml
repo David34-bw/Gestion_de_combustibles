@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="fuel_dark">#1A1F2E</color>
+    <color name="fuel_dark_card">#242938</color>
+    <color name="fuel_divider">#2E3447</color>
+    <color name="fuel_error">#FF4D4D</color>
+    <color name="fuel_gray">#8B92A5</color>
+    <color name="fuel_gray_light">#BDC3D1</color>
+    <color name="fuel_input_bg">#2E3447</color>
+    <color name="fuel_orange">#FF6B2C</color>
+    <color name="fuel_orange_dark">#CC5520</color>
+    <color name="fuel_orange_light">#FF8C5A</color>
+    <color name="fuel_success">#4CAF50</color>
+    <color name="fuel_white">#F4F6FA</color>
+    <string name="app_name">aplicacion destion de combustibles</string>
+    <style name="FuelButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/fuel_white</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.05</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="backgroundTint">@color/fuel_orange</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+    <style name="FuelInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/fuel_divider</item>
+        <item name="boxBackgroundColor">@color/fuel_input_bg</item>
+        <item name="hintTextColor">@color/fuel_gray</item>
+        <item name="android:textColorHint">@color/fuel_gray</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+    </style>
+    <style name="Theme.AplicacionDestionDeCombustibles" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/fuel_orange</item>
+        <item name="colorPrimaryVariant">@color/fuel_orange_dark</item>
+        <item name="colorOnPrimary">@color/fuel_white</item>
+        <item name="colorSecondary">@color/fuel_orange_light</item>
+        <item name="android:windowBackground">@color/fuel_dark</item>
+        <item name="android:statusBarColor">@color/fuel_dark</item>
+        <item name="android:navigationBarColor">@color/fuel_dark</item>
+    </style>
+</resources>
