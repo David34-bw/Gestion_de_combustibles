@@ -78,28 +78,28 @@ public class RegisterActivity extends AppCompatActivity {
         cardDistribuidor = findViewById(R.id.card_distribuidor);
         cardRegulador    = findViewById(R.id.card_regulador);
 
-        etCedula        = findViewById(R.id.et_cedula);
-        etPlaca         = findViewById(R.id.et_placa);
-        etRunt          = findViewById(R.id.et_runt);
-        rgTipoVehiculo  = findViewById(R.id.rg_tipo_vehiculo);
-        rgSubsidio      = findViewById(R.id.rg_subsidio);
-        layoutRunt      = findViewById(R.id.layout_runt);
-        tvRuntInfo      = findViewById(R.id.tv_runt_info);
+        etCedula       = findViewById(R.id.et_cedula);
+        etPlaca        = findViewById(R.id.et_placa);
+        etRunt         = findViewById(R.id.et_runt);
+        rgTipoVehiculo = findViewById(R.id.rg_tipo_vehiculo);
+        rgSubsidio     = findViewById(R.id.rg_subsidio);
+        layoutRunt     = findViewById(R.id.layout_runt);
+        tvRuntInfo     = findViewById(R.id.tv_runt_info);
 
-        cardEstacion            = findViewById(R.id.card_estacion);
-        etNitEstacion           = findViewById(R.id.et_nit_estacion);
-        etNombreEstacion        = findViewById(R.id.et_nombre_estacion);
-        etCodigoSicom           = findViewById(R.id.et_codigo_sicom);
-        etLicenciaEstacion      = findViewById(R.id.et_licencia_estacion);
-        etDireccionEstacion     = findViewById(R.id.et_direccion_estacion);
-        etCiudadEstacion        = findViewById(R.id.et_ciudad_estacion);
-        etDepartamentoEstacion  = findViewById(R.id.et_departamento_estacion);
+        cardEstacion           = findViewById(R.id.card_estacion);
+        etNitEstacion          = findViewById(R.id.et_nit_estacion);
+        etNombreEstacion       = findViewById(R.id.et_nombre_estacion);
+        etCodigoSicom          = findViewById(R.id.et_codigo_sicom);
+        etLicenciaEstacion     = findViewById(R.id.et_licencia_estacion);
+        etDireccionEstacion    = findViewById(R.id.et_direccion_estacion);
+        etCiudadEstacion       = findViewById(R.id.et_ciudad_estacion);
+        etDepartamentoEstacion = findViewById(R.id.et_departamento_estacion);
 
-        etNitDist            = findViewById(R.id.et_nit_dist);
-        etNombreEmpresa      = findViewById(R.id.et_nombre_empresa);
-        etRegistroMercantil  = findViewById(R.id.et_registro_mercantil);
-        etCiudadDist         = findViewById(R.id.et_ciudad_dist);
-        etDepartamentoDist   = findViewById(R.id.et_departamento_dist);
+        etNitDist           = findViewById(R.id.et_nit_dist);
+        etNombreEmpresa     = findViewById(R.id.et_nombre_empresa);
+        etRegistroMercantil = findViewById(R.id.et_registro_mercantil);
+        etCiudadDist        = findViewById(R.id.et_ciudad_dist);
+        etDepartamentoDist  = findViewById(R.id.et_departamento_dist);
 
         etNitReg        = findViewById(R.id.et_nit_reg);
         etCodigoEntidad = findViewById(R.id.et_codigo_entidad);
@@ -112,18 +112,16 @@ public class RegisterActivity extends AppCompatActivity {
             cardUsuario.setVisibility(View.GONE);
             cardDistribuidor.setVisibility(View.GONE);
             cardRegulador.setVisibility(View.GONE);
+            cardEstacion.setVisibility(View.GONE);
 
             if (checkedId == R.id.rb_usuario) {
                 cardUsuario.setVisibility(View.VISIBLE);
-                cardEstacion.setVisibility(View.GONE);
             } else if (checkedId == R.id.rb_estacion) {
                 cardEstacion.setVisibility(View.VISIBLE);
             } else if (checkedId == R.id.rb_distribuidor) {
                 cardDistribuidor.setVisibility(View.VISIBLE);
-                cardEstacion.setVisibility(View.GONE);
             } else if (checkedId == R.id.rb_regulador) {
                 cardRegulador.setVisibility(View.VISIBLE);
-                cardEstacion.setVisibility(View.GONE);
             }
         });
     }
@@ -166,46 +164,62 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (rolId == R.id.rb_usuario) {
             if (!validarUsuario()) return;
-            enviarRegistro(email, password, "USUARIO",
-                    etCedula.getText().toString().trim(), null, null, null);
+
+            String cedula        = etCedula.getText().toString().trim();
+            String placa         = etPlaca.getText().toString().trim().toUpperCase();
+            String tipoVehiculo  = getTipoVehiculo();
+            boolean subsidio     = rgSubsidio.getCheckedRadioButtonId() == R.id.rb_subsidio_si;
+            String runt          = subsidio ? etRunt.getText().toString().trim() : null;
+
+            RegisterRequest request = new RegisterRequest(
+                    email, password, cedula, "USUARIO",
+                    placa, tipoVehiculo, subsidio, runt);
+            enviarRegistro(request);
 
         } else if (rolId == R.id.rb_estacion) {
             if (!validarEstacion()) return;
-            enviarRegistro(email, password, "ESTACION",
-                    null,
+            RegisterRequest request = new RegisterRequest(
                     etNombreEstacion.getText().toString().trim(),
+                    etCiudadEstacion.getText().toString().trim(),
+                    email, password,
                     etNitEstacion.getText().toString().trim(),
-                    etCiudadEstacion.getText().toString().trim());
+                    "ESTACION");
+            enviarRegistro(request);
 
         } else if (rolId == R.id.rb_distribuidor) {
             if (!validarDistribuidor()) return;
-            enviarRegistro(email, password, "DISTRIBUIDOR",
-                    null,
+            RegisterRequest request = new RegisterRequest(
                     etNombreEmpresa.getText().toString().trim(),
+                    etCiudadDist.getText().toString().trim(),
+                    email, password,
                     etNitDist.getText().toString().trim(),
-                    etCiudadDist.getText().toString().trim());
+                    "DISTRIBUIDOR");
+            enviarRegistro(request);
 
         } else if (rolId == R.id.rb_regulador) {
             if (!validarRegulador()) return;
-            enviarRegistro(email, password, "REGULADOR",
-                    null,
+            RegisterRequest request = new RegisterRequest(
                     etCargo.getText().toString().trim(),
+                    etDependencia.getText().toString().trim(),
+                    email, password,
                     etNitReg.getText().toString().trim(),
-                    etDependencia.getText().toString().trim());
+                    "REGULADOR");
+            enviarRegistro(request);
+
         } else {
-            Toast.makeText(this, "Selecciona un rol", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Selecciona un tipo de usuario", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void enviarRegistro(String email, String password, String rol,
-                                String numeroDocumento, String nombre,
-                                String nit, String ciudad) {
-        // nombre y apellido: usamos email como nombre si no hay campo específico
-        String nombreFinal   = nombre != null ? nombre : email.split("@")[0];
-        String apellidoFinal = ciudad != null ? ciudad : "";
+    private String getTipoVehiculo() {
+        int id = rgTipoVehiculo.getCheckedRadioButtonId();
+        if (id == R.id.rb_taxi)          return "TAXI";
+        if (id == R.id.rb_moto)   return "MOTOCICLETA";
+        if (id == R.id.rb_carga)         return "CARGA";
+        return "PARTICULAR";
+    }
 
-        RegisterRequest request = new RegisterRequest(nombreFinal, apellidoFinal, email, password, numeroDocumento, rol);
-
+    private void enviarRegistro(RegisterRequest request) {
         ApiClient.getApiService().register(request).enqueue(new Callback<ApiResponse<AuthResponse>>() {
             @Override
             public void onResponse(Call<ApiResponse<AuthResponse>> call,
@@ -224,8 +238,7 @@ public class RegisterActivity extends AppCompatActivity {
                             .putString("rol", auth.getRol().toString())
                             .apply();
 
-                    Toast.makeText(RegisterActivity.this,
-                            "¡Registro exitoso!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "¡Registro exitoso!", Toast.LENGTH_SHORT).show();
 
                     switch (auth.getRol().toString()) {
                         case "USUARIO":
@@ -265,15 +278,14 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(this, "Ingresa tu número de cédula", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (placa.isEmpty() || !placa.matches("[A-Za-z]{3}\\d{3}")) {
+        if (!placa.matches("[A-Za-z]{3}\\d{3}")) {
             Toast.makeText(this, "Formato de placa inválido. Usa 3 letras y 3 números", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (rgSubsidio.getCheckedRadioButtonId() == R.id.rb_subsidio_si) {
-            if (etRunt.getText().toString().trim().isEmpty()) {
-                Toast.makeText(this, "Ingresa el número RUNT", Toast.LENGTH_SHORT).show();
-                return false;
-            }
+        if (rgSubsidio.getCheckedRadioButtonId() == R.id.rb_subsidio_si
+                && etRunt.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, "Ingresa el número RUNT", Toast.LENGTH_SHORT).show();
+            return false;
         }
         return true;
     }
@@ -296,7 +308,7 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         }
         if (etCiudadEstacion.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "Ingresa ciudad y departamento", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Ingresa la ciudad", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -312,7 +324,7 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         }
         if (etCiudadDist.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "Ingresa ciudad y departamento", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Ingresa la ciudad", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
