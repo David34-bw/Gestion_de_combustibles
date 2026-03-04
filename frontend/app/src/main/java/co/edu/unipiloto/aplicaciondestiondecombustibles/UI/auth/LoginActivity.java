@@ -1,4 +1,4 @@
-package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.auth;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,12 +42,6 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            // Simular 2FA antes de redirigir
-            Intent intent = new Intent(this, TwoFactorActivity.class);
-            intent.putExtra("EMAIL", email);
-            intent.putExtra("ROL", getRolSeleccionado());
-            startActivity(intent);
         });
 
         tvGoRegister.setOnClickListener(v ->
