@@ -19,6 +19,7 @@
 
         <!-- Icono -->
         <TextView
+            android:id="@+id/tv_icono_vehiculo"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:text="🚗"

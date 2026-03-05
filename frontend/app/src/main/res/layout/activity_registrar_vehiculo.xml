@@ -26,9 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Placa del vehículo (ej: ABC123)"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxStrokeColor="@color/fuel_orange"
-            app:hintTextColor="@color/fuel_gray"
+            style="@style/FuelInput"
             android:layout_marginBottom="16dp">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -45,9 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Marca (opcional)"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxStrokeColor="@color/fuel_orange"
-            app:hintTextColor="@color/fuel_gray"
+            style="@style/FuelInput"
             android:layout_marginBottom="16dp">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -62,9 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Modelo / año (opcional)"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxStrokeColor="@color/fuel_orange"
-            app:hintTextColor="@color/fuel_gray"
+            style="@style/FuelInput"
             android:layout_marginBottom="24dp">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -151,9 +145,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Número RUNT"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxStrokeColor="@color/fuel_orange"
-            app:hintTextColor="@color/fuel_gray"
+            style="@style/FuelInput"
             android:layout_marginBottom="24dp"
             android:visibility="gone">
 

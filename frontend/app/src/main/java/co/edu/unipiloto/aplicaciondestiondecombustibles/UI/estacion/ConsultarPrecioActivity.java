@@ -66,8 +66,10 @@ public class ConsultarPrecioActivity extends AppCompatActivity {
 
     private void setupSpinner(Spinner spinner, String[] items) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_spinner_item, items);
+                this, R.layout.spinner_item, items);
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         spinner.setAdapter(adapter);
     }
 

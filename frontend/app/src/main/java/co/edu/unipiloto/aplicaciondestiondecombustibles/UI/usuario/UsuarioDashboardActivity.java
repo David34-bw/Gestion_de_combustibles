@@ -95,11 +95,26 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
     private void agregarTarjetaVehiculo(Vehiculo v) {
         View tarjeta = getLayoutInflater().inflate(R.layout.item_vehiculo, llVehiculos, false);
 
+        TextView tvIcono   = tarjeta.findViewById(R.id.tv_icono_vehiculo);
         TextView tvPlaca   = tarjeta.findViewById(R.id.tv_placa);
         TextView tvTipo    = tarjeta.findViewById(R.id.tv_tipo);
         TextView tvMarca   = tarjeta.findViewById(R.id.tv_marca);
         TextView tvSubsidio= tarjeta.findViewById(R.id.tv_subsidio);
 
+        String tipo = v.getTipoVehiculo() != null ? v.getTipoVehiculo().toUpperCase() : "";
+        String emoji = "🚗"; // Por defecto
+
+        if (tipo.contains("MOTO")) {
+            emoji = "🏍️";
+        } else if (tipo.contains("TAXI")) {
+            emoji = "🚕";
+        } else if (tipo.contains("CARGA") || tipo.contains("CAMION")) {
+            emoji = "🚛";
+        } else if (tipo.contains("PARTICULAR")) {
+            emoji = "🚗";
+        }
+
+        tvIcono.setText(emoji);
         tvPlaca.setText(v.getPlaca());
         tvTipo.setText(v.getTipoVehiculo());
         tvMarca.setText((v.getMarca() != null ? v.getMarca() : "") +

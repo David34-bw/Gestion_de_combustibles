@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="💰 Consultar Precios"
+            android:text="Consultar Precios"
             android:textColor="@color/fuel_orange"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -54,6 +54,7 @@
 
                 <Spinner
                     android:id="@+id/spinner_zona"
+                    style="@style/CustomSpinnerStyle"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginBottom="16dp"/>
@@ -69,6 +70,7 @@
 
                 <Spinner
                     android:id="@+id/spinner_combustible"
+                    style="@style/CustomSpinnerStyle"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginBottom="16dp"/>
@@ -84,6 +86,7 @@
 
                 <Spinner
                     android:id="@+id/spinner_vehiculo"
+                    style="@style/CustomSpinnerStyle"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginBottom="16dp"/>
