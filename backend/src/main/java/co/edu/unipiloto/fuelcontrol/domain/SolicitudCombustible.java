@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "solicitudes_combustible")
 public class SolicitudCombustible {
@@ -34,18 +36,22 @@ public class SolicitudCombustible {
     @Column(name = "fecha_resolucion")
     private LocalDateTime fechaResolucion;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password", "solicitudes"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password", "solicitudes"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "estacion_id")
     private Estacion estacion;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password", "solicitudes"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "distribuidor_id")
     private Distribuidor distribuidor;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password", "solicitudes"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aprobado_por_id")
     private Usuario aprobadoPor;

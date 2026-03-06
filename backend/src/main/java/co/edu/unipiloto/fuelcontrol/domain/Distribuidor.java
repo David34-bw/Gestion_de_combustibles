@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "distribuidores")
 public class Distribuidor {
@@ -44,10 +46,12 @@ public class Distribuidor {
     @Column(name = "fecha_registro")
     private LocalDateTime fechaRegistro;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password", "solicitudes"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "representante_id")
     private Usuario representante;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password", "solicitudes"})
     @OneToMany(mappedBy = "distribuidor", cascade = CascadeType.ALL)
     private List<SolicitudCombustible> solicitudes;
 

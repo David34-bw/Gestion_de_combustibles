@@ -1,5 +1,7 @@
 C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\dto\response\AuthResponse.java
 C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\dto\request\ResolucionRequest.java
+C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\repository\VehiculoRepository.java
+C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\controller\VehiculoController.java
 C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\domain\enums\EstadoSolicitud.java
 C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\service\UsuarioService.java
 C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\repository\UsuarioRepository.java
@@ -30,9 +32,13 @@ C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\
 C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\exception\ResourceNotFoundException.java
 C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\repository\AutoridadReguladoraRepository.java
 C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\controller\AutoridadReguladoraController.java
+C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\controller\PrecioController.java
 C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\FuelControlBackendApplication.java
 C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\domain\enums\Rol.java
 C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\domain\Estacion.java
 C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\controller\AuthController.java
+C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\dto\request\VehiculoRequest.java
 C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\dto\response\SolicitudResponse.java
 C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\controller\UsuarioController.java
+C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\service\VehiculoService.java
+C:\Users\PC\AndroidStudioProjects\Gestion_de_combustibles\backend\src\main\java\co\edu\unipiloto\fuelcontrol\domain\Vehiculo.java
