@@ -51,7 +51,6 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
                 return;
             }
-
             doLogin(email, password);
         });
 
@@ -61,6 +60,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void doLogin(String email, String password) {
+        // Rol que el usuario seleccionó en la pantalla de login
+        String rolSeleccionado = getRolSeleccionado();
+
         LoginRequest request = new LoginRequest(email, password);
 
         ApiClient.getApiService().login(request).enqueue(new Callback<ApiResponse<AuthResponse>>() {
@@ -71,21 +73,31 @@ public class LoginActivity extends AppCompatActivity {
                         && response.body().isSuccess()) {
 
                     AuthResponse auth = response.body().getData();
+                    String rolReal = auth.getRol().toString();
 
-                    // Guardar token para futuras llamadas
+                    // ── Validar que el rol coincida ──────────────
+                    if (!rolReal.equals(rolSeleccionado)) {
+                        String esperado = rolDisplay(rolSeleccionado);
+                        String real     = rolDisplay(rolReal);
+                        Toast.makeText(LoginActivity.this,
+                                "Tu cuenta es de tipo \"" + real + "\".\n" +
+                                        "Selecciona el tipo correcto para ingresar.",
+                                Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    // ── Guardar sesión ───────────────────────────
                     ApiClient.setToken(auth.getToken());
-
-                    // Guardar datos en SharedPreferences
                     SharedPreferences prefs = getSharedPreferences("fuelcontrol", MODE_PRIVATE);
                     prefs.edit()
                             .putString("token", auth.getToken())
                             .putLong("userId", auth.getId())
                             .putString("nombre", auth.getNombre())
-                            .putString("rol", auth.getRol().toString())
+                            .putString("rol", rolReal)
                             .apply();
 
-                    // Redirigir según rol
-                    switch (auth.getRol().toString()) {
+                    // ── Redirigir según rol ──────────────────────
+                    switch (rolReal) {
                         case "USUARIO":
                             startActivity(new Intent(LoginActivity.this, UsuarioDashboardActivity.class));
                             break;
@@ -121,5 +133,14 @@ public class LoginActivity extends AppCompatActivity {
         if (id == R.id.rb_distribuidor) return "DISTRIBUIDOR";
         if (id == R.id.rb_regulador)    return "REGULADOR";
         return "USUARIO";
+    }
+
+    private String rolDisplay(String rol) {
+        switch (rol) {
+            case "ESTACION":     return "Estación de servicio";
+            case "DISTRIBUIDOR": return "Distribuidor mayorista";
+            case "REGULADOR":    return "Autoridad reguladora";
+            default:             return "Usuario particular";
+        }
     }
 }

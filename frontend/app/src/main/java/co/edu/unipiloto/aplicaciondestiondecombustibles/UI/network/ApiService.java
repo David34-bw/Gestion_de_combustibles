@@ -1,30 +1,42 @@
-// ─────────────────────────────────────────────────────────────────
-
-
 package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.network;
 
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.*;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.ApiResponse;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.AuthResponse;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.Distribuidor;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.Estacion;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.LoginRequest;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.PrecioResponse;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.RegisterRequest;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.ResolucionRequest;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.SolicitudCombustible;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.SolicitudRequest;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.Usuario;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.Vehiculo;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.VehiculoRequest;
+
 import retrofit2.Call;
-import retrofit2.http.*;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.PATCH;
+import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
+
 import java.util.List;
 import java.util.Map;
 
 public interface ApiService {
 
-    // ══════════════════════════════════════
-    //  AUTH
-    // ══════════════════════════════════════
-
+    // ── AUTH ──────────────────────────────────────────────────
     @POST("api/auth/login")
     Call<ApiResponse<AuthResponse>> login(@Body LoginRequest request);
 
     @POST("api/auth/register")
     Call<ApiResponse<AuthResponse>> register(@Body RegisterRequest request);
 
-    // ══════════════════════════════════════
-    //  USUARIOS
-    // ══════════════════════════════════════
-
+    // ── USUARIOS ──────────────────────────────────────────────
     @GET("api/usuarios/me")
     Call<ApiResponse<Usuario>> getMiPerfil();
 
@@ -34,55 +46,35 @@ public interface ApiService {
     @PUT("api/usuarios/{id}")
     Call<ApiResponse<Usuario>> actualizarUsuario(@Path("id") Long id, @Body Usuario usuario);
 
-    @GET("api/usuarios")
-    Call<ApiResponse<List<Usuario>>> listarUsuarios();
+    // ── VEHÍCULOS ─────────────────────────────────────────────
+    @POST("api/vehiculos")
+    Call<ApiResponse<Vehiculo>> registrarVehiculo(@Body VehiculoRequest request);
 
-    // ══════════════════════════════════════
-    //  ESTACIONES
-    // ══════════════════════════════════════
+    @GET("api/vehiculos/mis-vehiculos")
+    Call<ApiResponse<List<Vehiculo>>> getMisVehiculos();
 
+    @DELETE("api/vehiculos/{id}")
+    Call<ApiResponse<Void>> eliminarVehiculo(@Path("id") Long id);
+
+    // ── PRECIOS ───────────────────────────────────────────────
+    @GET("api/precios")
+    Call<ApiResponse<Map<String, Object>>> consultarPrecio(
+            @Query("zona") String zona,
+            @Query("tipoCombustible") String tipoCombustible,
+            @Query("tipoVehiculo") String tipoVehiculo);
+
+    // ── ESTACIONES ────────────────────────────────────────────
     @GET("api/estaciones/publicas")
     Call<ApiResponse<List<Estacion>>> getEstacionesPublicas();
-
-    @GET("api/estaciones")
-    Call<ApiResponse<List<Estacion>>> getEstaciones();
 
     @GET("api/estaciones/{id}")
     Call<ApiResponse<Estacion>> getEstacion(@Path("id") Long id);
 
-    @POST("api/estaciones")
-    Call<ApiResponse<Estacion>> crearEstacion(@Body Estacion estacion,
-                                              @Query("administradorId") Long adminId);
-
-    @PUT("api/estaciones/{id}")
-    Call<ApiResponse<Estacion>> actualizarEstacion(@Path("id") Long id, @Body Estacion estacion);
-
-    @PATCH("api/estaciones/{id}/stock")
-    Call<ApiResponse<Estacion>> actualizarStockEstacion(@Path("id") Long id,
-                                                        @Body Map<String, Double> stock);
-
-    // ══════════════════════════════════════
-    //  DISTRIBUIDORES
-    // ══════════════════════════════════════
-
+    // ── DISTRIBUIDORES ────────────────────────────────────────
     @GET("api/distribuidores")
     Call<ApiResponse<List<Distribuidor>>> getDistribuidores();
 
-    @GET("api/distribuidores/{id}")
-    Call<ApiResponse<Distribuidor>> getDistribuidor(@Path("id") Long id);
-
-    @POST("api/distribuidores")
-    Call<ApiResponse<Distribuidor>> crearDistribuidor(@Body Distribuidor distribuidor,
-                                                      @Query("representanteId") Long repId);
-
-    @PATCH("api/distribuidores/{id}/stock")
-    Call<ApiResponse<Distribuidor>> actualizarStockDistribuidor(@Path("id") Long id,
-                                                                @Body Map<String, Double> stock);
-
-    // ══════════════════════════════════════
-    //  SOLICITUDES
-    // ══════════════════════════════════════
-
+    // ── SOLICITUDES ───────────────────────────────────────────
     @POST("api/solicitudes")
     Call<ApiResponse<SolicitudCombustible>> crearSolicitud(@Body SolicitudRequest request);
 
@@ -97,9 +89,6 @@ public interface ApiService {
 
     @GET("api/solicitudes/estacion/{id}")
     Call<ApiResponse<List<SolicitudCombustible>>> getSolicitudesEstacion(@Path("id") Long id);
-
-    @GET("api/solicitudes/distribuidor/{id}")
-    Call<ApiResponse<List<SolicitudCombustible>>> getSolicitudesDistribuidor(@Path("id") Long id);
 
     @POST("api/solicitudes/{id}/resolver")
     Call<ApiResponse<SolicitudCombustible>> resolverSolicitud(@Path("id") Long id,

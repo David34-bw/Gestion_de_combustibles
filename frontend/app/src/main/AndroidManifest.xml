@@ -39,6 +39,11 @@
         <!-- ENTIDAD REGULADORA -->
         <activity android:name=".UI.regulador.ReguladorDashboardActivity"       android:exported="false"/>
 
+        <activity android:name=".UI.usuario.RegistrarVehiculoActivity" android:exported="false"/>
+
+        <activity android:name=".UI.estacion.ConsultarPrecioActivity" android:exported="false"/>
+
+
     </application>
 
 </manifest>

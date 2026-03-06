@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fuel_dark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="FuelControl"
+                android:textColor="@color/fuel_orange"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/btn_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Salir"
+                android:textSize="12sp"
+                android:backgroundTint="@color/fuel_dark_card"
+                android:textColor="@color/fuel_white"/>
+        </LinearLayout>
+
+        <!-- Bienvenida -->
+        <TextView
+            android:id="@+id/tv_welcome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bienvenido, Usuario"
+            android:textColor="@color/fuel_white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingHorizontal="20dp"
+            android:paddingBottom="20dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="24dp">
+
+            <!-- Card mis vehículos -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/fuel_dark_card"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- Título + botón -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="🚗 Mis Vehículos"
+                            android:textColor="@color/fuel_orange"
+                            android:textSize="16sp"
+                            android:textStyle="bold"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_registrar_vehiculo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="+ Agregar"
+                            android:textSize="12sp"
+                            app:backgroundTint="@color/fuel_orange"
+                            android:textColor="@color/fuel_white"
+                            app:cornerRadius="8dp"/>
+                    </LinearLayout>
+
+                    <!-- Sin vehículos -->
+                    <TextView
+                        android:id="@+id/tv_sin_vehiculos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="No tienes vehículos registrados aún."
+                        android:textColor="@color/fuel_gray"
+                        android:textSize="13sp"
+                        android:gravity="center"
+                        android:paddingVertical="12dp"
+                        android:visibility="visible"/>
+
+                    <!-- Lista dinámica de vehículos -->
+                    <LinearLayout
+                        android:id="@+id/ll_vehiculos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"/>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

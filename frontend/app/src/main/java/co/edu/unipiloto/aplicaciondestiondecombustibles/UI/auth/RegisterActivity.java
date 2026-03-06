@@ -77,6 +77,7 @@ public class RegisterActivity extends AppCompatActivity {
         cardUsuario      = findViewById(R.id.card_usuario);
         cardDistribuidor = findViewById(R.id.card_distribuidor);
         cardRegulador    = findViewById(R.id.card_regulador);
+        cardEstacion     = findViewById(R.id.card_estacion);
 
         etCedula       = findViewById(R.id.et_cedula);
         etPlaca        = findViewById(R.id.et_placa);
@@ -86,7 +87,6 @@ public class RegisterActivity extends AppCompatActivity {
         layoutRunt     = findViewById(R.id.layout_runt);
         tvRuntInfo     = findViewById(R.id.tv_runt_info);
 
-        cardEstacion           = findViewById(R.id.card_estacion);
         etNitEstacion          = findViewById(R.id.et_nit_estacion);
         etNombreEstacion       = findViewById(R.id.et_nombre_estacion);
         etCodigoSicom          = findViewById(R.id.et_codigo_sicom);
@@ -105,6 +105,12 @@ public class RegisterActivity extends AppCompatActivity {
         etCodigoEntidad = findViewById(R.id.et_codigo_entidad);
         etCargo         = findViewById(R.id.et_cargo);
         etDependencia   = findViewById(R.id.et_dependencia);
+
+        // ← NUEVO: ocultar todas las cards al inicio
+        cardUsuario.setVisibility(View.GONE);
+        cardEstacion.setVisibility(View.GONE);
+        cardDistribuidor.setVisibility(View.GONE);
+        cardRegulador.setVisibility(View.GONE);
     }
 
     private void setupRolListener() {

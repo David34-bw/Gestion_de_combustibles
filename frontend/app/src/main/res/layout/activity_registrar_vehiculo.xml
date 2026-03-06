@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fuel_dark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Título -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registrar Vehículo"
+            android:textColor="@color/fuel_orange"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Placa -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Placa del vehículo (ej: ABC123)"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="@color/fuel_orange"
+            app:hintTextColor="@color/fuel_gray"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_placa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fuel_white"
+                android:inputType="textCapCharacters"
+                android:maxLength="6"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Marca -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Marca (opcional)"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="@color/fuel_orange"
+            app:hintTextColor="@color/fuel_gray"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_marca"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fuel_white"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Modelo -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Modelo / año (opcional)"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="@color/fuel_orange"
+            app:hintTextColor="@color/fuel_gray"
+            android:layout_marginBottom="24dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_modelo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fuel_white"
+                android:inputType="number"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Tipo de vehículo -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tipo de vehículo"
+            android:textColor="@color/fuel_orange"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <RadioGroup
+            android:id="@+id/rg_tipo_vehiculo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp">
+
+            <RadioButton
+                android:id="@+id/rb_particular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Particular"
+                android:textColor="@color/fuel_white"
+                android:checked="true"
+                android:buttonTint="@color/fuel_orange"/>
+
+            <RadioButton
+                android:id="@+id/rb_taxi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Taxi"
+                android:textColor="@color/fuel_white"
+                android:buttonTint="@color/fuel_orange"/>
+
+            <RadioButton
+                android:id="@+id/rb_motocicleta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Motocicleta"
+                android:textColor="@color/fuel_white"
+                android:buttonTint="@color/fuel_orange"/>
+
+            <RadioButton
+                android:id="@+id/rb_carga"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vehículo de carga"
+                android:textColor="@color/fuel_white"
+                android:buttonTint="@color/fuel_orange"/>
+        </RadioGroup>
+
+        <!-- Subsidio -->
+        <CheckBox
+            android:id="@+id/cb_subsidio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿Aplica subsidio de combustible?"
+            android:textColor="@color/fuel_white"
+            android:buttonTint="@color/fuel_orange"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- RUNT (oculto por defecto) -->
+        <TextView
+            android:id="@+id/tv_runt_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Número RUNT"
+            android:textColor="@color/fuel_gray"
+            android:textSize="12sp"
+            android:visibility="gone"
+            android:layout_marginBottom="4dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_runt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Número RUNT"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="@color/fuel_orange"
+            app:hintTextColor="@color/fuel_gray"
+            android:layout_marginBottom="24dp"
+            android:visibility="gone">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_runt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fuel_white"
+                android:inputType="number"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Botón registrar -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_registrar_vehiculo"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Registrar Vehículo"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/fuel_orange"
+            android:textColor="@color/fuel_white"
+            app:cornerRadius="12dp"/>
+
+    </LinearLayout>
+</ScrollView>
