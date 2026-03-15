@@ -1,4 +1,4 @@
-package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model;
+package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.requests;
 
 public class ResolucionRequest {
     private String estado;         // "APROBADA" o "RECHAZADA"

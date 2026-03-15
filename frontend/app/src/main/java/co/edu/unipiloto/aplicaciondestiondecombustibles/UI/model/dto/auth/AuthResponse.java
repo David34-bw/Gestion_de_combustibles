@@ -1,4 +1,4 @@
-package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model;
+package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.auth;
 
 public class AuthResponse {
     private String token;

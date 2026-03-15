@@ -1,4 +1,4 @@
-package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model;
+package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.common;
 
 public class ApiResponse<T> {
     private boolean success;

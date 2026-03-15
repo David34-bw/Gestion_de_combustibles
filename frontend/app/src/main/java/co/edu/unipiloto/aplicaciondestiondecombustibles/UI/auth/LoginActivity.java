@@ -16,9 +16,9 @@ import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.distribuidor.Distribu
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.estacion.EstacionDashboardActivity;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.regulador.ReguladorDashboardActivity;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.usuario.UsuarioDashboardActivity;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.ApiResponse;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.AuthResponse;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.LoginRequest;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.common.ApiResponse;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.auth.AuthResponse;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.auth.LoginRequest;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.network.ApiClient;
 
 import retrofit2.Call;

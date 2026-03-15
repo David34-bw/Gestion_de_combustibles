@@ -13,9 +13,9 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import co.edu.unipiloto.aplicaciondestiondecombustibles.R;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.ApiResponse;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.Vehiculo;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.VehiculoRequest;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.common.ApiResponse;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.entity.Vehiculo;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.requests.VehiculoRequest;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.network.ApiClient;
 
 import retrofit2.Call;

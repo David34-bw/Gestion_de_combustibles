@@ -1,18 +1,17 @@
 package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.network;
 
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.ApiResponse;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.AuthResponse;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.Distribuidor;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.Estacion;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.LoginRequest;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.PrecioResponse;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.RegisterRequest;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.ResolucionRequest;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.SolicitudCombustible;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.SolicitudRequest;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.Usuario;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.Vehiculo;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.VehiculoRequest;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.common.ApiResponse;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.auth.AuthResponse;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.entity.Distribuidor;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.entity.Estacion;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.auth.LoginRequest;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.auth.RegisterRequest;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.requests.ResolucionRequest;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.entity.SolicitudCombustible;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.requests.SolicitudRequest;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.entity.Usuario;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.entity.Vehiculo;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.requests.VehiculoRequest;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

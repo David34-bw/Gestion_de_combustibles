@@ -15,8 +15,8 @@ import java.util.List;
 
 import co.edu.unipiloto.aplicaciondestiondecombustibles.R;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.auth.LoginActivity;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.ApiResponse;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.Vehiculo;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.common.ApiResponse;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.entity.Vehiculo;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.network.ApiClient;
 import retrofit2.Call;
 import retrofit2.Callback;

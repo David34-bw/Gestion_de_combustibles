@@ -1,4 +1,4 @@
-package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model;
+package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.entity;
 
 public class SolicitudCombustible {
     private Long id;
