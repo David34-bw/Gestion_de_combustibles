@@ -4,17 +4,22 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import co.edu.unipiloto.aplicaciondestiondecombustibles.R;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.auth.LoginActivity;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.estacion.ConsultarPrecioActivity;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.common.ApiResponse;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.entity.Vehiculo;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.network.ApiClient;
@@ -26,6 +31,12 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
 
     private LinearLayout llVehiculos;
     private TextView tvSinVehiculos;
+    private Spinner spinnerFiltro;
+
+    private List<Vehiculo> todosLosVehiculos = new ArrayList<>();
+
+    private final String[] FILTROS = {"TODOS", "PARTICULAR", "TAXI", "MOTOCICLETA", "CARGA"};
+    private final String[] FILTROS_DISPLAY = {"Todos", "Particular", "Taxi", "Motocicleta", "Carga"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,16 +46,34 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("fuelcontrol", MODE_PRIVATE);
         String nombre = prefs.getString("nombre", "Usuario");
 
-        TextView tvWelcome   = findViewById(R.id.tv_welcome);
-        Button btnLogout     = findViewById(R.id.btn_logout);
-        Button btnVehiculo   = findViewById(R.id.btn_registrar_vehiculo);
-        llVehiculos          = findViewById(R.id.ll_vehiculos);
-        tvSinVehiculos       = findViewById(R.id.tv_sin_vehiculos);
+        TextView tvWelcome = findViewById(R.id.tv_welcome);
+        Button btnLogout   = findViewById(R.id.btn_logout);
+        Button btnVehiculo = findViewById(R.id.btn_registrar_vehiculo);
+        Button btnPrecios  = findViewById(R.id.btn_ver_precios);
+        llVehiculos        = findViewById(R.id.ll_vehiculos);
+        tvSinVehiculos     = findViewById(R.id.tv_sin_vehiculos);
+        spinnerFiltro      = findViewById(R.id.spinner_filtro);
 
-        tvWelcome.setText("Bienvenido, " + nombre + "\nConsulta precios, historial y alertas.");
+        tvWelcome.setText("Bienvenido, " + nombre);
+
+        // Spinner de filtro
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_spinner_item, FILTROS_DISPLAY);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerFiltro.setAdapter(adapter);
+        spinnerFiltro.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                filtrarVehiculos(FILTROS[pos]);
+            }
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
 
         btnVehiculo.setOnClickListener(v ->
                 startActivity(new Intent(this, RegistrarVehiculoActivity.class)));
+
+        btnPrecios.setOnClickListener(v ->
+                startActivity(new Intent(this, ConsultarPrecioActivity.class)));
 
         btnLogout.setOnClickListener(v -> {
             ApiClient.clearToken();
@@ -58,7 +87,7 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        cargarVehiculos(); // Se recarga cada vez que vuelves al dashboard
+        cargarVehiculos();
     }
 
     private void cargarVehiculos() {
@@ -69,27 +98,36 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
                                            Response<ApiResponse<List<Vehiculo>>> response) {
                         if (response.isSuccessful() && response.body() != null
                                 && response.body().isSuccess()) {
-
-                            List<Vehiculo> lista = response.body().getData();
-                            llVehiculos.removeAllViews();
-
-                            if (lista == null || lista.isEmpty()) {
-                                tvSinVehiculos.setVisibility(View.VISIBLE);
-                            } else {
-                                tvSinVehiculos.setVisibility(View.GONE);
-                                for (Vehiculo v : lista) {
-                                    agregarTarjetaVehiculo(v);
-                                }
-                            }
+                            todosLosVehiculos = response.body().getData();
+                            filtrarVehiculos(FILTROS[spinnerFiltro.getSelectedItemPosition()]);
                         }
                     }
-
                     @Override
                     public void onFailure(Call<ApiResponse<List<Vehiculo>>> call, Throwable t) {
                         Toast.makeText(UsuarioDashboardActivity.this,
                                 "Error cargando vehículos", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void filtrarVehiculos(String filtro) {
+        llVehiculos.removeAllViews();
+        List<Vehiculo> filtrados = new ArrayList<>();
+
+        for (Vehiculo v : todosLosVehiculos) {
+            if (filtro.equals("TODOS") || filtro.equals(v.getTipoVehiculo())) {
+                filtrados.add(v);
+            }
+        }
+
+        if (filtrados.isEmpty()) {
+            tvSinVehiculos.setVisibility(View.VISIBLE);
+        } else {
+            tvSinVehiculos.setVisibility(View.GONE);
+            for (Vehiculo v : filtrados) {
+                agregarTarjetaVehiculo(v);
+            }
+        }
     }
 
     private void agregarTarjetaVehiculo(Vehiculo v) {
@@ -100,6 +138,7 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
         TextView tvTipo    = tarjeta.findViewById(R.id.tv_tipo);
         TextView tvMarca   = tarjeta.findViewById(R.id.tv_marca);
         TextView tvSubsidio= tarjeta.findViewById(R.id.tv_subsidio);
+        Button btnEliminar  = tarjeta.findViewById(R.id.btn_eliminar);
 
         String tipo = v.getTipoVehiculo() != null ? v.getTipoVehiculo().toUpperCase() : "";
         String emoji = "🚗"; // Por defecto
@@ -125,6 +164,25 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
                 Boolean.TRUE.equals(v.getAplicaSubsidio())
                         ? R.color.fuel_success : R.color.fuel_gray, null));
 
+        btnEliminar.setOnClickListener(x -> eliminarVehiculo(v.getId()));
         llVehiculos.addView(tarjeta);
+    }
+
+    private void eliminarVehiculo(Long id) {
+        ApiClient.getApiService().eliminarVehiculo(id)
+                .enqueue(new Callback<ApiResponse<Void>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse<Void>> call,
+                                           Response<ApiResponse<Void>> response) {
+                        Toast.makeText(UsuarioDashboardActivity.this,
+                                "Vehículo eliminado", Toast.LENGTH_SHORT).show();
+                        cargarVehiculos();
+                    }
+                    @Override
+                    public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
+                        Toast.makeText(UsuarioDashboardActivity.this,
+                                "Error al eliminar", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

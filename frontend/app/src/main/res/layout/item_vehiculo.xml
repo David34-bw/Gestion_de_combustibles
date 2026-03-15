@@ -5,27 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="#1E2333"
-    app:cardCornerRadius="10dp"
+    app:cardCornerRadius="12dp"
     app:strokeColor="@color/fuel_divider"
     app:strokeWidth="1dp"
-    android:layout_marginBottom="10dp">
+    android:layout_marginBottom="12dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="14dp"
+        android:padding="16dp"
         android:gravity="center_vertical">
 
         <!-- Icono -->
         <TextView
             android:id="@+id/tv_icono_vehiculo"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:text="🚗"
-            android:textSize="22sp"
+            android:textSize="26sp"
             android:gravity="center"
-            android:layout_marginEnd="12dp"/>
+            android:layout_marginEnd="16dp"/>
 
         <!-- Info -->
         <LinearLayout
@@ -40,16 +40,19 @@
                 android:layout_height="wrap_content"
                 android:text="ABC123"
                 android:textColor="@color/fuel_white"
-                android:textSize="16sp"
-                android:textStyle="bold"/>
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp"/>
 
             <TextView
                 android:id="@+id/tv_tipo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="PARTICULAR"
-                android:textColor="@color/fuel_gray_light"
-                android:textSize="12sp"/>
+                android:textColor="@color/fuel_orange"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp"/>
 
             <TextView
                 android:id="@+id/tv_marca"
@@ -60,14 +63,38 @@
                 android:textSize="12sp"/>
         </LinearLayout>
 
-        <!-- Subsidio -->
-        <TextView
-            android:id="@+id/tv_subsidio"
+        <!-- Derecha: subsidio + eliminar -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sin subsidio"
-            android:textSize="11sp"
-            android:textColor="@color/fuel_gray"/>
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginStart="12dp">
+
+            <TextView
+                android:id="@+id/tv_subsidio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sin subsidio"
+                android:textSize="11sp"
+                android:textColor="@color/fuel_gray"
+                android:gravity="center"
+                android:layout_marginBottom="8dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_eliminar"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:text="✕"
+                android:textSize="13sp"
+                android:minWidth="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:paddingHorizontal="0dp"
+                app:backgroundTint="@color/fuel_error"
+                android:textColor="@color/fuel_white"
+                app:cornerRadius="8dp"/>
+        </LinearLayout>
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
