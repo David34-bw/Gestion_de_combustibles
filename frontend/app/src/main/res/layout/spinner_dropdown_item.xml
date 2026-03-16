@@ -3,6 +3,8 @@
     android:id="@android:id/text1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="12dp"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="14dp"
     android:textColor="@color/fuel_white"
-    android:textSize="15sp" />
+    android:textSize="15sp"
+    android:background="@color/fuel_dark_card" />

@@ -25,7 +25,7 @@
     </style>
 
     <style name="CustomSpinnerStyle" parent="Widget.AppCompat.Spinner">
-        <item name="android:backgroundTint">@color/fuel_orange</item>
+        <item name="android:background">@drawable/spinner_bg</item>
         <item name="android:popupBackground">@color/fuel_dark_card</item>
     </style>
 

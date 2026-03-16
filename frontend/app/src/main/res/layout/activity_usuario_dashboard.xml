@@ -145,6 +145,7 @@
 
                     <Spinner
                         android:id="@+id/spinner_filtro"
+                        style="@style/CustomSpinnerStyle"
                         android:layout_width="match_parent"
                         android:layout_height="44dp"
                         android:layout_marginBottom="12dp"/>

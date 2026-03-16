@@ -58,8 +58,8 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
 
         // Spinner de filtro
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_spinner_item, FILTROS_DISPLAY);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                this, R.layout.spinner_item, FILTROS_DISPLAY);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerFiltro.setAdapter(adapter);
         spinnerFiltro.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
