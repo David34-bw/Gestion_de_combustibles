@@ -1,7 +1,6 @@
 package co.edu.unipiloto.fuelcontrol.config;
 
 import co.edu.unipiloto.fuelcontrol.repository.UsuarioRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -80,7 +79,6 @@ public class SecurityConfig {
                     .requestMatchers("/api/estaciones/publicas").permitAll()
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers("/api/solicitudes/*/resolver").hasRole("REGULADOR")
-                    .requestMatchers("/api/autoridades/**").hasRole("REGULADOR")
                     .anyRequest().authenticated()
             )
             .authenticationProvider(authenticationProvider())

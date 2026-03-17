@@ -8,7 +8,6 @@ import co.edu.unipiloto.fuelcontrol.dto.response.SolicitudResponse;
 import co.edu.unipiloto.fuelcontrol.exception.BadRequestException;
 import co.edu.unipiloto.fuelcontrol.exception.ResourceNotFoundException;
 import co.edu.unipiloto.fuelcontrol.repository.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,13 +15,22 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class SolicitudCombustibleService {
 
     private final SolicitudCombustibleRepository solicitudRepository;
     private final UsuarioRepository usuarioRepository;
     private final EstacionRepository estacionRepository;
     private final DistribuidorRepository distribuidorRepository;
+
+    public SolicitudCombustibleService(SolicitudCombustibleRepository solicitudRepository,
+                                       UsuarioRepository usuarioRepository,
+                                       EstacionRepository estacionRepository,
+                                       DistribuidorRepository distribuidorRepository) {
+        this.solicitudRepository    = solicitudRepository;
+        this.usuarioRepository      = usuarioRepository;
+        this.estacionRepository     = estacionRepository;
+        this.distribuidorRepository = distribuidorRepository;
+    }
 
     // ─── Crear solicitud (cualquier usuario) ─────────────────
     @Transactional
@@ -148,14 +156,12 @@ public class SolicitudCombustibleService {
                 .fechaSolicitud(s.getFechaSolicitud())
                 .fechaResolucion(s.getFechaResolucion())
                 .usuarioId(s.getUsuario() != null ? s.getUsuario().getId() : null)
-                .usuarioNombre(s.getUsuario() != null
-                        ? s.getUsuario().getNombre() + " " + s.getUsuario().getApellido() : null)
+                .usuarioNombre(s.getUsuario() != null ? s.getUsuario().getNombre() : null)
                 .estacionId(s.getEstacion() != null ? s.getEstacion().getId() : null)
                 .estacionNombre(s.getEstacion() != null ? s.getEstacion().getNombre() : null)
                 .distribuidorId(s.getDistribuidor() != null ? s.getDistribuidor().getId() : null)
                 .distribuidorNombre(s.getDistribuidor() != null ? s.getDistribuidor().getNombre() : null)
-                .aprobadoPorNombre(s.getAprobadoPor() != null
-                        ? s.getAprobadoPor().getNombre() + " " + s.getAprobadoPor().getApellido() : null)
+                .aprobadoPorNombre(s.getAprobadoPor() != null ? s.getAprobadoPor().getNombre() : null)
                 .build();
     }
 }

@@ -1,7 +1,6 @@
 package co.edu.unipiloto.fuelcontrol.config;
 
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
-@Slf4j
 @Component
 public class JwtUtil {
 
@@ -20,6 +18,9 @@ public class JwtUtil {
 
     @Value("${app.jwt.expiration-ms}")
     private long jwtExpirationMs;
+
+    private static final java.util.logging.Logger log = 
+    java.util.logging.Logger.getLogger(JwtUtil.class.getName());
 
     private SecretKey getSigningKey() {
         byte[] keyBytes = jwtSecret.getBytes();
@@ -55,7 +56,7 @@ public class JwtUtil {
             String username = extractUsername(token);
             return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
         } catch (Exception e) {
-            log.warn("Token JWT inválido: {}", e.getMessage());
+            System.out.println("Token JWT inválido: {}" + e.getMessage());
             return false;
         }
     }

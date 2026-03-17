@@ -4,7 +4,6 @@ import co.edu.unipiloto.fuelcontrol.domain.Usuario;
 import co.edu.unipiloto.fuelcontrol.domain.enums.Rol;
 import co.edu.unipiloto.fuelcontrol.dto.response.ApiResponse;
 import co.edu.unipiloto.fuelcontrol.service.UsuarioService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,10 +13,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/usuarios")
-@RequiredArgsConstructor
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
+
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
 
     /** GET /api/usuarios - Solo REGULADOR */
     @GetMapping

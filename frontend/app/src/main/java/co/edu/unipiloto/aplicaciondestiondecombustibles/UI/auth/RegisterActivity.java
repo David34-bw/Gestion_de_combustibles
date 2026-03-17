@@ -5,14 +5,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import co.edu.unipiloto.aplicaciondestiondecombustibles.R;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.distribuidor.DistribuidorDashboardActivity;
@@ -30,30 +28,23 @@ import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    // ── Campos base ────────────────────────────────
+    // Campos base
     private TextInputEditText etEmail, etPassword, etConfirmPassword;
     private RadioGroup rgRole;
 
-    // ── Cards dinámicas ────────────────────────────
-    private MaterialCardView cardUsuario, cardDistribuidor, cardRegulador;
+    // Cards dinámicas
+    private MaterialCardView cardEstacion, cardDistribuidor, cardRegulador;
 
-    // ── Campos USUARIO ─────────────────────────────
-    private TextInputEditText etCedula, etPlaca, etRunt;
-    private RadioGroup rgTipoVehiculo, rgSubsidio;
-    private TextInputLayout layoutRunt;
-    private TextView tvRuntInfo;
-
-    // ── Campos ESTACIÓN ────────────────────────────
-    private MaterialCardView cardEstacion;
+    // Campos ESTACIÓN
     private TextInputEditText etNitEstacion, etNombreEstacion, etCodigoSicom;
     private TextInputEditText etLicenciaEstacion, etDireccionEstacion;
     private TextInputEditText etCiudadEstacion, etDepartamentoEstacion;
 
-    // ── Campos DISTRIBUIDOR ────────────────────────
+    // Campos DISTRIBUIDOR
     private TextInputEditText etNitDist, etNombreEmpresa, etRegistroMercantil;
     private TextInputEditText etCiudadDist, etDepartamentoDist;
 
-    // ── Campos REGULADOR ───────────────────────────
+    // Campos REGULADOR
     private TextInputEditText etNitReg, etCodigoEntidad, etCargo, etDependencia;
 
     @Override
@@ -63,8 +54,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         initViews();
         setupRolListener();
-        setupSubsidioListener();
-
         findViewById(R.id.btn_register).setOnClickListener(v -> validarYRegistrar());
     }
 
@@ -74,19 +63,11 @@ public class RegisterActivity extends AppCompatActivity {
         etConfirmPassword = findViewById(R.id.et_confirm_password);
         rgRole            = findViewById(R.id.rg_role);
 
-        cardUsuario      = findViewById(R.id.card_usuario);
+        cardEstacion     = findViewById(R.id.card_estacion);
         cardDistribuidor = findViewById(R.id.card_distribuidor);
         cardRegulador    = findViewById(R.id.card_regulador);
-        cardEstacion     = findViewById(R.id.card_estacion);
 
-        etCedula       = findViewById(R.id.et_cedula);
-        etPlaca        = findViewById(R.id.et_placa);
-        etRunt         = findViewById(R.id.et_runt);
-        rgTipoVehiculo = findViewById(R.id.rg_tipo_vehiculo);
-        rgSubsidio     = findViewById(R.id.rg_subsidio);
-        layoutRunt     = findViewById(R.id.layout_runt);
-        tvRuntInfo     = findViewById(R.id.tv_runt_info);
-
+        // Campos estación
         etNitEstacion          = findViewById(R.id.et_nit_estacion);
         etNombreEstacion       = findViewById(R.id.et_nombre_estacion);
         etCodigoSicom          = findViewById(R.id.et_codigo_sicom);
@@ -95,19 +76,20 @@ public class RegisterActivity extends AppCompatActivity {
         etCiudadEstacion       = findViewById(R.id.et_ciudad_estacion);
         etDepartamentoEstacion = findViewById(R.id.et_departamento_estacion);
 
+        // Campos distribuidor
         etNitDist           = findViewById(R.id.et_nit_dist);
         etNombreEmpresa     = findViewById(R.id.et_nombre_empresa);
         etRegistroMercantil = findViewById(R.id.et_registro_mercantil);
         etCiudadDist        = findViewById(R.id.et_ciudad_dist);
         etDepartamentoDist  = findViewById(R.id.et_departamento_dist);
 
+        // Campos regulador
         etNitReg        = findViewById(R.id.et_nit_reg);
         etCodigoEntidad = findViewById(R.id.et_codigo_entidad);
         etCargo         = findViewById(R.id.et_cargo);
         etDependencia   = findViewById(R.id.et_dependencia);
 
-        // ← NUEVO: ocultar todas las cards al inicio
-        cardUsuario.setVisibility(View.GONE);
+        // Ocultar todas al inicio
         cardEstacion.setVisibility(View.GONE);
         cardDistribuidor.setVisibility(View.GONE);
         cardRegulador.setVisibility(View.GONE);
@@ -115,117 +97,99 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void setupRolListener() {
         rgRole.setOnCheckedChangeListener((group, checkedId) -> {
-            cardUsuario.setVisibility(View.GONE);
+            // Ocultar todas
+            cardEstacion.setVisibility(View.GONE);
             cardDistribuidor.setVisibility(View.GONE);
             cardRegulador.setVisibility(View.GONE);
-            cardEstacion.setVisibility(View.GONE);
 
-            if (checkedId == R.id.rb_usuario) {
-                cardUsuario.setVisibility(View.VISIBLE);
-            } else if (checkedId == R.id.rb_estacion) {
+            // Mostrar la que corresponde
+            if (checkedId == R.id.rb_estacion) {
                 cardEstacion.setVisibility(View.VISIBLE);
             } else if (checkedId == R.id.rb_distribuidor) {
                 cardDistribuidor.setVisibility(View.VISIBLE);
             } else if (checkedId == R.id.rb_regulador) {
                 cardRegulador.setVisibility(View.VISIBLE);
             }
-        });
-    }
-
-    private void setupSubsidioListener() {
-        rgSubsidio.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.rb_subsidio_si) {
-                layoutRunt.setVisibility(View.VISIBLE);
-                tvRuntInfo.setVisibility(View.VISIBLE);
-            } else {
-                layoutRunt.setVisibility(View.GONE);
-                tvRuntInfo.setVisibility(View.GONE);
-            }
+            // rb_usuario no muestra card aquí porque sus campos están en el Dashboard
         });
     }
 
     private void validarYRegistrar() {
-        String email    = etEmail.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
-        String confirm  = etConfirmPassword.getText().toString().trim();
+        String email   = etEmail.getText().toString().trim();
+        String pass    = etPassword.getText().toString().trim();
+        String confirm = etConfirmPassword.getText().toString().trim();
 
-        if (email.isEmpty() || password.isEmpty() || confirm.isEmpty()) {
-            Toast.makeText(this, "Completa los datos de acceso", Toast.LENGTH_SHORT).show();
+        if (email.isEmpty()) {
+            etEmail.requestFocus();
+            Toast.makeText(this, "El correo electrónico es obligatorio", Toast.LENGTH_SHORT).show();
             return;
         }
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            etEmail.requestFocus();
             Toast.makeText(this, "Correo electrónico inválido", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (!password.equals(confirm)) {
-            Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
+        if (pass.isEmpty()) {
+            etPassword.requestFocus();
+            Toast.makeText(this, "La contraseña es obligatoria", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (password.length() < 8) {
+        if (pass.length() < 8) {
+            etPassword.requestFocus();
             Toast.makeText(this, "La contraseña debe tener mínimo 8 caracteres", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (confirm.isEmpty()) {
+            etConfirmPassword.requestFocus();
+            Toast.makeText(this, "Confirma tu contraseña", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!pass.equals(confirm)) {
+            etConfirmPassword.requestFocus();
+            Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
             return;
         }
 
         int rolId = rgRole.getCheckedRadioButtonId();
+        if (rolId == -1) {
+            Toast.makeText(this, "Selecciona un tipo de usuario", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         if (rolId == R.id.rb_usuario) {
-            if (!validarUsuario()) return;
-
-            String cedula        = etCedula.getText().toString().trim();
-            String placa         = etPlaca.getText().toString().trim().toUpperCase();
-            String tipoVehiculo  = getTipoVehiculo();
-            boolean subsidio     = rgSubsidio.getCheckedRadioButtonId() == R.id.rb_subsidio_si;
-            String runt          = subsidio ? etRunt.getText().toString().trim() : null;
-
-            RegisterRequest request = new RegisterRequest(
-                    email, password, cedula, "USUARIO",
-                    placa, tipoVehiculo, subsidio, runt);
-            enviarRegistro(request);
+            RegisterRequest request = new RegisterRequest(email, pass, "USUARIO");
+            enviarRegistro(request, "USUARIO");
 
         } else if (rolId == R.id.rb_estacion) {
             if (!validarEstacion()) return;
             RegisterRequest request = new RegisterRequest(
                     etNombreEstacion.getText().toString().trim(),
-                    etCiudadEstacion.getText().toString().trim(),
-                    email, password,
+                    email, pass,
                     etNitEstacion.getText().toString().trim(),
                     "ESTACION");
-            enviarRegistro(request);
+            enviarRegistro(request, "ESTACION");
 
         } else if (rolId == R.id.rb_distribuidor) {
             if (!validarDistribuidor()) return;
             RegisterRequest request = new RegisterRequest(
                     etNombreEmpresa.getText().toString().trim(),
-                    etCiudadDist.getText().toString().trim(),
-                    email, password,
+                    email, pass,
                     etNitDist.getText().toString().trim(),
                     "DISTRIBUIDOR");
-            enviarRegistro(request);
+            enviarRegistro(request, "DISTRIBUIDOR");
 
         } else if (rolId == R.id.rb_regulador) {
             if (!validarRegulador()) return;
             RegisterRequest request = new RegisterRequest(
                     etCargo.getText().toString().trim(),
-                    etDependencia.getText().toString().trim(),
-                    email, password,
+                    email, pass,
                     etNitReg.getText().toString().trim(),
                     "REGULADOR");
-            enviarRegistro(request);
-
-        } else {
-            Toast.makeText(this, "Selecciona un tipo de usuario", Toast.LENGTH_SHORT).show();
+            enviarRegistro(request, "REGULADOR");
         }
     }
 
-    private String getTipoVehiculo() {
-        int id = rgTipoVehiculo.getCheckedRadioButtonId();
-        if (id == R.id.rb_taxi)          return "TAXI";
-        if (id == R.id.rb_moto)   return "MOTOCICLETA";
-        if (id == R.id.rb_carga)         return "CARGA";
-        return "PARTICULAR";
-    }
-
-    private void enviarRegistro(RegisterRequest request) {
+    private void enviarRegistro(RegisterRequest request, String rol) {
         ApiClient.getApiService().register(request).enqueue(new Callback<ApiResponse<AuthResponse>>() {
             @Override
             public void onResponse(Call<ApiResponse<AuthResponse>> call,
@@ -236,34 +200,22 @@ public class RegisterActivity extends AppCompatActivity {
                     AuthResponse auth = response.body().getData();
                     ApiClient.setToken(auth.getToken());
 
-                    SharedPreferences prefs = getSharedPreferences("fuelcontrol", MODE_PRIVATE);
-                    prefs.edit()
+                    getSharedPreferences("fuelcontrol", MODE_PRIVATE)
+                            .edit()
                             .putString("token", auth.getToken())
                             .putLong("userId", auth.getId())
                             .putString("nombre", auth.getNombre())
-                            .putString("rol", auth.getRol().toString())
+                            .putString("rol", rol)
                             .apply();
 
-                    Toast.makeText(RegisterActivity.this, "¡Registro exitoso!", Toast.LENGTH_SHORT).show();
-
-                    switch (auth.getRol().toString()) {
-                        case "USUARIO":
-                            startActivity(new Intent(RegisterActivity.this, UsuarioDashboardActivity.class));
-                            break;
-                        case "DISTRIBUIDOR":
-                            startActivity(new Intent(RegisterActivity.this, DistribuidorDashboardActivity.class));
-                            break;
-                        case "ESTACION":
-                            startActivity(new Intent(RegisterActivity.this, EstacionDashboardActivity.class));
-                            break;
-                        case "REGULADOR":
-                            startActivity(new Intent(RegisterActivity.this, ReguladorDashboardActivity.class));
-                            break;
-                    }
+                    Toast.makeText(RegisterActivity.this,
+                            "¡Registro exitoso!", Toast.LENGTH_SHORT).show();
+                    navegarSegunRol(rol);
                     finish();
 
                 } else {
-                    String msg = response.body() != null ? response.body().getMessage() : "Error al registrar";
+                    String msg = response.body() != null
+                            ? response.body().getMessage() : "Error al registrar";
                     Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_LONG).show();
                 }
             }
@@ -276,24 +228,19 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private boolean validarUsuario() {
-        String cedula = etCedula.getText().toString().trim();
-        String placa  = etPlaca.getText().toString().trim();
-
-        if (cedula.isEmpty()) {
-            Toast.makeText(this, "Ingresa tu número de cédula", Toast.LENGTH_SHORT).show();
-            return false;
+    private void navegarSegunRol(String rol) {
+        Intent intent;
+        switch (rol) {
+            case "USUARIO":
+                intent = new Intent(this, UsuarioDashboardActivity.class); break;
+            case "DISTRIBUIDOR":
+                intent = new Intent(this, DistribuidorDashboardActivity.class); break;
+            case "ESTACION":
+                intent = new Intent(this, EstacionDashboardActivity.class); break;
+            default:
+                intent = new Intent(this, ReguladorDashboardActivity.class); break;
         }
-        if (!placa.matches("[A-Za-z]{3}\\d{3}")) {
-            Toast.makeText(this, "Formato de placa inválido. Usa 3 letras y 3 números", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (rgSubsidio.getCheckedRadioButtonId() == R.id.rb_subsidio_si
-                && etRunt.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "Ingresa el número RUNT", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        return true;
+        startActivity(intent);
     }
 
     private boolean validarEstacion() {

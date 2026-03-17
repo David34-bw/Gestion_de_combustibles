@@ -3,7 +3,6 @@ package co.edu.unipiloto.fuelcontrol.controller;
 import co.edu.unipiloto.fuelcontrol.domain.Distribuidor;
 import co.edu.unipiloto.fuelcontrol.dto.response.ApiResponse;
 import co.edu.unipiloto.fuelcontrol.service.DistribuidorService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +12,14 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/distribuidores")
-@RequiredArgsConstructor
+
 public class DistribuidorController {
 
     private final DistribuidorService distribuidorService;
+
+    public DistribuidorController(DistribuidorService distribuidorService) {
+        this.distribuidorService = distribuidorService;
+    }
 
     /** GET /api/distribuidores */
     @GetMapping

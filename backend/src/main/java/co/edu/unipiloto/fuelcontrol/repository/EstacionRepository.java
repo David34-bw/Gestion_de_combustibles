@@ -11,6 +11,4 @@ import java.util.Optional;
 public interface EstacionRepository extends JpaRepository<Estacion, Long> {
     Optional<Estacion> findByNit(String nit);
     List<Estacion> findByActivaTrue();
-    List<Estacion> findByCiudad(String ciudad);
-    List<Estacion> findByAdministradorId(Long administradorId);
 }

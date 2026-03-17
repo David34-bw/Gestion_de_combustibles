@@ -3,7 +3,6 @@ package co.edu.unipiloto.fuelcontrol.controller;
 import co.edu.unipiloto.fuelcontrol.domain.Estacion;
 import co.edu.unipiloto.fuelcontrol.dto.response.ApiResponse;
 import co.edu.unipiloto.fuelcontrol.service.EstacionService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +12,13 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/estaciones")
-@RequiredArgsConstructor
 public class EstacionController {
 
     private final EstacionService estacionService;
+    
+    public EstacionController(EstacionService estacionService) {
+        this.estacionService = estacionService;
+    }
 
     /** GET /api/estaciones/publicas - Sin autenticación (para mostrar en app) */
     @GetMapping("/publicas")

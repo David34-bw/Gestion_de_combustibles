@@ -7,7 +7,6 @@ import co.edu.unipiloto.fuelcontrol.dto.response.ApiResponse;
 import co.edu.unipiloto.fuelcontrol.dto.response.SolicitudResponse;
 import co.edu.unipiloto.fuelcontrol.service.SolicitudCombustibleService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,11 +16,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/solicitudes")
-@RequiredArgsConstructor
+
 public class SolicitudCombustibleController {
 
-    private final SolicitudCombustibleService solicitudService;
+  private final SolicitudCombustibleService solicitudService;
 
+    public SolicitudCombustibleController(SolicitudCombustibleService solicitudService) {
+        this.solicitudService = solicitudService;
+    }
     /**
      * POST /api/solicitudes - Cualquier usuario autenticado
      * Body: { "tipoCombustible": "GASOLINA", "cantidad": 50.0,

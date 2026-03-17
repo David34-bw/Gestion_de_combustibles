@@ -5,25 +5,25 @@ import co.edu.unipiloto.fuelcontrol.domain.enums.Rol;
 import co.edu.unipiloto.fuelcontrol.exception.BadRequestException;
 import co.edu.unipiloto.fuelcontrol.exception.ResourceNotFoundException;
 import co.edu.unipiloto.fuelcontrol.repository.UsuarioRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public List<Usuario> listarTodos() {
-        return usuarioRepository.findAll();
+    public UsuarioService(UsuarioRepository usuarioRepository,
+                          PasswordEncoder passwordEncoder) {
+        this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder   = passwordEncoder;
     }
 
-    public List<Usuario> listarActivos() {
-        return usuarioRepository.findByActivoTrue();
+    public List<Usuario> listarTodos() {
+        return usuarioRepository.findAll();
     }
 
     public List<Usuario> listarPorRol(Rol rol) {
@@ -42,16 +42,10 @@ public class UsuarioService {
 
     public Usuario actualizar(Long id, Usuario datos) {
         Usuario usuario = buscarPorId(id);
-
-        if (datos.getNombre() != null)    usuario.setNombre(datos.getNombre());
-        if (datos.getApellido() != null)  usuario.setApellido(datos.getApellido());
-        if (datos.getTelefono() != null)  usuario.setTelefono(datos.getTelefono());
-
+        if (datos.getNombre() != null) usuario.setNombre(datos.getNombre());
         if (datos.getPassword() != null && !datos.getPassword().isBlank()) {
             usuario.setPassword(passwordEncoder.encode(datos.getPassword()));
         }
-
-        // No se puede cambiar email ni documento aquí
         return usuarioRepository.save(usuario);
     }
 
