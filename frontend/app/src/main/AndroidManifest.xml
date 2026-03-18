@@ -33,9 +33,6 @@
         <!-- ESTACIÓN DE SERVICIO -->
         <activity android:name=".UI.estacion.EstacionDashboardActivity"         android:exported="false"/>
 
-        <!-- DISTRIBUIDOR -->
-        <activity android:name=".UI.distribuidor.DistribuidorDashboardActivity" android:exported="false"/>
-
         <!-- ENTIDAD REGULADORA -->
         <activity android:name=".UI.regulador.ReguladorDashboardActivity"       android:exported="false"/>
 
@@ -43,7 +40,11 @@
 
         <activity android:name=".UI.estacion.ConsultarPrecioActivity" android:exported="false"/>
 
+        <activity android:name=".UI.distribuidor.DistribuidorDashboardActivity" android:exported="false"/>
 
+        <activity android:name=".UI.distribuidor.RegistrarEntregaActivity"      android:exported="false"/>
+
+        <activity android:name=".UI.estacion.InventarioActivity" android:exported="false"/>
     </application>
 
 </manifest>

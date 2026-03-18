@@ -38,5 +38,9 @@ public class EstacionDashboardActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         });
+
+        Button btnInventario = findViewById(R.id.btn_inventario);
+        btnInventario.setOnClickListener(v ->
+                startActivity(new Intent(this, InventarioActivity.class)));
     }
 }

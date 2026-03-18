@@ -2,6 +2,8 @@ package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.network;
 
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.common.ApiResponse;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.auth.AuthResponse;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.entregas.EntregaResponse;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.requests.EntregaRequest;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.entity.Distribuidor;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.entity.Estacion;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.auth.LoginRequest;
@@ -22,6 +24,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+
 
 import java.util.List;
 import java.util.Map;
@@ -92,7 +95,22 @@ public interface ApiService {
     @POST("api/solicitudes/{id}/resolver")
     Call<ApiResponse<SolicitudCombustible>> resolverSolicitud(@Path("id") Long id,
                                                               @Body ResolucionRequest request);
+    // ── ENTREGAS ──────────────────────────────────────────────
+    @POST("api/entregas")
+    Call<ApiResponse<EntregaResponse>> registrarEntrega(@Body EntregaRequest request);
 
+    @GET("api/entregas/mis-entregas")
+    Call<ApiResponse<List<EntregaResponse>>> getMisEntregas();
+
+    @GET("api/entregas/estacion/{id}")
+    Call<ApiResponse<List<EntregaResponse>>> getEntregasPorEstacion(@Path("id") Long id);
     @PATCH("api/solicitudes/{id}/entregar")
     Call<ApiResponse<SolicitudCombustible>> marcarEntregada(@Path("id") Long id);
+
+    // ── INVENTARIO ESTACION ───────────────────────────────────
+    @GET("api/estaciones/mi-estacion")
+    Call<ApiResponse<Estacion>> getMiEstacion();
+
+    @PATCH("api/estaciones/mi-estacion/stock")
+    Call<ApiResponse<Estacion>> actualizarMiStock(@Body Map<String, Double> stock);
 }

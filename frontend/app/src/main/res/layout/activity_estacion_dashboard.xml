@@ -101,6 +101,49 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/fuel_dark_card"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📦 Inventario"
+                        android:textColor="@color/fuel_orange"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="6dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Carga y consulta el inventario de combustible disponible."
+                        android:textColor="@color/fuel_gray"
+                        android:textSize="13sp"
+                        android:layout_marginBottom="16dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_inventario"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:text="Ver Inventario"
+                        android:textSize="14sp"
+                        app:backgroundTint="@color/fuel_orange"
+                        android:textColor="@color/fuel_white"
+                        app:cornerRadius="8dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- Próximas funciones -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -147,6 +190,8 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+
         </LinearLayout>
+
     </LinearLayout>
 </ScrollView>
