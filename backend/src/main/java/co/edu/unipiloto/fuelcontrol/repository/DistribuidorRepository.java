@@ -10,5 +10,6 @@ import java.util.Optional;
 @Repository
 public interface DistribuidorRepository extends JpaRepository<Distribuidor, Long> {
     Optional<Distribuidor> findByNit(String nit);
+    Optional<Distribuidor> findByRepresentanteId(Long representanteId);
     List<Distribuidor> findByActivoTrue();
 }

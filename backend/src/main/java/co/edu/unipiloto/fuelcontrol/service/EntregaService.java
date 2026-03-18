@@ -1,0 +1,114 @@
+package co.edu.unipiloto.fuelcontrol.service;
+
+import co.edu.unipiloto.fuelcontrol.domain.Distribuidor;
+import co.edu.unipiloto.fuelcontrol.domain.EntregaCombustible;
+import co.edu.unipiloto.fuelcontrol.domain.Estacion;
+import co.edu.unipiloto.fuelcontrol.dto.request.EntregaRequest;
+import co.edu.unipiloto.fuelcontrol.dto.response.EntregaResponse;
+import co.edu.unipiloto.fuelcontrol.exception.BadRequestException;
+import co.edu.unipiloto.fuelcontrol.exception.ResourceNotFoundException;
+import co.edu.unipiloto.fuelcontrol.repository.DistribuidorRepository;
+import co.edu.unipiloto.fuelcontrol.repository.EntregaRepository;
+import co.edu.unipiloto.fuelcontrol.repository.EstacionRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+public class EntregaService {
+
+    private final EntregaRepository entregaRepository;
+    private final DistribuidorRepository distribuidorRepository;
+    private final EstacionRepository estacionRepository;
+
+    public EntregaService(EntregaRepository entregaRepository,
+                          DistribuidorRepository distribuidorRepository,
+                          EstacionRepository estacionRepository) {
+        this.entregaRepository      = entregaRepository;
+        this.distribuidorRepository = distribuidorRepository;
+        this.estacionRepository     = estacionRepository;
+    }
+
+    @Transactional
+    public EntregaResponse registrar(Long distribuidorId, EntregaRequest request) {
+        Distribuidor distribuidor = distribuidorRepository.findById(distribuidorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Distribuidor", distribuidorId));
+
+        Estacion estacion = estacionRepository.findById(request.getEstacionId())
+                .orElseThrow(() -> new ResourceNotFoundException("Estación", request.getEstacionId()));
+
+        String tipo = request.getTipoCombustible().toUpperCase();
+        if (!tipo.equals("GASOLINA") && !tipo.equals("DIESEL")) {
+            throw new BadRequestException("Tipo de combustible inválido. Use GASOLINA o DIESEL");
+        }
+
+        // Descontar stock del distribuidor
+        if (tipo.equals("GASOLINA")) {
+            distribuidor.setStockGasolina(distribuidor.getStockGasolina() - request.getVolumen());
+        } else {
+            distribuidor.setStockDiesel(distribuidor.getStockDiesel() - request.getVolumen());
+        }
+        distribuidorRepository.save(distribuidor);
+
+        // Sumar stock a la estación
+        if (tipo.equals("GASOLINA")) {
+            estacion.setStockGasolina(estacion.getStockGasolina() + request.getVolumen());
+        } else {
+            estacion.setStockDiesel(estacion.getStockDiesel() + request.getVolumen());
+        }
+        estacionRepository.save(estacion);
+
+        // Registrar entrega
+        EntregaCombustible entrega = EntregaCombustible.builder()
+                .tipoCombustible(tipo)
+                .volumen(request.getVolumen())
+                .observaciones(request.getObservaciones())
+                .distribuidor(distribuidor)
+                .estacion(estacion)
+                .build();
+
+        return toResponse(entregaRepository.save(entrega));
+    }
+
+    public List<EntregaResponse> listarPorDistribuidor(Long distribuidorId) {
+        return entregaRepository
+                .findByDistribuidorIdOrderByFechaEntregaDesc(distribuidorId)
+                .stream().map(this::toResponse).toList();
+    }
+
+    public List<EntregaResponse> listarPorEstacion(Long estacionId) {
+        return entregaRepository
+                .findByEstacionIdOrderByFechaEntregaDesc(estacionId)
+                .stream().map(this::toResponse).toList();
+    }
+
+    private EntregaResponse toResponse(EntregaCombustible e) {
+        return EntregaResponse.builder()
+                .id(e.getId())
+                .tipoCombustible(e.getTipoCombustible())
+                .volumen(e.getVolumen())
+                .fechaEntrega(e.getFechaEntrega())
+                .observaciones(e.getObservaciones())
+                .distribuidorId(e.getDistribuidor().getId())
+                .distribuidorNombre(e.getDistribuidor().getNombre())
+                .estacionId(e.getEstacion().getId())
+                .estacionNombre(e.getEstacion().getNombre())
+                .build();
+    }
+        // Busca el distribuidor cuyo representante es el usuario autenticado
+        @Transactional
+    public EntregaResponse registrarPorUsuario(Long usuarioId, EntregaRequest request) {
+        Distribuidor distribuidor = distribuidorRepository.findByRepresentanteId(usuarioId)
+                .orElseThrow(() -> new BadRequestException(
+                        "No tienes un distribuidor asociado a tu cuenta"));
+        return registrar(distribuidor.getId(), request);
+    }
+
+    public List<EntregaResponse> listarPorUsuario(Long usuarioId) {
+        Distribuidor distribuidor = distribuidorRepository.findByRepresentanteId(usuarioId)
+                .orElseThrow(() -> new BadRequestException(
+                        "No tienes un distribuidor asociado a tu cuenta"));
+        return listarPorDistribuidor(distribuidor.getId());
+    }
+    }

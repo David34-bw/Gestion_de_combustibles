@@ -8,6 +8,7 @@ import co.edu.unipiloto.fuelcontrol.repository.EstacionRepository;
 import co.edu.unipiloto.fuelcontrol.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import co.edu.unipiloto.fuelcontrol.repository.EstacionRepository;
 
 import java.util.List;
 
@@ -76,5 +77,10 @@ public class EstacionService {
         Estacion estacion = buscarPorId(id);
         estacion.setActiva(false);
         estacionRepository.save(estacion);
+    }
+        public Estacion buscarPorAdministrador(Long usuarioId) {
+        return estacionRepository.findByAdministradorId(usuarioId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                "No tienes una estación asociada a tu cuenta"));
     }
 }

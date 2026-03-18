@@ -2,6 +2,7 @@ package co.edu.unipiloto.fuelcontrol.service;
 
 import co.edu.unipiloto.fuelcontrol.config.JwtUtil;
 import co.edu.unipiloto.fuelcontrol.domain.Usuario;
+import co.edu.unipiloto.fuelcontrol.domain.enums.Rol;
 import co.edu.unipiloto.fuelcontrol.dto.request.LoginRequest;
 import co.edu.unipiloto.fuelcontrol.dto.request.RegisterRequest;
 import co.edu.unipiloto.fuelcontrol.dto.response.AuthResponse;
@@ -10,6 +11,11 @@ import co.edu.unipiloto.fuelcontrol.repository.UsuarioRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import co.edu.unipiloto.fuelcontrol.domain.Distribuidor;
+import co.edu.unipiloto.fuelcontrol.domain.Estacion;
+import co.edu.unipiloto.fuelcontrol.repository.DistribuidorRepository;
+import co.edu.unipiloto.fuelcontrol.repository.EstacionRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,15 +25,21 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
+    private final EstacionRepository estacionRepository;      // ← nuevo
+    private final DistribuidorRepository distribuidorRepository; // ← nuevo
 
     public AuthService(UsuarioRepository usuarioRepository,
-                       PasswordEncoder passwordEncoder,
-                       JwtUtil jwtUtil,
-                       AuthenticationManager authenticationManager) {
-        this.usuarioRepository   = usuarioRepository;
-        this.passwordEncoder     = passwordEncoder;
-        this.jwtUtil             = jwtUtil;
-        this.authenticationManager = authenticationManager;
+                    PasswordEncoder passwordEncoder,
+                    JwtUtil jwtUtil,
+                    AuthenticationManager authenticationManager,
+                    EstacionRepository estacionRepository,
+                    DistribuidorRepository distribuidorRepository) {
+        this.usuarioRepository      = usuarioRepository;
+        this.passwordEncoder        = passwordEncoder;
+        this.jwtUtil                = jwtUtil;
+        this.authenticationManager  = authenticationManager;
+        this.estacionRepository     = estacionRepository;
+        this.distribuidorRepository = distribuidorRepository;
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -64,6 +76,25 @@ public class AuthService {
             .build();
 
         usuarioRepository.save(usuario);
+        if (request.getRol() == Rol.ESTACION) {
+            Estacion estacion = new Estacion();
+            estacion.setNombre(nombre);
+            estacion.setNit(request.getNumeroDocumento());
+            estacion.setDireccion("Por definir");
+            estacion.setActiva(true);
+            estacion.setAdministrador(usuario);
+            estacionRepository.save(estacion);
+        }
+
+        if (request.getRol() == Rol.DISTRIBUIDOR) {
+            Distribuidor distribuidor = new Distribuidor();
+            distribuidor.setNombre(nombre);
+            distribuidor.setNit(request.getNumeroDocumento() != null
+                    ? request.getNumeroDocumento() : request.getEmail());
+            distribuidor.setActivo(true);
+            distribuidor.setRepresentante(usuario);
+            distribuidorRepository.save(distribuidor);
+        }
         return buildResponse(jwtUtil.generateToken(usuario), usuario);
     }
 

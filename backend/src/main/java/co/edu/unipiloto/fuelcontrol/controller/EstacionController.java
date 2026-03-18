@@ -6,6 +6,8 @@ import co.edu.unipiloto.fuelcontrol.service.EstacionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import co.edu.unipiloto.fuelcontrol.domain.Usuario;
 
 import java.util.List;
 import java.util.Map;
@@ -60,18 +62,18 @@ public class EstacionController {
     }
 
     /**
-     * PATCH /api/estaciones/{id}/stock
-     * Body: { "gasolina": 100.0, "diesel": 50.0 }
+     * PATCH /api/estaciones/mi-estacion/stock
+     * La estación actualiza su propio stock
      */
-    @PatchMapping("/{id}/stock")
-    @PreAuthorize("hasAnyRole('ESTACION', 'REGULADOR')")
-    public ResponseEntity<ApiResponse<Estacion>> actualizarStock(
-            @PathVariable Long id,
+    @PatchMapping("/mi-estacion/stock")
+    @PreAuthorize("hasRole('ESTACION')")
+    public ResponseEntity<ApiResponse<Estacion>> actualizarMiStock(
+            @AuthenticationPrincipal Usuario usuario,
             @RequestBody Map<String, Double> stock) {
+        Estacion estacion = estacionService.buscarPorAdministrador(usuario.getId());
         return ResponseEntity.ok(ApiResponse.ok("Stock actualizado",
-                estacionService.actualizarStock(id,
-                        stock.get("gasolina"),
-                        stock.get("diesel"))));
+                estacionService.actualizarStock(estacion.getId(),
+                        stock.get("gasolina"), stock.get("diesel"))));
     }
 
     /** DELETE /api/estaciones/{id} */
@@ -81,4 +83,17 @@ public class EstacionController {
         estacionService.desactivar(id);
         return ResponseEntity.ok(ApiResponse.ok("Estación desactivada", null));
     }
+
+
+    /**
+     * GET /api/estaciones/mi-estacion
+     * La estación ve su propio inventario
+     */
+    @GetMapping("/mi-estacion")
+    @PreAuthorize("hasRole('ESTACION')")
+    public ResponseEntity<ApiResponse<Estacion>> miEstacion(
+            @AuthenticationPrincipal Usuario usuario) {
+        return ResponseEntity.ok(ApiResponse.ok("OK",
+            estacionService.buscarPorAdministrador(usuario.getId())));
+        }
 }
