@@ -1,5 +1,7 @@
 package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.network;
 
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.requests.VentaRequest;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.Ventas.VentaResponse;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.common.ApiResponse;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.auth.AuthResponse;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.entregas.EntregaResponse;
@@ -113,4 +115,13 @@ public interface ApiService {
 
     @PATCH("api/estaciones/mi-estacion/stock")
     Call<ApiResponse<Estacion>> actualizarMiStock(@Body Map<String, Double> stock);
+    // Imports a agregar:
+
+    // Endpoints a agregar:
+// ── VENTAS ────────────────────────────────────────────────
+    @POST("api/ventas")
+    Call<ApiResponse<VentaResponse>> registrarVenta(@Body VentaRequest request);
+
+    @GET("api/ventas/mis-ventas")
+    Call<ApiResponse<List<VentaResponse>>> getMisVentas();
 }

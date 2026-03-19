@@ -42,5 +42,9 @@ public class EstacionDashboardActivity extends AppCompatActivity {
         Button btnInventario = findViewById(R.id.btn_inventario);
         btnInventario.setOnClickListener(v ->
                 startActivity(new Intent(this, InventarioActivity.class)));
+
+        Button btnVentas = findViewById(R.id.btn_registrar_venta);
+        btnVentas.setOnClickListener(v ->
+                startActivity(new Intent(this, RegistrarVentaActivity.class)));
     }
 }

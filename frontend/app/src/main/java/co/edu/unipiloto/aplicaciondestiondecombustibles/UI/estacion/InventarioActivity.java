@@ -75,15 +75,15 @@ public class InventarioActivity extends AppCompatActivity {
 
         double stockGas   = estacion.getStockGasolina() != null ? estacion.getStockGasolina() : 0;
         double stockDiesel= estacion.getStockDiesel()   != null ? estacion.getStockDiesel()   : 0;
-        double capGas     = estacion.getCapacidadGasolina() != null ? estacion.getCapacidadGasolina() : 0;
-        double capDiesel  = estacion.getCapacidadDiesel()   != null ? estacion.getCapacidadDiesel()   : 0;
+
+        double CAPACIDAD_MAX = 500.0;
+        double UMBRAL_ALERTA = CAPACIDAD_MAX * 0.25; // 125 galones
+
+        boolean alertaGas    = stockGas < UMBRAL_ALERTA;
+        boolean alertaDiesel = stockDiesel < UMBRAL_ALERTA;
 
         tvStockGasolina.setText(fmt.format(stockGas) + " gal");
         tvStockDiesel.setText(fmt.format(stockDiesel) + " gal");
-
-        // Verificar alertas HU-008: alerta si stock < 25% de capacidad
-        boolean alertaGas    = capGas > 0 && stockGas < (capGas * 0.25);
-        boolean alertaDiesel = capDiesel > 0 && stockDiesel < (capDiesel * 0.25);
 
         if (alertaGas || alertaDiesel) {
             cardAlerta.setVisibility(View.VISIBLE);
