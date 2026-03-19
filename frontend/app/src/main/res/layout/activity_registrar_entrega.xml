@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:text="Tipo de combustible"
             android:textColor="@color/fuel_orange"
-            android:textSize="13sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:layout_marginBottom="8dp"/>
 
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:text="Estación destino"
             android:textColor="@color/fuel_orange"
-            android:textSize="13sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:layout_marginBottom="8dp"/>
 
@@ -70,6 +70,7 @@
             android:id="@+id/spinner_estacion"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            style="@style/CustomSpinnerStyle"
             android:layout_marginBottom="20dp"/>
 
         <!-- Volumen -->
@@ -77,9 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Volumen (galones)"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxStrokeColor="@color/fuel_orange"
-            app:hintTextColor="@color/fuel_gray"
+            style="@style/FuelInput"
             android:layout_marginBottom="16dp">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -95,9 +94,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Observaciones (opcional)"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxStrokeColor="@color/fuel_orange"
-            app:hintTextColor="@color/fuel_gray"
+            style="@style/FuelInput"
             android:layout_marginBottom="24dp">
 
             <com.google.android.material.textfield.TextInputEditText
