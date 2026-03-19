@@ -21,6 +21,7 @@ public class EntregaService {
     private final EntregaRepository entregaRepository;
     private final DistribuidorRepository distribuidorRepository;
     private final EstacionRepository estacionRepository;
+    private static final double CAPACIDAD_MAX = 500.0;
 
     public EntregaService(EntregaRepository entregaRepository,
                           DistribuidorRepository distribuidorRepository,
@@ -52,12 +53,24 @@ public class EntregaService {
         distribuidorRepository.save(distribuidor);
 
         // Sumar stock a la estación
+        // Sumar stock a la estación con validación de capacidad máxima
         if (tipo.equals("GASOLINA")) {
-            estacion.setStockGasolina(estacion.getStockGasolina() + request.getVolumen());
+            double nuevoStock = estacion.getStockGasolina() + request.getVolumen();
+            if (nuevoStock > CAPACIDAD_MAX) {
+                throw new BadRequestException(
+                    "La estación no puede recibir más gasolina. Capacidad máxima: 500 galones. " +
+                    "Stock actual: " + estacion.getStockGasolina() + " galones");
+            }
+            estacion.setStockGasolina(nuevoStock);
         } else {
-            estacion.setStockDiesel(estacion.getStockDiesel() + request.getVolumen());
+            double nuevoStock = estacion.getStockDiesel() + request.getVolumen();
+            if (nuevoStock > CAPACIDAD_MAX) {
+                throw new BadRequestException(
+                    "La estación no puede recibir más diesel. Capacidad máxima: 500 galones. " +
+                    "Stock actual: " + estacion.getStockDiesel() + " galones");
+            }
+            estacion.setStockDiesel(nuevoStock);
         }
-        estacionRepository.save(estacion);
 
         // Registrar entrega
         EntregaCombustible entrega = EntregaCombustible.builder()

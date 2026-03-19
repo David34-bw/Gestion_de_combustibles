@@ -8,7 +8,7 @@ import co.edu.unipiloto.fuelcontrol.repository.EstacionRepository;
 import co.edu.unipiloto.fuelcontrol.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import co.edu.unipiloto.fuelcontrol.repository.EstacionRepository;
+
 
 import java.util.List;
 
@@ -18,6 +18,7 @@ public class EstacionService {
 
     private final EstacionRepository estacionRepository;
     private final UsuarioRepository usuarioRepository;
+    private static final double CAPACIDAD_MAX = 500.0;
 
     public Estacion crear(Estacion estacion, Long administradorId) {
         if (estacion.getNit() != null && estacionRepository.findByNit(estacion.getNit()).isPresent()) {
@@ -54,24 +55,28 @@ public class EstacionService {
     }
 
     public Estacion actualizarStock(Long id, Double gasolina, Double diesel) {
-        Estacion estacion = buscarPorId(id);
+    Estacion estacion = buscarPorId(id);
 
-        if (gasolina != null) {
-            double nuevoStock = estacion.getStockGasolina() + gasolina;
-            if (estacion.getCapacidadGasolina() != null && nuevoStock > estacion.getCapacidadGasolina()) {
-                throw new BadRequestException("El stock supera la capacidad de gasolina de la estación");
-            }
-            estacion.setStockGasolina(nuevoStock);
+    if (gasolina != null) {
+        double nuevoStock = estacion.getStockGasolina() + gasolina;
+        if (nuevoStock > CAPACIDAD_MAX) {
+            throw new BadRequestException(
+                "Stock de gasolina supera el máximo de 500 galones. " +
+                "Stock actual: " + estacion.getStockGasolina() + " galones");
         }
-        if (diesel != null) {
-            double nuevoStock = estacion.getStockDiesel() + diesel;
-            if (estacion.getCapacidadDiesel() != null && nuevoStock > estacion.getCapacidadDiesel()) {
-                throw new BadRequestException("El stock supera la capacidad de diesel de la estación");
-            }
-            estacion.setStockDiesel(nuevoStock);
-        }
-        return estacionRepository.save(estacion);
+        estacion.setStockGasolina(nuevoStock);
     }
+    if (diesel != null) {
+        double nuevoStock = estacion.getStockDiesel() + diesel;
+        if (nuevoStock > CAPACIDAD_MAX) {
+            throw new BadRequestException(
+                "Stock de diesel supera el máximo de 500 galones. " +
+                "Stock actual: " + estacion.getStockDiesel() + " galones");
+        }
+        estacion.setStockDiesel(nuevoStock);
+    }
+    return estacionRepository.save(estacion);
+}
 
     public void desactivar(Long id) {
         Estacion estacion = buscarPorId(id);
