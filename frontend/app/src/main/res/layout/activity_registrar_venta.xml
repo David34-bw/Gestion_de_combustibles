@@ -61,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Cantidad vendida (galones)"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/FuelInput"
             app:boxStrokeColor="@color/fuel_orange"
             app:hintTextColor="@color/fuel_gray"
             android:layout_marginBottom="16dp">
@@ -79,7 +79,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Observaciones (opcional)"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/FuelInput"
             app:boxStrokeColor="@color/fuel_orange"
             app:hintTextColor="@color/fuel_gray"
             android:layout_marginBottom="24dp">
