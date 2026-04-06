@@ -1,5 +1,7 @@
 package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.network;
 
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.precios.HistorialPrecio;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.requests.PrecioUpdateRequest;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.requests.VentaRequest;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.Ventas.VentaResponse;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.common.ApiResponse;
@@ -124,4 +126,28 @@ public interface ApiService {
 
     @GET("api/ventas/mis-ventas")
     Call<ApiResponse<List<VentaResponse>>> getMisVentas();
+
+    @PUT("api/precios")
+    Call<ApiResponse<Map<String, Object>>> actualizarPrecio(@Body PrecioUpdateRequest request);
+
+    @GET("api/precios/historial")
+    Call<ApiResponse<List<HistorialPrecio>>> getHistorialPrecios();
+
+    // ── HU-010 USUARIOS ───────────────────────────────────────
+    @GET("api/usuarios")
+    Call<ApiResponse<List<Usuario>>> getTodosUsuarios();
+
+    @GET("api/usuarios/rol/{rol}")
+    Call<ApiResponse<List<Usuario>>> getUsuariosPorRol(@Path("rol") String rol);
+
+    @PATCH("api/usuarios/{id}/rol")
+    Call<ApiResponse<Usuario>> cambiarRol(@Path("id") Long id, @Body Map<String, String> body);
+
+    @DELETE("api/usuarios/{id}")
+    Call<ApiResponse<Void>> desactivarUsuario(@Path("id") Long id);
+
+    @DELETE("api/usuarios/{id}/eliminar")
+    Call<ApiResponse<Void>> eliminarUsuario(@Path("id") Long id);
+
+
 }

@@ -108,4 +108,6 @@ public class AuthService {
                 .rol(usuario.getRol())
                 .build();
     }
+
+    
 }

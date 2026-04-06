@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -66,4 +67,23 @@ public class UsuarioController {
         usuarioService.desactivar(id);
         return ResponseEntity.ok(ApiResponse.ok("Usuario desactivado", null));
     }
+
+    // Agrega este método en UsuarioController:
+    @DeleteMapping("/{id}/eliminar")
+    @PreAuthorize("hasRole('REGULADOR')")
+    public ResponseEntity<ApiResponse<Void>> eliminar(@PathVariable Long id) {
+        usuarioService.eliminar(id);
+        return ResponseEntity.ok(ApiResponse.ok("Usuario eliminado", null));
+    }
+
+    // En UsuarioController:
+    @PatchMapping("/{id}/rol")
+    @PreAuthorize("hasRole('REGULADOR')")
+    public ResponseEntity<ApiResponse<Usuario>> cambiarRol(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body) {
+        return ResponseEntity.ok(ApiResponse.ok("Rol actualizado",
+                usuarioService.cambiarRol(id, body.get("rol"))));
+    }
+
 }

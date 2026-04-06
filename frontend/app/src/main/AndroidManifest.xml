@@ -47,6 +47,9 @@
         <activity android:name=".UI.estacion.InventarioActivity" android:exported="false"/>
 
         <activity android:name=".UI.estacion.RegistrarVentaActivity" android:exported="false"/>
+
+        <activity android:name=".UI.regulador.ActualizarPrecioActivity"  android:exported="false"/>
+        <activity android:name=".UI.regulador.GestionUsuariosActivity"   android:exported="false"/>
     </application>
 
 </manifest>

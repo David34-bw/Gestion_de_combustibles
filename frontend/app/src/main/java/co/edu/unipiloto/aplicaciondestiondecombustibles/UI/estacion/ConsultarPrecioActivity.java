@@ -100,6 +100,13 @@ public class ConsultarPrecioActivity extends AppCompatActivity {
                             tvPrecioFinal.setText("$" + fmt.format(final_) + " / galón");
                             cardResultado.setVisibility(View.VISIBLE);
 
+                            Object huboCambio = data.get("huboCambioReciente");
+                            if (Boolean.TRUE.equals(huboCambio)) {
+                                Toast.makeText(ConsultarPrecioActivity.this,
+                                        "⚠️ Los precios han cambiado recientemente. Verifica las tarifas vigentes.",
+                                        Toast.LENGTH_LONG).show();
+                            }
+
                         } else {
                             Toast.makeText(ConsultarPrecioActivity.this,
                                     "Error al consultar precio", Toast.LENGTH_SHORT).show();

@@ -2,7 +2,7 @@ package co.edu.unipiloto.fuelcontrol.service;
 
 import co.edu.unipiloto.fuelcontrol.domain.Usuario;
 import co.edu.unipiloto.fuelcontrol.domain.enums.Rol;
-import co.edu.unipiloto.fuelcontrol.exception.BadRequestException;
+import co.edu.unipiloto.fuelcontrol.domain.enums.Rol;
 import co.edu.unipiloto.fuelcontrol.exception.ResourceNotFoundException;
 import co.edu.unipiloto.fuelcontrol.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -59,5 +59,15 @@ public class UsuarioService {
         Usuario usuario = buscarPorId(id);
         usuario.setActivo(true);
         usuarioRepository.save(usuario);
+    }
+
+    public void eliminar(Long id) {
+    usuarioRepository.deleteById(id);
+    }   
+
+    public Usuario cambiarRol(Long id, String nuevoRol) {
+        Usuario usuario = buscarPorId(id);
+        usuario.setRol(Rol.valueOf(nuevoRol.toUpperCase()));
+        return usuarioRepository.save(usuario);
     }
 }
