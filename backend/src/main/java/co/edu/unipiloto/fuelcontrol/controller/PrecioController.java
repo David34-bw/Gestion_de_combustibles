@@ -15,35 +15,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.annotation.PostConstruct;
+import java.util.concurrent.ConcurrentHashMap;
+
 @RestController
 @RequestMapping("/api/precios")
 public class PrecioController {
 
     private final HistorialPreciosRepository historialRepository;
 
-
-    // Precios actuales en memoria — se actualizan dinámicamente
-    private static final Map<String, Map<String, Double>> PRECIOS = new HashMap<>();
-
-    static {
-        PRECIOS.put("CENTRO",       Map.of("GASOLINA", 16491.0, "ACPM", 11276.0));
-        PRECIOS.put("ANTIOQUIA",    Map.of("GASOLINA", 16412.0, "ACPM", 11301.0));
-        PRECIOS.put("PACIFICA",     Map.of("GASOLINA", 16502.0, "ACPM", 11424.0));
-        PRECIOS.put("CARIBE",       Map.of("GASOLINA", 16126.0, "ACPM", 10951.0));
-        PRECIOS.put("EJE_CAFETERO", Map.of("GASOLINA", 16439.0, "ACPM", 11363.0));
-        PRECIOS.put("ORINOQUIA",    Map.of("GASOLINA", 16591.0, "ACPM", 11376.0));
-        PRECIOS.put("SANTANDERES",  Map.of("GASOLINA", 16248.0, "ACPM", 11025.0));
-        PRECIOS.put("SUR_ANDINA",   Map.of("GASOLINA", 14247.0, "ACPM", 10338.0));
-        PRECIOS.put("FRONTERA",     Map.of("GASOLINA", 14400.0, "ACPM",  9032.0));
-    }
-
-    // Usamos HashMap mutable para poder actualizar precios
-    private static final Map<String, Map<String, Double>> PRECIOS_MUTABLES = new HashMap<>();
-
-    static {
-        PRECIOS.forEach((zona, precios) ->
-                PRECIOS_MUTABLES.put(zona, new HashMap<>(precios)));
-    }
+    // Usamos ConcurrentHashMap mutable para poder actualizar precios a nivel de instancia
+    private final Map<String, Map<String, Double>> preciosActuales = new ConcurrentHashMap<>();
 
     private static final Map<String, Double> DESCUENTO_SUBSIDIO = new HashMap<>();
     static {
@@ -55,6 +37,33 @@ public class PrecioController {
 
     public PrecioController(HistorialPreciosRepository historialRepository) {
         this.historialRepository = historialRepository;
+    }
+
+    @PostConstruct
+    public void init() {
+        // Inicializar con valores base
+        preciosActuales.put("CENTRO",       new ConcurrentHashMap<>(Map.of("GASOLINA", 16491.0, "ACPM", 11276.0)));
+        preciosActuales.put("ANTIOQUIA",    new ConcurrentHashMap<>(Map.of("GASOLINA", 16412.0, "ACPM", 11301.0)));
+        preciosActuales.put("PACIFICA",     new ConcurrentHashMap<>(Map.of("GASOLINA", 16502.0, "ACPM", 11424.0)));
+        preciosActuales.put("CARIBE",       new ConcurrentHashMap<>(Map.of("GASOLINA", 16126.0, "ACPM", 10951.0)));
+        preciosActuales.put("EJE_CAFETERO", new ConcurrentHashMap<>(Map.of("GASOLINA", 16439.0, "ACPM", 11363.0)));
+        preciosActuales.put("ORINOQUIA",    new ConcurrentHashMap<>(Map.of("GASOLINA", 16591.0, "ACPM", 11376.0)));
+        preciosActuales.put("SANTANDERES",  new ConcurrentHashMap<>(Map.of("GASOLINA", 16248.0, "ACPM", 11025.0)));
+        preciosActuales.put("SUR_ANDINA",   new ConcurrentHashMap<>(Map.of("GASOLINA", 14247.0, "ACPM", 10338.0)));
+        preciosActuales.put("FRONTERA",     new ConcurrentHashMap<>(Map.of("GASOLINA", 14400.0, "ACPM",  9032.0)));
+
+        // Cargar últimos precios de la base de datos si existen (sobrescribe valores base)
+        List<HistorialPrecios> historialDesc = historialRepository.findAllByOrderByFechaCambioDesc();
+        // Iteramos de fin a principio para que los más recientes (al principio de la lista) se guarden de últimos y sobrevivan
+        for (int i = historialDesc.size() - 1; i >= 0; i--) {
+            HistorialPrecios h = historialDesc.get(i);
+            String zona = h.getZona();
+            String tipo = h.getTipoCombustible();
+            Double precioNuevo = h.getPrecioNuevo();
+            if (preciosActuales.containsKey(zona) && preciosActuales.get(zona).containsKey(tipo)) {
+                preciosActuales.get(zona).put(tipo, precioNuevo);
+            }
+        }
     }
 
     /**
@@ -69,16 +78,16 @@ public class PrecioController {
         String zonaKey       = zona.toUpperCase().replace(" ", "_");
         String combustibleKey= tipoCombustible.toUpperCase();
 
-        if (!PRECIOS_MUTABLES.containsKey(zonaKey)) {
+        if (!preciosActuales.containsKey(zonaKey)) {
             return ResponseEntity.badRequest()
                     .body(ApiResponse.error("Zona no válida: " + zona));
         }
-        if (!PRECIOS_MUTABLES.get(zonaKey).containsKey(combustibleKey)) {
+        if (!preciosActuales.get(zonaKey).containsKey(combustibleKey)) {
             return ResponseEntity.badRequest()
                     .body(ApiResponse.error("Tipo de combustible no válido"));
         }
 
-        double precioBase  = PRECIOS_MUTABLES.get(zonaKey).get(combustibleKey);
+        double precioBase  = preciosActuales.get(zonaKey).get(combustibleKey);
         double descuento   = DESCUENTO_SUBSIDIO.getOrDefault(tipoVehiculo.toUpperCase(), 0.0);
         double precioFinal = precioBase * (1 - descuento / 100);
 
@@ -112,16 +121,16 @@ public class PrecioController {
         String zonaKey       = request.getZona().toUpperCase().replace(" ", "_");
         String combustibleKey= request.getTipoCombustible().toUpperCase();
 
-        if (!PRECIOS_MUTABLES.containsKey(zonaKey)) {
+        if (!preciosActuales.containsKey(zonaKey)) {
             return ResponseEntity.badRequest()
                     .body(ApiResponse.error("Zona no válida"));
         }
 
-        double precioAnterior = PRECIOS_MUTABLES.get(zonaKey)
+        double precioAnterior = preciosActuales.get(zonaKey)
                 .getOrDefault(combustibleKey, 0.0);
 
         // Actualizar precio en memoria
-        PRECIOS_MUTABLES.get(zonaKey).put(combustibleKey, request.getPrecio());
+        preciosActuales.get(zonaKey).put(combustibleKey, request.getPrecio());
 
         // Guardar en historial
         HistorialPrecios historial = HistorialPrecios.builder()
@@ -156,6 +165,6 @@ public class PrecioController {
      */
     @GetMapping("/zonas")
     public ResponseEntity<ApiResponse<Object>> zonas() {
-        return ResponseEntity.ok(ApiResponse.ok("OK", PRECIOS_MUTABLES.keySet()));
+        return ResponseEntity.ok(ApiResponse.ok("OK", preciosActuales.keySet()));
     }
 }
