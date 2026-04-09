@@ -44,6 +44,7 @@
         <Spinner
             android:id="@+id/spinner_filtro_rol"
             android:layout_width="match_parent"
+            style="@style/CustomSpinnerStyle"
             android:layout_height="48dp"/>
     </LinearLayout>
 
