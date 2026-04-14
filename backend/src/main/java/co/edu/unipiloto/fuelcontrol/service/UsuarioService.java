@@ -2,7 +2,6 @@ package co.edu.unipiloto.fuelcontrol.service;
 
 import co.edu.unipiloto.fuelcontrol.domain.Usuario;
 import co.edu.unipiloto.fuelcontrol.domain.enums.Rol;
-import co.edu.unipiloto.fuelcontrol.domain.enums.Rol;
 import co.edu.unipiloto.fuelcontrol.exception.ResourceNotFoundException;
 import co.edu.unipiloto.fuelcontrol.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
