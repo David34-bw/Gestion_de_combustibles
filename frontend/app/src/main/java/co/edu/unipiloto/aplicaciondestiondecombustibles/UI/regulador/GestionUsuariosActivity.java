@@ -1,5 +1,6 @@
 package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.regulador;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,6 +24,7 @@ import co.edu.unipiloto.aplicaciondestiondecombustibles.R;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.common.ApiResponse;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.entity.Usuario;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.network.ApiClient;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.usuario.EditarPerfilActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -120,7 +122,15 @@ public class GestionUsuariosActivity extends AppCompatActivity {
         btnActivar.setText(activo ? "Desactivar" : "Activar");
 
         btnActivar.setOnClickListener(v -> toggleActivar(u, activo));
-        btnRol.setOnClickListener(v -> mostrarDialogRol(u));
+        //btnRol.setOnClickListener(v -> mostrarDialogRol(u));
+        MaterialButton btnEditar = tarjeta.findViewById(R.id.btn_cambiar_rol); // Reutilizamos el botón
+        btnEditar.setText("Editar Datos");
+
+        btnEditar.setOnClickListener(v -> {
+            Intent intent = new Intent(this, EditarPerfilActivity.class);
+            intent.putExtra("id", u.getId()); // Pasamos el ID del usuario seleccionado
+            startActivity(intent);
+        });
         btnEliminar.setOnClickListener(v -> confirmarEliminar(u));
 
         llUsuarios.addView(tarjeta);

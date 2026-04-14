@@ -2,6 +2,7 @@ package co.edu.unipiloto.fuelcontrol.service;
 
 import co.edu.unipiloto.fuelcontrol.domain.Usuario;
 import co.edu.unipiloto.fuelcontrol.domain.enums.Rol;
+import co.edu.unipiloto.fuelcontrol.dto.request.UsuarioUpdateDTO;
 import co.edu.unipiloto.fuelcontrol.exception.ResourceNotFoundException;
 import co.edu.unipiloto.fuelcontrol.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,14 +40,21 @@ public class UsuarioService {
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con email: " + email));
     }
 
-    public Usuario actualizar(Long id, Usuario datos) {
-        Usuario usuario = buscarPorId(id);
-        if (datos.getNombre() != null) usuario.setNombre(datos.getNombre());
-        if (datos.getPassword() != null && !datos.getPassword().isBlank()) {
-            usuario.setPassword(passwordEncoder.encode(datos.getPassword()));
-        }
-        return usuarioRepository.save(usuario);
+    // Reemplaza el método actualizar en UsuarioService.java
+    public Usuario actualizar(Long id, UsuarioUpdateDTO datos) {
+    Usuario usuario = buscarPorId(id);
+    
+    if (datos.nombre() != null) usuario.setNombre(datos.nombre());
+    if (datos.email() != null) usuario.setEmail(datos.email());
+    if (datos.numeroDocumento() != null) usuario.setNumeroDocumento(datos.numeroDocumento());
+    
+    // Solo actualiza la contraseña si no viene vacía
+    if (datos.password() != null && !datos.password().isBlank()) {
+        usuario.setPassword(passwordEncoder.encode(datos.password()));
     }
+    
+    return usuarioRepository.save(usuario);
+}
 
     public void desactivar(Long id) {
         Usuario usuario = buscarPorId(id);
@@ -63,10 +71,4 @@ public class UsuarioService {
     public void eliminar(Long id) {
     usuarioRepository.deleteById(id);
     }   
-
-    public Usuario cambiarRol(Long id, String nuevoRol) {
-        Usuario usuario = buscarPorId(id);
-        usuario.setRol(Rol.valueOf(nuevoRol.toUpperCase()));
-        return usuarioRepository.save(usuario);
-    }
 }

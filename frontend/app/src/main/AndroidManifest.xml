@@ -52,6 +52,10 @@
 
         <activity android:name=".UI.regulador.ActualizarPrecioActivity"  android:exported="false"/>
         <activity android:name=".UI.regulador.GestionUsuariosActivity"   android:exported="false"/>
+        <activity
+            android:name=".UI.usuario.EditarPerfilActivity"
+            android:label="Editar Perfil"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
     </application>
 
 </manifest>

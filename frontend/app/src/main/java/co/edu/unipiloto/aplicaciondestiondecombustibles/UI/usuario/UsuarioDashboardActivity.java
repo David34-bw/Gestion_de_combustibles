@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import com.google.android.material.card.MaterialCardView;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.R;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.auth.LoginActivity;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.estacion.ConsultarPrecioActivity;
@@ -47,6 +47,7 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
         String nombre = prefs.getString("nombre", "Usuario");
 
         TextView tvWelcome = findViewById(R.id.tv_welcome);
+        MaterialCardView btn_ir_perfil = findViewById(R.id.btn_ir_perfil);
         Button btnLogout   = findViewById(R.id.btn_logout);
         Button btnVehiculo = findViewById(R.id.btn_registrar_vehiculo);
         Button btnPrecios  = findViewById(R.id.btn_ver_precios);
@@ -67,6 +68,14 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
                 filtrarVehiculos(FILTROS[pos]);
             }
             @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        btn_ir_perfil.setOnClickListener(v -> {
+            Long miId = prefs.getLong("userId", -1L);
+
+            Intent intent = new Intent(this, EditarPerfilActivity.class);
+            intent.putExtra("id", miId);
+            startActivity(intent);
         });
 
         btnVehiculo.setOnClickListener(v ->

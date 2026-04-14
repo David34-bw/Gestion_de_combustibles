@@ -2,6 +2,7 @@ package co.edu.unipiloto.fuelcontrol.controller;
 
 import co.edu.unipiloto.fuelcontrol.domain.Usuario;
 import co.edu.unipiloto.fuelcontrol.domain.enums.Rol;
+import co.edu.unipiloto.fuelcontrol.dto.request.UsuarioUpdateDTO;
 import co.edu.unipiloto.fuelcontrol.dto.response.ApiResponse;
 import co.edu.unipiloto.fuelcontrol.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
@@ -55,10 +56,11 @@ public class UsuarioController {
     @PreAuthorize("hasRole('REGULADOR') or authentication.principal.id == #id")
     public ResponseEntity<ApiResponse<Usuario>> actualizar(
             @PathVariable Long id,
-            @RequestBody Usuario datos) {
-        return ResponseEntity.ok(ApiResponse.ok("Usuario actualizado",
+            @RequestBody UsuarioUpdateDTO datos) { // Cambiado a DTO
+        return ResponseEntity.ok(ApiResponse.ok("Datos actualizados correctamente",
                 usuarioService.actualizar(id, datos)));
     }
+
 
     /** DELETE /api/usuarios/{id} - Desactiva (no borra) */
     @DeleteMapping("/{id}")
@@ -74,16 +76,6 @@ public class UsuarioController {
     public ResponseEntity<ApiResponse<Void>> eliminar(@PathVariable Long id) {
         usuarioService.eliminar(id);
         return ResponseEntity.ok(ApiResponse.ok("Usuario eliminado", null));
-    }
-
-    // En UsuarioController:
-    @PatchMapping("/{id}/rol")
-    @PreAuthorize("hasRole('REGULADOR')")
-    public ResponseEntity<ApiResponse<Usuario>> cambiarRol(
-            @PathVariable Long id,
-            @RequestBody Map<String, String> body) {
-        return ResponseEntity.ok(ApiResponse.ok("Rol actualizado",
-                usuarioService.cambiarRol(id, body.get("rol"))));
     }
 
 }

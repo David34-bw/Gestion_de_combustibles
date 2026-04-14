@@ -2,8 +2,16 @@ package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.entity;
 
 public class Usuario {
     private Long id;
-    private String nombre, apellido, email, telefono, rol;
+    private String nombre, apellido, email, telefono, rol,numeroDocumento;
     private Boolean activo;
+
+    public String getNumeroDocumento() {
+        return numeroDocumento;
+    }
+
+    public void setNumeroDocumento(String numeroDocumento) {
+        this.numeroDocumento = numeroDocumento;
+    }
 
     public Long getId() {
         return id;
