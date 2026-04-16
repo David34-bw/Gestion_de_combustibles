@@ -30,16 +30,24 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/btn_ir_perfil"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="16dp"
-                android:backgroundTint="@color/fuel_orange"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardCornerRadius="25dp"
+                app:cardCornerRadius="24dp"
                 app:cardElevation="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:strokeWidth="1.5dp"
+                app:strokeColor="@color/fuel_orange"
+                app:cardBackgroundColor="@color/fuel_dark_card">
+
+                <ImageView
+                    android:id="@+id/iv_profile_pic"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@mipmap/ic_launcher_round"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="Foto de perfil"/>
+
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>

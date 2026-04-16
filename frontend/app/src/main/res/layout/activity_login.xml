@@ -156,6 +156,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Ubicación"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:textColorHint="@color/fuel_gray_light"
+
                     app:boxStrokeColor="@color/fuel_orange"
                     app:hintTextColor="@color/fuel_gray"
                     android:layout_marginBottom="8dp">
