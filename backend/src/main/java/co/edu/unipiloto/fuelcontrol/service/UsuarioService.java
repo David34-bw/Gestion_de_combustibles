@@ -5,6 +5,8 @@ import co.edu.unipiloto.fuelcontrol.domain.enums.Rol;
 import co.edu.unipiloto.fuelcontrol.dto.request.UsuarioUpdateDTO;
 import co.edu.unipiloto.fuelcontrol.exception.ResourceNotFoundException;
 import co.edu.unipiloto.fuelcontrol.repository.UsuarioRepository;
+import jakarta.transaction.Transactional;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -62,11 +64,15 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
+    @Transactional
     public void activar(Long id) {
-        Usuario usuario = buscarPorId(id);
+        // Usa directamente el repositorio para evitar filtros de lógica de negocio antiguos
+        Usuario usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+        
         usuario.setActivo(true);
         usuarioRepository.save(usuario);
-    }
+    }   
 
     public void eliminar(Long id) {
     usuarioRepository.deleteById(id);

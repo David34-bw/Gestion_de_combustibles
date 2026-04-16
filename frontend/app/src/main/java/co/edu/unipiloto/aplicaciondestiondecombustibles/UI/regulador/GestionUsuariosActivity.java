@@ -136,27 +136,30 @@ public class GestionUsuariosActivity extends AppCompatActivity {
         llUsuarios.addView(tarjeta);
     }
 
-    private void toggleActivar(Usuario u, boolean activo) {
-        Call<ApiResponse<Void>> call = activo
+    private void toggleActivar(Usuario u, boolean estaActivo) {
+        // Si está activo, llamamos a DESACTIVAR. Si está inactivo, llamamos a ACTIVAR.
+        Call<ApiResponse<Void>> call = estaActivo
                 ? ApiClient.getApiService().desactivarUsuario(u.getId())
-                : ApiClient.getApiService().desactivarUsuario(u.getId());
+                : ApiClient.getApiService().activarUsuario(u.getId());
 
-        ApiClient.getApiService().desactivarUsuario(u.getId())
-                .enqueue(new Callback<ApiResponse<Void>>() {
-                    @Override
-                    public void onResponse(Call<ApiResponse<Void>> call,
-                                           Response<ApiResponse<Void>> response) {
-                        Toast.makeText(GestionUsuariosActivity.this,
-                                activo ? "Usuario desactivado" : "Usuario activado",
-                                Toast.LENGTH_SHORT).show();
-                        cargarUsuarios();
-                    }
-                    @Override
-                    public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
-                        Toast.makeText(GestionUsuariosActivity.this,
-                                "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        call.enqueue(new Callback<ApiResponse<Void>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(GestionUsuariosActivity.this,
+                            estaActivo ? "Usuario desactivado" : "Usuario activado",
+                            Toast.LENGTH_SHORT).show();
+                    cargarUsuarios(); // Recarga la lista para ver los cambios
+                } else {
+                    Toast.makeText(GestionUsuariosActivity.this, "Error: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
+                Toast.makeText(GestionUsuariosActivity.this, "Fallo: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void mostrarDialogRol(Usuario u) {

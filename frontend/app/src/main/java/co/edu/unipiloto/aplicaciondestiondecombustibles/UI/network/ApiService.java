@@ -143,7 +143,10 @@ public interface ApiService {
     @PATCH("api/usuarios/{id}/rol")
     Call<ApiResponse<Usuario>> cambiarRol(@Path("id") Long id, @Body Map<String, String> body);
 
-    @DELETE("api/usuarios/{id}")
+    @PUT("api/usuarios/{id}/activar")
+    Call<ApiResponse<Void>> activarUsuario(@Path("id") Long id);
+
+    @PUT("api/usuarios/{id}/desactivar")
     Call<ApiResponse<Void>> desactivarUsuario(@Path("id") Long id);
 
     @DELETE("api/usuarios/{id}/eliminar")

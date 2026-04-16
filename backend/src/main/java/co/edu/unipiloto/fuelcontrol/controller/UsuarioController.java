@@ -11,10 +11,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping("/api/usuarios")
+@RequestMapping("/api/usuarios") 
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -61,16 +60,20 @@ public class UsuarioController {
                 usuarioService.actualizar(id, datos)));
     }
 
-
-    /** DELETE /api/usuarios/{id} - Desactiva (no borra) */
-    @DeleteMapping("/{id}")
+    @PutMapping("/{id}/desactivar") 
     @PreAuthorize("hasRole('REGULADOR')")
     public ResponseEntity<ApiResponse<Void>> desactivar(@PathVariable Long id) {
         usuarioService.desactivar(id);
-        return ResponseEntity.ok(ApiResponse.ok("Usuario desactivado", null));
+        return ResponseEntity.ok(ApiResponse.ok("Desactivado", null));
     }
 
-    // Agrega este método en UsuarioController:
+    @PutMapping("/{id}/activar")
+    @PreAuthorize("hasRole('REGULADOR')")
+    public ResponseEntity<ApiResponse<Void>> activar(@PathVariable Long id) {
+        usuarioService.activar(id);
+        return ResponseEntity.ok(ApiResponse.ok("Usuario activado con éxito", null));
+    }
+
     @DeleteMapping("/{id}/eliminar")
     @PreAuthorize("hasRole('REGULADOR')")
     public ResponseEntity<ApiResponse<Void>> eliminar(@PathVariable Long id) {
