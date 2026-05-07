@@ -4,5 +4,6 @@ public enum Rol {
     USUARIO,
     DISTRIBUIDOR,
     ESTACION,
-    REGULADOR
+    REGULADOR,
+    ADMINISTRADOR
 }

@@ -27,6 +27,8 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final EstacionRepository estacionRepository;      // ← nuevo
     private final DistribuidorRepository distribuidorRepository; // ← nuevo
+    private static final String CODIGO_ADMIN = "555";
+
 
     public AuthService(UsuarioRepository usuarioRepository,
                     PasswordEncoder passwordEncoder,
@@ -53,6 +55,13 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest request) {
+        if (Rol.ADMINISTRADOR.name().equals(request.getRol())) {
+    if (request.getCodigoAdmin() == null || 
+        !CODIGO_ADMIN.equals(request.getCodigoAdmin())) {
+        throw new RuntimeException("Código de administrador incorrecto");
+        // o usa tu clase de excepción personalizada si tienes una
+    }
+}
         if (usuarioRepository.existsByEmail(request.getEmail())) {
             throw new BadRequestException("El email ya está registrado");
         }

@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Size;
 public class RegisterRequest {
 
     private String nombre;
+    private String codigoAdmin;
 
     @Email(message = "Email inválido")
     @NotBlank(message = "El email es requerido")
@@ -33,4 +34,6 @@ public class RegisterRequest {
     public void setNumeroDocumento(String v) { this.numeroDocumento = v; }
     public Rol getRol()                { return rol; }
     public void setRol(Rol v)          { this.rol = v; }
+    public String getCodigoAdmin()     { return codigoAdmin; }
+    public void setCodigoAdmin(String v) { this.codigoAdmin = v; }
 }
