@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface VentaRepository extends JpaRepository<Venta, Long> {
     List<Venta> findByEstacionIdOrderByFechaVentaDesc(Long estacionId);
+    List<Venta> findByUsuarioIdOrderByFechaVentaDesc(Long usuarioId);
 }

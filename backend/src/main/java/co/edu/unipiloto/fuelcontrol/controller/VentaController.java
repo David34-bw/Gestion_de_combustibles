@@ -48,4 +48,13 @@ public class VentaController {
         return ResponseEntity.ok(ApiResponse.ok("OK",
                 ventaService.listarPorEstacion(usuario.getId())));
     }
+
+    // Agrega este endpoint:
+    @GetMapping("/mis-compras")
+    @PreAuthorize("hasRole('USUARIO')")
+    public ResponseEntity<ApiResponse<List<VentaResponse>>> misCompras(
+            @AuthenticationPrincipal Usuario usuario) {
+        return ResponseEntity.ok(ApiResponse.ok("OK",
+                   ventaService.listarPorUsuario(usuario.getId())));
+    }
 }

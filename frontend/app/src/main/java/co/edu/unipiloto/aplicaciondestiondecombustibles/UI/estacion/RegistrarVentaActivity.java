@@ -11,9 +11,9 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import co.edu.unipiloto.aplicaciondestiondecombustibles.R;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.common.ApiResponse;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.requests.VentaRequest;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.Ventas.VentaResponse;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.network.ApiClient;
-import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.requests.VentaRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,7 +21,7 @@ import retrofit2.Response;
 public class RegistrarVentaActivity extends AppCompatActivity {
 
     private RadioGroup rgCombustible;
-    private TextInputEditText etCantidad, etObservaciones;
+    private TextInputEditText etCantidad, etObservaciones, etPlaca;
     private Button btnRegistrar;
 
     @Override
@@ -32,6 +32,7 @@ public class RegistrarVentaActivity extends AppCompatActivity {
         rgCombustible   = findViewById(R.id.rg_combustible);
         etCantidad      = findViewById(R.id.et_cantidad);
         etObservaciones = findViewById(R.id.et_observaciones);
+        etPlaca         = findViewById(R.id.et_placa_comprador);
         btnRegistrar    = findViewById(R.id.btn_registrar_venta);
 
         btnRegistrar.setOnClickListener(v -> registrar());
@@ -39,8 +40,18 @@ public class RegistrarVentaActivity extends AppCompatActivity {
 
     private void registrar() {
         String cantStr = etCantidad.getText().toString().trim();
+        String placa   = etPlaca.getText().toString().trim().toUpperCase();
+
         if (cantStr.isEmpty()) {
             Toast.makeText(this, "Ingresa la cantidad", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (placa.isEmpty()) {
+            Toast.makeText(this, "Ingresa la placa del vehículo", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!placa.matches("[A-Z]{3}\\d{3}")) {
+            Toast.makeText(this, "Placa inválida. Formato: ABC123", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -49,7 +60,7 @@ public class RegistrarVentaActivity extends AppCompatActivity {
                 ? "GASOLINA" : "DIESEL";
         String obs      = etObservaciones.getText().toString().trim();
 
-        VentaRequest request = new VentaRequest(tipo, cantidad, obs);
+        VentaRequest request = new VentaRequest(tipo, cantidad, obs, placa);
 
         ApiClient.getApiService().registrarVenta(request)
                 .enqueue(new Callback<ApiResponse<VentaResponse>>() {
@@ -58,15 +69,11 @@ public class RegistrarVentaActivity extends AppCompatActivity {
                                            Response<ApiResponse<VentaResponse>> response) {
                         if (response.isSuccessful() && response.body() != null
                                 && response.body().isSuccess()) {
-
                             VentaResponse venta = response.body().getData();
-                            String msg = "Venta registrada correctamente";
-
-                            // HU-008: alerta si stock bajo
+                            String msg = "Venta registrada a " + venta.getUsuarioNombre();
                             if (Boolean.TRUE.equals(venta.getAlertaStockBajo())) {
                                 msg += "\n⚠️ ALERTA: Stock por debajo del 25%";
                             }
-
                             Toast.makeText(RegistrarVentaActivity.this,
                                     msg, Toast.LENGTH_LONG).show();
                             finish();
@@ -77,7 +84,6 @@ public class RegistrarVentaActivity extends AppCompatActivity {
                                     msg, Toast.LENGTH_LONG).show();
                         }
                     }
-
                     @Override
                     public void onFailure(Call<ApiResponse<VentaResponse>> call, Throwable t) {
                         Toast.makeText(RegistrarVentaActivity.this,

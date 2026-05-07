@@ -152,5 +152,7 @@ public interface ApiService {
     @DELETE("api/usuarios/{id}/eliminar")
     Call<ApiResponse<Void>> eliminarUsuario(@Path("id") Long id);
 
+    @GET("api/ventas/mis-compras")
+    Call<ApiResponse<List<VentaResponse>>> getMisCompras();
 
 }

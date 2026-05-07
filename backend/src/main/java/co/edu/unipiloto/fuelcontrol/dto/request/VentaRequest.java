@@ -12,6 +12,9 @@ public class VentaRequest {
     @NotNull(message = "La cantidad es requerida")
     @Positive(message = "La cantidad debe ser mayor a 0")
     private Double cantidad;
+    // Agrega este campo:
+    private String placaVehiculo;
+
 
     private String observaciones;
 
@@ -21,4 +24,6 @@ public class VentaRequest {
     public void setCantidad(Double v)        { this.cantidad = v; }
     public String getObservaciones()         { return observaciones; }
     public void setObservaciones(String v)   { this.observaciones = v; }
+    public String getPlacaVehiculo()       { return placaVehiculo; }
+public void setPlacaVehiculo(String v) { this.placaVehiculo = v; }
 }

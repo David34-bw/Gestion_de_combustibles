@@ -20,6 +20,24 @@
             android:textStyle="bold"
             android:layout_marginBottom="24dp"/>
 
+        <!-- Placa del comprador -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Placa del vehículo (ej: ABC123)"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="@color/fuel_orange"
+            app:hintTextColor="@color/fuel_gray"
+            android:layout_marginBottom="16dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_placa_comprador"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fuel_white"
+                android:inputType="textCapCharacters"
+                android:maxLength="6"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
         <!-- Tipo combustible -->
         <TextView
             android:layout_width="wrap_content"
@@ -61,11 +79,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Cantidad vendida (galones)"
-            style="@style/FuelInput"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:boxStrokeColor="@color/fuel_orange"
             app:hintTextColor="@color/fuel_gray"
             android:layout_marginBottom="16dp">
-
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_cantidad"
                 android:layout_width="match_parent"
@@ -79,11 +96,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Observaciones (opcional)"
-            style="@style/FuelInput"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:boxStrokeColor="@color/fuel_orange"
             app:hintTextColor="@color/fuel_gray"
             android:layout_marginBottom="24dp">
-
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_observaciones"
                 android:layout_width="match_parent"

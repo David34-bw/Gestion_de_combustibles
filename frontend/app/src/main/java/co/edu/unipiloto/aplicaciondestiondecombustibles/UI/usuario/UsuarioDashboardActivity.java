@@ -26,6 +26,7 @@ import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.network.ApiClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.Ventas.VentaResponse;
 
 public class UsuarioDashboardActivity extends AppCompatActivity {
 
@@ -42,6 +43,8 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usuario_dashboard);
+        LinearLayout llCompras   = findViewById(R.id.ll_compras);
+        TextView tvSinCompras    = findViewById(R.id.tv_sin_compras);
 
         SharedPreferences prefs = getSharedPreferences("fuelcontrol", MODE_PRIVATE);
         String nombre = prefs.getString("nombre", "Usuario");
@@ -91,6 +94,41 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         });
+        ApiClient.getApiService().getMisCompras()
+                .enqueue(new Callback<ApiResponse<List<VentaResponse>>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse<List<VentaResponse>>> call,
+                                           Response<ApiResponse<List<VentaResponse>>> response) {
+                        if (response.isSuccessful() && response.body() != null
+                                && response.body().isSuccess()) {
+                            List<VentaResponse> compras = response.body().getData();
+                            if (compras == null || compras.isEmpty()) {
+                                tvSinCompras.setVisibility(View.VISIBLE);
+                            } else {
+                                tvSinCompras.setVisibility(View.GONE);
+                                for (VentaResponse compra : compras) {
+                                    View item = getLayoutInflater().inflate(
+                                            R.layout.item_compra, llCompras, false);
+                                    ((TextView) item.findViewById(R.id.tv_estacion_compra))
+                                            .setText(compra.getEstacionNombre());
+                                    ((TextView) item.findViewById(R.id.tv_tipo_compra))
+                                            .setText(compra.getTipoCombustible());
+                                    ((TextView) item.findViewById(R.id.tv_cantidad_compra))
+                                            .setText(compra.getCantidad() + " gal");
+                                    ((TextView) item.findViewById(R.id.tv_fecha_compra))
+                                            .setText(compra.getFechaVenta() != null
+                                                    ? compra.getFechaVenta().substring(0, 10) : "");
+                                    ((TextView) item.findViewById(R.id.tv_placa_compra))
+                                            .setText(compra.getPlacaVehiculo() != null
+                                                    ? "🚗 " + compra.getPlacaVehiculo() : "");
+                                    llCompras.addView(item);
+                                }
+                            }
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<ApiResponse<List<VentaResponse>>> call, Throwable t) {}
+                });
     }
 
     @Override

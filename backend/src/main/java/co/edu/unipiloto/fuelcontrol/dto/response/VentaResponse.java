@@ -11,6 +11,9 @@ public class VentaResponse {
     private Long estacionId;
     private String estacionNombre;
     private Boolean alertaStockBajo;
+    private Long usuarioId;
+    private String usuarioNombre;
+    private String placaVehiculo;
 
     public static Builder builder() { return new Builder(); }
 
@@ -25,6 +28,9 @@ public class VentaResponse {
         public Builder estacionNombre(String v)     { r.estacionNombre = v; return this; }
         public Builder alertaStockBajo(Boolean v)   { r.alertaStockBajo = v; return this; }
         public VentaResponse build()                { return r; }
+        public Builder usuarioId(Long v)       { r.usuarioId = v; return this; }
+        public Builder usuarioNombre(String v) { r.usuarioNombre = v; return this; }
+        public Builder placaVehiculo(String v) { r.placaVehiculo = v; return this; }
     }
 
     public Long getId()                    { return id; }
@@ -35,4 +41,7 @@ public class VentaResponse {
     public Long getEstacionId()            { return estacionId; }
     public String getEstacionNombre()      { return estacionNombre; }
     public Boolean getAlertaStockBajo()    { return alertaStockBajo; }
+    public Long getUsuarioId()         { return usuarioId; }
+    public String getUsuarioNombre()   { return usuarioNombre; }
+    public String getPlacaVehiculo()   { return placaVehiculo; }
 }

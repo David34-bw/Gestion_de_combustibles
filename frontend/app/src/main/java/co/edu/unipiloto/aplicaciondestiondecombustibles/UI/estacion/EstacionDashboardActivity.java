@@ -5,7 +5,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
-
+import android.view.View;
+import android.widget.LinearLayout;
+import java.util.List;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.common.ApiResponse;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.Ventas.VentaResponse;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import androidx.appcompat.app.AppCompatActivity;
 
 import co.edu.unipiloto.aplicaciondestiondecombustibles.R;
@@ -18,6 +25,9 @@ public class EstacionDashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_estacion_dashboard);
+        LinearLayout llVentas  = findViewById(R.id.ll_ventas_estacion);
+        TextView tvSinVentas   = findViewById(R.id.tv_sin_ventas_estacion);
+
 
         SharedPreferences prefs = getSharedPreferences("fuelcontrol", MODE_PRIVATE);
         String nombre = prefs.getString("nombre", "Estación");
@@ -46,5 +56,41 @@ public class EstacionDashboardActivity extends AppCompatActivity {
         Button btnVentas = findViewById(R.id.btn_registrar_venta);
         btnVentas.setOnClickListener(v ->
                 startActivity(new Intent(this, RegistrarVentaActivity.class)));
+        ApiClient.getApiService().getMisVentas()
+                .enqueue(new Callback<ApiResponse<List<VentaResponse>>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse<List<VentaResponse>>> call,
+                                           Response<ApiResponse<List<VentaResponse>>> response) {
+                        if (response.isSuccessful() && response.body() != null
+                                && response.body().isSuccess()) {
+                            List<VentaResponse> ventas = response.body().getData();
+                            if (ventas == null || ventas.isEmpty()) {
+                                tvSinVentas.setVisibility(View.VISIBLE);
+                            } else {
+                                tvSinVentas.setVisibility(View.GONE);
+                                for (VentaResponse v : ventas) {
+                                    View item = getLayoutInflater().inflate(
+                                            R.layout.item_venta_estacion, llVentas, false);
+                                    ((TextView) item.findViewById(R.id.tv_placa_venta))
+                                            .setText(v.getPlacaVehiculo() != null ? "🚗 " + v.getPlacaVehiculo() : "");
+                                    ((TextView) item.findViewById(R.id.tv_comprador))
+                                            .setText(v.getUsuarioNombre() != null
+                                                    ? v.getUsuarioNombre() : "Anónimo");
+                                    ((TextView) item.findViewById(R.id.tv_tipo_venta))
+                                            .setText(v.getTipoCombustible());
+                                    ((TextView) item.findViewById(R.id.tv_cantidad_venta))
+                                            .setText(v.getCantidad() + " gal");
+                                    ((TextView) item.findViewById(R.id.tv_fecha_venta))
+                                            .setText(v.getFechaVenta() != null
+                                                    ? v.getFechaVenta().substring(0, 10) : "");
+                                    llVentas.addView(item);
+                                }
+                            }
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<ApiResponse<List<VentaResponse>>> call, Throwable t) {}
+                });
+
     }
 }
