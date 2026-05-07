@@ -175,6 +175,13 @@
                         android:paddingBottom="6dp"
                         android:text="Autoridad reguladora"
                         android:textColor="@color/fuel_gray_light" />
+                    <RadioButton
+                        android:id="@+id/rb_administrador"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/fuel_orange"
+                        android:text="Administrador"
+                        android:textColor="@color/fuel_gray_light"/>
                 </RadioGroup>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -540,6 +547,47 @@
                     android:text="⚠ El código CHIP y NIT serán verificados contra el Directorio de Entidades Estatales del DANE y el SECOP."
                     android:textColor="@color/fuel_gray"
                     android:textSize="12sp" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+        <!-- Card ADMINISTRADOR — oculta por defecto -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_administrador"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/fuel_dark_card"
+            app:cardCornerRadius="12dp"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🔐 Código de administrador"
+                    android:textColor="@color/fuel_orange"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Código secreto"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_codigo_admin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberPassword"
+                        android:maxLength="10"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

@@ -16,6 +16,7 @@ public class RegisterRequest {
     private String tipoVehiculo;
     private Boolean aplicaSubsidio;
     private String numeroRunt;
+    private String codigoAdmin;
 
     // ── Constructor usuario particular (desde Dashboard)
     public RegisterRequest(String email, String password, String numeroDocumento,
@@ -57,4 +58,9 @@ public class RegisterRequest {
     public String getTipoVehiculo()     { return tipoVehiculo; }
     public Boolean getAplicaSubsidio()  { return aplicaSubsidio; }
     public String getNumeroRunt()       { return numeroRunt; }
+
+    public void setCodigoAdmin(String codigoAdmin) {
+        this.codigoAdmin = codigoAdmin;
+    }
+    public String getCodigoAdmin() { return codigoAdmin; }
 }

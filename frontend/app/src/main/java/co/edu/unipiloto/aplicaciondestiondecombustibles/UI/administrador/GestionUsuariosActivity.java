@@ -1,4 +1,4 @@
-package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.regulador;
+package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.administrador;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,7 +36,7 @@ public class GestionUsuariosActivity extends AppCompatActivity {
     private TextView tvSinUsuarios;
     private List<Usuario> todosLosUsuarios = new ArrayList<>();
 
-    private final String[] FILTROS     = {"TODOS", "USUARIO", "ESTACION", "DISTRIBUIDOR", "REGULADOR"};
+    private final String[] FILTROS         = {"TODOS", "USUARIO", "ESTACION", "DISTRIBUIDOR", "REGULADOR"};
     private final String[] FILTROS_DISPLAY = {"Todos", "Usuario", "Estación", "Distribuidor", "Regulador"};
 
     @Override
@@ -74,12 +74,15 @@ public class GestionUsuariosActivity extends AppCompatActivity {
                                 && response.body().isSuccess()) {
                             todosLosUsuarios = response.body().getData();
                             filtrar(FILTROS[spinnerFiltro.getSelectedItemPosition()]);
+                        } else {
+                            Toast.makeText(GestionUsuariosActivity.this,
+                                    "Error HTTP: " + response.code(), Toast.LENGTH_LONG).show();
                         }
                     }
                     @Override
                     public void onFailure(Call<ApiResponse<List<Usuario>>> call, Throwable t) {
                         Toast.makeText(GestionUsuariosActivity.this,
-                                "Error cargando usuarios", Toast.LENGTH_SHORT).show();
+                                "Error cargando usuarios: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -107,9 +110,9 @@ public class GestionUsuariosActivity extends AppCompatActivity {
         TextView tvEmail   = tarjeta.findViewById(R.id.tv_email);
         TextView tvRol     = tarjeta.findViewById(R.id.tv_rol);
         TextView tvEstado  = tarjeta.findViewById(R.id.tv_estado);
-        MaterialButton btnActivar   = tarjeta.findViewById(R.id.btn_activar);
-        MaterialButton btnRol       = tarjeta.findViewById(R.id.btn_cambiar_rol);
-        MaterialButton btnEliminar  = tarjeta.findViewById(R.id.btn_eliminar);
+        MaterialButton btnActivar  = tarjeta.findViewById(R.id.btn_activar);
+        MaterialButton btnEditar   = tarjeta.findViewById(R.id.btn_cambiar_rol);
+        MaterialButton btnEliminar = tarjeta.findViewById(R.id.btn_eliminar);
 
         tvNombre.setText(u.getNombre());
         tvEmail.setText(u.getEmail());
@@ -119,47 +122,77 @@ public class GestionUsuariosActivity extends AppCompatActivity {
         tvEstado.setText(activo ? "✓ Activo" : "✗ Inactivo");
         tvEstado.setTextColor(getResources().getColor(
                 activo ? R.color.fuel_success : R.color.fuel_error, null));
+
         btnActivar.setText(activo ? "Desactivar" : "Activar");
-
         btnActivar.setOnClickListener(v -> toggleActivar(u, activo));
-        //btnRol.setOnClickListener(v -> mostrarDialogRol(u));
-        MaterialButton btnEditar = tarjeta.findViewById(R.id.btn_cambiar_rol); // Reutilizamos el botón
-        btnEditar.setText("Editar Datos");
 
+        btnEditar.setText("Editar Datos");
         btnEditar.setOnClickListener(v -> {
             Intent intent = new Intent(this, EditarPerfilActivity.class);
-            intent.putExtra("id", u.getId()); // Pasamos el ID del usuario seleccionado
+            intent.putExtra("id", u.getId());
             startActivity(intent);
         });
+
         btnEliminar.setOnClickListener(v -> confirmarEliminar(u));
 
         llUsuarios.addView(tarjeta);
     }
 
     private void toggleActivar(Usuario u, boolean estaActivo) {
-        // Si está activo, llamamos a DESACTIVAR. Si está inactivo, llamamos a ACTIVAR.
         Call<ApiResponse<Void>> call = estaActivo
                 ? ApiClient.getApiService().desactivarUsuario(u.getId())
                 : ApiClient.getApiService().activarUsuario(u.getId());
 
         call.enqueue(new Callback<ApiResponse<Void>>() {
             @Override
-            public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
+            public void onResponse(Call<ApiResponse<Void>> call,
+                                   Response<ApiResponse<Void>> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(GestionUsuariosActivity.this,
                             estaActivo ? "Usuario desactivado" : "Usuario activado",
                             Toast.LENGTH_SHORT).show();
-                    cargarUsuarios(); // Recarga la lista para ver los cambios
+                    cargarUsuarios();
                 } else {
-                    Toast.makeText(GestionUsuariosActivity.this, "Error: " + response.code(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GestionUsuariosActivity.this,
+                            "Error HTTP: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
-                Toast.makeText(GestionUsuariosActivity.this, "Fallo: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(GestionUsuariosActivity.this,
+                        "Fallo: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void confirmarEliminar(Usuario u) {
+        new AlertDialog.Builder(this)
+                .setTitle("Eliminar usuario")
+                .setMessage("¿Estás seguro de eliminar a " + u.getNombre() + "? Esta acción no se puede deshacer.")
+                .setPositiveButton("Eliminar", (dialog, which) -> {
+                    ApiClient.getApiService().eliminarUsuario(u.getId())
+                            .enqueue(new Callback<ApiResponse<Void>>() {  // ← corregido
+                                @Override
+                                public void onResponse(Call<ApiResponse<Void>> call,
+                                                       Response<ApiResponse<Void>> response) {  // ← corregido
+                                    if (response.isSuccessful()) {
+                                        Toast.makeText(GestionUsuariosActivity.this,
+                                                "Usuario eliminado", Toast.LENGTH_SHORT).show();
+                                        cargarUsuarios();  // ← recarga la lista
+                                    } else {
+                                        Toast.makeText(GestionUsuariosActivity.this,
+                                                "Error HTTP: " + response.code(), Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                                @Override
+                                public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
+                                    Toast.makeText(GestionUsuariosActivity.this,
+                                            "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
 
     private void mostrarDialogRol(Usuario u) {
@@ -185,31 +218,6 @@ public class GestionUsuariosActivity extends AppCompatActivity {
                                 }
                             });
                 })
-                .show();
-    }
-
-    private void confirmarEliminar(Usuario u) {
-        new AlertDialog.Builder(this)
-                .setTitle("Eliminar usuario")
-                .setMessage("¿Estás seguro de eliminar a " + u.getNombre() + "? Esta acción no se puede deshacer.")
-                .setPositiveButton("Eliminar", (dialog, which) -> {
-                    ApiClient.getApiService().eliminarUsuario(u.getId())
-                            .enqueue(new Callback<ApiResponse<Void>>() {
-                                @Override
-                                public void onResponse(Call<ApiResponse<Void>> call,
-                                                       Response<ApiResponse<Void>> response) {
-                                    Toast.makeText(GestionUsuariosActivity.this,
-                                            "Usuario eliminado", Toast.LENGTH_SHORT).show();
-                                    cargarUsuarios();
-                                }
-                                @Override
-                                public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
-                                    Toast.makeText(GestionUsuariosActivity.this,
-                                            "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                })
-                .setNegativeButton("Cancelar", null)
                 .show();
     }
 }

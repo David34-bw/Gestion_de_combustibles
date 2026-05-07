@@ -20,6 +20,7 @@ import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.common.ApiR
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.auth.AuthResponse;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.auth.RegisterRequest;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.network.ApiClient;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.administrador.AdministradorDashboardActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,6 +46,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     // Campos REGULADOR
     private TextInputEditText etNitReg, etCodigoEntidad, etCargo, etDependencia;
+    private MaterialCardView cardAdministrador;
+    private TextInputEditText etCodigoAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +95,10 @@ public class RegisterActivity extends AppCompatActivity {
         cardEstacion.setVisibility(View.GONE);
         cardDistribuidor.setVisibility(View.GONE);
         cardRegulador.setVisibility(View.GONE);
+
+        cardAdministrador = findViewById(R.id.card_administrador);
+        etCodigoAdmin     = findViewById(R.id.et_codigo_admin);
+        cardAdministrador.setVisibility(View.GONE);
     }
 
     private void setupRolListener() {
@@ -100,16 +107,17 @@ public class RegisterActivity extends AppCompatActivity {
             cardEstacion.setVisibility(View.GONE);
             cardDistribuidor.setVisibility(View.GONE);
             cardRegulador.setVisibility(View.GONE);
+            cardAdministrador.setVisibility(View.GONE);  // ← agregar
 
-            // Mostrar la que corresponde
             if (checkedId == R.id.rb_estacion) {
                 cardEstacion.setVisibility(View.VISIBLE);
             } else if (checkedId == R.id.rb_distribuidor) {
                 cardDistribuidor.setVisibility(View.VISIBLE);
             } else if (checkedId == R.id.rb_regulador) {
                 cardRegulador.setVisibility(View.VISIBLE);
+            } else if (checkedId == R.id.rb_administrador) {  // ← agregar
+                cardAdministrador.setVisibility(View.VISIBLE);
             }
-            // rb_usuario no muestra card aquí porque sus campos están en el Dashboard
         });
     }
 
@@ -185,7 +193,17 @@ public class RegisterActivity extends AppCompatActivity {
                     etNitReg.getText().toString().trim(),
                     "REGULADOR");
             enviarRegistro(request, "REGULADOR");
+        }else if (rolId == R.id.rb_administrador) {
+            if (!validarAdministrador()) return;
+            RegisterRequest request = new RegisterRequest(
+                    "Administrador",   // nombre genérico, ajusta si tienes campo nombre
+                    email, pass,
+                    null,              // NIT no aplica, ajusta según tu constructor
+                    "ADMINISTRADOR");
+            request.setCodigoAdmin(etCodigoAdmin.getText().toString().trim());
+            enviarRegistro(request, "ADMINISTRADOR");
         }
+
     }
 
     private void enviarRegistro(RegisterRequest request, String rol) {
@@ -236,6 +254,8 @@ public class RegisterActivity extends AppCompatActivity {
                 intent = new Intent(this, DistribuidorDashboardActivity.class); break;
             case "ESTACION":
                 intent = new Intent(this, EstacionDashboardActivity.class); break;
+            case "ADMINISTRADOR":                                                    // ← nuevo
+                intent = new Intent(this, AdministradorDashboardActivity.class); break;
             default:
                 intent = new Intent(this, ReguladorDashboardActivity.class); break;
         }
@@ -293,6 +313,20 @@ public class RegisterActivity extends AppCompatActivity {
         }
         if (etDependencia.getText().toString().trim().isEmpty()) {
             Toast.makeText(this, "Ingresa la dependencia", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validarAdministrador() {
+        String codigo = etCodigoAdmin.getText().toString().trim();
+        if (codigo.isEmpty()) {
+            Toast.makeText(this, "Ingresa el código de administrador", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!codigo.equals("555")) {
+            Toast.makeText(this, "Código de administrador incorrecto", Toast.LENGTH_SHORT).show();
+            etCodigoAdmin.setText("");
             return false;
         }
         return true;

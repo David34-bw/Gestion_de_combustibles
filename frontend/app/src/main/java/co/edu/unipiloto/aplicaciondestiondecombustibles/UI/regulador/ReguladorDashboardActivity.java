@@ -25,15 +25,11 @@ public class ReguladorDashboardActivity extends AppCompatActivity {
         TextView tvWelcome       = findViewById(R.id.tv_welcome);
         Button btnLogout         = findViewById(R.id.btn_logout);
         Button btnPrecios        = findViewById(R.id.btn_actualizar_precios);
-        Button btnUsuarios       = findViewById(R.id.btn_gestionar_usuarios);
 
         tvWelcome.setText("Bienvenido, " + nombre + "\nPanel de administración.");
 
         btnPrecios.setOnClickListener(v ->
                 startActivity(new Intent(this, ActualizarPrecioActivity.class)));
-
-        btnUsuarios.setOnClickListener(v ->
-                startActivity(new Intent(this, GestionUsuariosActivity.class)));
 
         btnLogout.setOnClickListener(v -> {
             ApiClient.clearToken();

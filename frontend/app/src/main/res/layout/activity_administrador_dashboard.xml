@@ -42,7 +42,7 @@
             android:id="@+id/tv_welcome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bienvenido, Regulador"
+            android:text="Bienvenido, Administrador"
             android:textColor="@color/fuel_white"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -56,14 +56,13 @@
             android:paddingHorizontal="16dp"
             android:paddingBottom="24dp">
 
-            <!-- Card precios -->
+            <!-- Card usuarios -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/fuel_dark_card"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
-                android:layout_marginBottom="12dp">
+                app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -74,7 +73,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="💰 Gestión de Precios"
+                        android:text="👥 Gestión de Usuarios"
                         android:textColor="@color/fuel_orange"
                         android:textSize="16sp"
                         android:textStyle="bold"
@@ -83,16 +82,16 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Actualiza tarifas por zona y consulta el historial de cambios."
+                        android:text="Administra perfiles, roles y accesos de todos los usuarios."
                         android:textColor="@color/fuel_gray"
                         android:textSize="13sp"
                         android:layout_marginBottom="16dp"/>
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_actualizar_precios"
+                        android:id="@+id/btn_gestionar_usuarios"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:text="Actualizar Precios"
+                        android:text="Gestionar Usuarios"
                         android:textSize="14sp"
                         app:backgroundTint="@color/fuel_orange"
                         android:textColor="@color/fuel_white"

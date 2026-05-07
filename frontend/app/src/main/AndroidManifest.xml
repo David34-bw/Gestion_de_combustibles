@@ -51,11 +51,12 @@
         <activity android:name=".UI.estacion.RegistrarVentaActivity" android:exported="false"/>
 
         <activity android:name=".UI.regulador.ActualizarPrecioActivity"  android:exported="false"/>
-        <activity android:name=".UI.regulador.GestionUsuariosActivity"   android:exported="false"/>
+        <activity android:name=".UI.administrador.GestionUsuariosActivity"   android:exported="false"/>
         <activity
             android:name=".UI.usuario.EditarPerfilActivity"
             android:label="Editar Perfil"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
+        <activity android:name=".UI.administrador.AdministradorDashboardActivity" android:exported="false"/>
     </application>
 
 </manifest>

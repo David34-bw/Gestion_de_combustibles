@@ -140,6 +140,12 @@
                         android:textColor="@color/fuel_gray_light"
                         android:buttonTint="@color/fuel_orange"
                         android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+
+                    <RadioButton android:id="@+id/rb_administrador"
+                        android:text="Administrador"
+                        android:textColor="@color/fuel_gray_light"
+                        android:buttonTint="@color/fuel_orange"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                 </RadioGroup>
 
                 <TextView

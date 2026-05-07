@@ -21,6 +21,7 @@ import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.common.ApiR
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.auth.AuthResponse;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.auth.LoginRequest;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.network.ApiClient;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.administrador.AdministradorDashboardActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -131,6 +132,9 @@ public class LoginActivity extends AppCompatActivity {
                         case "REGULADOR":
                             startActivity(new Intent(LoginActivity.this, ReguladorDashboardActivity.class));
                             break;
+                        case "ADMINISTRADOR":
+                            startActivity(new Intent(LoginActivity.this, AdministradorDashboardActivity.class));
+                            break;
                     }
                     finish();
 
@@ -153,6 +157,7 @@ public class LoginActivity extends AppCompatActivity {
         if (id == R.id.rb_estacion)     return "ESTACION";
         if (id == R.id.rb_distribuidor) return "DISTRIBUIDOR";
         if (id == R.id.rb_regulador)    return "REGULADOR";
+        if (id == R.id.rb_administrador) return "ADMINISTRADOR";
         return "USUARIO";
     }
 
@@ -161,6 +166,7 @@ public class LoginActivity extends AppCompatActivity {
             case "ESTACION":     return "Estación de servicio";
             case "DISTRIBUIDOR": return "Distribuidor mayorista";
             case "REGULADOR":    return "Autoridad reguladora";
+            case "ADMINISTRADOR": return "Administrador";
             default:             return "Usuario particular";
         }
     }
