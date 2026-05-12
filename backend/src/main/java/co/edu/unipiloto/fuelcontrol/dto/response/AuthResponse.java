@@ -9,6 +9,7 @@ public class AuthResponse {
     private String nombre;
     private String email;
     private Rol rol;
+    private Integer puntosAcumulados;
 
     public static Builder builder() { return new Builder(); }
 
@@ -20,6 +21,7 @@ public class AuthResponse {
         public Builder nombre(String v) { r.nombre = v; return this; }
         public Builder email(String v)  { r.email = v; return this; }
         public Builder rol(Rol v)       { r.rol = v; return this; }
+        public Builder puntosAcumulados(Integer v) { r.puntosAcumulados = v; return this; }
         public AuthResponse build()     { return r; }
     }
 
@@ -29,4 +31,5 @@ public class AuthResponse {
     public String getNombre() { return nombre; }
     public String getEmail()  { return email; }
     public Rol getRol()       { return rol; }
+    public Integer getPuntosAcumulados() { return puntosAcumulados; }
 }

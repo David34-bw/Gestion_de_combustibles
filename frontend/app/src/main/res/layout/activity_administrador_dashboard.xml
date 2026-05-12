@@ -56,6 +56,15 @@
             android:paddingHorizontal="16dp"
             android:paddingBottom="24dp">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Acciones principales"
+                android:textColor="@color/fuel_white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:paddingBottom="8dp"/>
+
             <!-- Card usuarios -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"

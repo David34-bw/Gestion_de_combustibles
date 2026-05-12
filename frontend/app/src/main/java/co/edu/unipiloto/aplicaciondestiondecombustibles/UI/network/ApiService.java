@@ -18,6 +18,10 @@ import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.requests.So
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.entity.Usuario;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.entity.Vehiculo;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.requests.VehiculoRequest;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.puntos.PuntosResponse;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.recompensas.RecompensaResponse;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.recompensas.CanjeResponse;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.requests.CanjeRequest;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -154,5 +158,18 @@ public interface ApiService {
 
     @GET("api/ventas/mis-compras")
     Call<ApiResponse<List<VentaResponse>>> getMisCompras();
+
+    // ── PUNTOS Y RECOMPENSAS ─────────────────────────────────
+    @GET("api/puntos/saldo")
+    Call<ApiResponse<PuntosResponse>> getSaldoPuntos();
+
+    @GET("api/recompensas")
+    Call<ApiResponse<List<RecompensaResponse>>> getRecompensas();
+
+    @POST("api/puntos/canjes")
+    Call<ApiResponse<CanjeResponse>> canjearRecompensa(@Body CanjeRequest request);
+
+    @GET("api/puntos/canjes")
+    Call<ApiResponse<List<CanjeResponse>>> getMisCanjes();
 
 }

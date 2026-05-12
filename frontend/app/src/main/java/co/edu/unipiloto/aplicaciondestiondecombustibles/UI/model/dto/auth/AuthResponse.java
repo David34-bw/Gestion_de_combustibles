@@ -8,6 +8,7 @@ public class AuthResponse {
     private String apellido;
     private String email;
     private String rol;   // "USUARIO", "DISTRIBUIDOR", "ESTACION", "REGULADOR"
+    private Integer puntosAcumulados;
     // + getters
 
 
@@ -37,6 +38,10 @@ public class AuthResponse {
 
     public String getRol() {
         return rol;
+    }
+
+    public Integer getPuntosAcumulados() {
+        return puntosAcumulados;
     }
 }
 

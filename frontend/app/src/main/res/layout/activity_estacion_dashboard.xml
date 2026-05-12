@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sv_estacion"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fuel_dark">
@@ -57,8 +58,76 @@
             android:paddingHorizontal="16dp"
             android:paddingBottom="16dp">
 
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true"
+                android:scrollbars="none"
+                android:paddingBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_tab_precios"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="Precios"
+                        android:textSize="12sp"
+                        android:backgroundTint="@color/fuel_dark_card"
+                        android:textColor="@color/fuel_white"
+                        app:cornerRadius="8dp"
+                        android:layout_marginEnd="8dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_tab_inventario"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="Inventario"
+                        android:textSize="12sp"
+                        android:backgroundTint="@color/fuel_dark_card"
+                        android:textColor="@color/fuel_white"
+                        app:cornerRadius="8dp"
+                        android:layout_marginEnd="8dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_tab_registrar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="Registrar"
+                        android:textSize="12sp"
+                        android:backgroundTint="@color/fuel_dark_card"
+                        android:textColor="@color/fuel_white"
+                        app:cornerRadius="8dp"
+                        android:layout_marginEnd="8dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_tab_historial"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="Historial"
+                        android:textSize="12sp"
+                        android:backgroundTint="@color/fuel_dark_card"
+                        android:textColor="@color/fuel_white"
+                        app:cornerRadius="8dp"/>
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/tv_acciones_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Acciones principales"
+                android:textColor="@color/fuel_white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:paddingBottom="8dp"/>
+
             <!-- Botón consultar precios -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_precios"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/fuel_dark_card"
@@ -102,6 +171,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_inventario"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/fuel_dark_card"
@@ -144,7 +214,19 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <TextView
+                android:id="@+id/tv_historial_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Historial"
+                android:textColor="@color/fuel_white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:paddingTop="4dp"
+                android:paddingBottom="8dp"/>
+
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_registrar_venta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/fuel_dark_card"
@@ -188,6 +270,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_historial_ventas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/fuel_dark_card"
@@ -228,55 +311,6 @@
                         android:orientation="vertical"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-
-
-            <!-- Próximas funciones -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/fuel_dark_card"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="20dp"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🏪"
-                        android:textSize="28sp"
-                        android:layout_marginEnd="12dp"/>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Más módulos próximamente"
-                            android:textColor="@color/fuel_white"
-                            android:textSize="14sp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Inventario, solicitudes y reportes."
-                            android:textColor="@color/fuel_gray"
-                            android:textSize="12sp"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
 
         </LinearLayout>
 

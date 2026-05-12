@@ -223,6 +223,8 @@ public class RegisterActivity extends AppCompatActivity {
                             .putLong("userId", auth.getId())
                             .putString("nombre", auth.getNombre())
                             .putString("rol", rol)
+                            .putInt("puntos", auth.getPuntosAcumulados() != null
+                                    ? auth.getPuntosAcumulados() : 0)
                             .apply();
 
                     Toast.makeText(RegisterActivity.this,

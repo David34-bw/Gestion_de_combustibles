@@ -19,7 +19,15 @@ import co.edu.unipiloto.aplicaciondestiondecombustibles.R;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.auth.LoginActivity;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.network.ApiClient;
 
+
 public class EstacionDashboardActivity extends AppCompatActivity {
+
+    private View cardPrecios;
+    private View cardInventario;
+    private View cardRegistrarVenta;
+    private View cardHistorial;
+    private View headerAcciones;
+    private View headerHistorial;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +43,24 @@ public class EstacionDashboardActivity extends AppCompatActivity {
         TextView tvWelcome  = findViewById(R.id.tv_welcome);
         Button btnLogout    = findViewById(R.id.btn_logout);
         Button btnPrecios   = findViewById(R.id.btn_consultar_precios);
+        headerAcciones = findViewById(R.id.tv_acciones_header);
+        headerHistorial = findViewById(R.id.tv_historial_header);
+        cardPrecios = findViewById(R.id.card_precios);
+        cardInventario = findViewById(R.id.card_inventario);
+        cardRegistrarVenta = findViewById(R.id.card_registrar_venta);
+        cardHistorial = findViewById(R.id.card_historial_ventas);
+        View btnTabPrecios = findViewById(R.id.btn_tab_precios);
+        View btnTabInventario = findViewById(R.id.btn_tab_inventario);
+        View btnTabRegistrar = findViewById(R.id.btn_tab_registrar);
+        View btnTabHistorial = findViewById(R.id.btn_tab_historial);
 
         tvWelcome.setText("Bienvenido, " + nombre + "\nGestiona inventario, precios y reportes.");
+        btnTabPrecios.setOnClickListener(v -> mostrarSeccion("PRECIOS"));
+        btnTabInventario.setOnClickListener(v -> mostrarSeccion("INVENTARIO"));
+        btnTabRegistrar.setOnClickListener(v -> mostrarSeccion("REGISTRAR"));
+        btnTabHistorial.setOnClickListener(v -> mostrarSeccion("HISTORIAL"));
+
+        mostrarSeccion("PRECIOS");
 
         btnPrecios.setOnClickListener(v ->
                 startActivity(new Intent(this, ConsultarPrecioActivity.class)));
@@ -92,5 +116,33 @@ public class EstacionDashboardActivity extends AppCompatActivity {
                     public void onFailure(Call<ApiResponse<List<VentaResponse>>> call, Throwable t) {}
                 });
 
+    }
+
+    private void mostrarSeccion(String seccion) {
+        headerAcciones.setVisibility(View.GONE);
+        headerHistorial.setVisibility(View.GONE);
+        cardPrecios.setVisibility(View.GONE);
+        cardInventario.setVisibility(View.GONE);
+        cardRegistrarVenta.setVisibility(View.GONE);
+        cardHistorial.setVisibility(View.GONE);
+
+        switch (seccion) {
+            case "PRECIOS":
+                headerAcciones.setVisibility(View.VISIBLE);
+                cardPrecios.setVisibility(View.VISIBLE);
+                break;
+            case "INVENTARIO":
+                headerAcciones.setVisibility(View.VISIBLE);
+                cardInventario.setVisibility(View.VISIBLE);
+                break;
+            case "REGISTRAR":
+                headerAcciones.setVisibility(View.VISIBLE);
+                cardRegistrarVenta.setVisibility(View.VISIBLE);
+                break;
+            case "HISTORIAL":
+                headerHistorial.setVisibility(View.VISIBLE);
+                cardHistorial.setVisibility(View.VISIBLE);
+                break;
+        }
     }
 }

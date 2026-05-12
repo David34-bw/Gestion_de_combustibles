@@ -116,6 +116,8 @@ public class LoginActivity extends AppCompatActivity {
                             .putLong("userId", auth.getId())
                             .putString("nombre", auth.getNombre())
                             .putString("rol", rolReal)
+                            .putInt("puntos", auth.getPuntosAcumulados() != null
+                                    ? auth.getPuntosAcumulados() : 0)
                             .apply();
 
                     // ── Redirigir según rol ──────────────────────

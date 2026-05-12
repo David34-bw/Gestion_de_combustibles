@@ -20,7 +20,9 @@ import com.google.android.material.card.MaterialCardView;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.R;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.auth.LoginActivity;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.estacion.ConsultarPrecioActivity;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.usuario.RecompensasActivity;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.common.ApiResponse;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.puntos.PuntosResponse;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.entity.Vehiculo;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.network.ApiClient;
 import retrofit2.Call;
@@ -33,6 +35,13 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
     private LinearLayout llVehiculos;
     private TextView tvSinVehiculos;
     private Spinner spinnerFiltro;
+    private View cardPrecios;
+    private View cardRecompensas;
+    private View cardVehiculos;
+    private View cardHistorial;
+    private View headerAcciones;
+    private View headerVehiculos;
+    private View headerHistorial;
 
     private List<Vehiculo> todosLosVehiculos = new ArrayList<>();
 
@@ -50,15 +59,37 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
         String nombre = prefs.getString("nombre", "Usuario");
 
         TextView tvWelcome = findViewById(R.id.tv_welcome);
+        TextView tvPuntosResumen = findViewById(R.id.tv_puntos_resumen);
         MaterialCardView btn_ir_perfil = findViewById(R.id.btn_ir_perfil);
+        cardPrecios = findViewById(R.id.card_precios);
+        cardRecompensas = findViewById(R.id.card_recompensas);
+        cardVehiculos = findViewById(R.id.card_vehiculos);
+        cardHistorial = findViewById(R.id.card_historial_compras);
+        headerAcciones = findViewById(R.id.tv_acciones_header);
+        headerVehiculos = findViewById(R.id.tv_vehiculos_header);
+        headerHistorial = findViewById(R.id.tv_historial_header);
+        View btnTabPrecios = findViewById(R.id.btn_tab_precios);
+        View btnTabRecompensas = findViewById(R.id.btn_tab_recompensas);
+        View btnTabVehiculos = findViewById(R.id.btn_tab_vehiculos);
+        View btnTabHistorial = findViewById(R.id.btn_tab_historial);
         Button btnLogout   = findViewById(R.id.btn_logout);
         Button btnVehiculo = findViewById(R.id.btn_registrar_vehiculo);
         Button btnPrecios  = findViewById(R.id.btn_ver_precios);
+        Button btnRecompensas = findViewById(R.id.btn_recompensas);
         llVehiculos        = findViewById(R.id.ll_vehiculos);
         tvSinVehiculos     = findViewById(R.id.tv_sin_vehiculos);
         spinnerFiltro      = findViewById(R.id.spinner_filtro);
 
         tvWelcome.setText("Bienvenido, " + nombre);
+        int puntos = prefs.getInt("puntos", 0);
+        tvPuntosResumen.setText("Puntos: " + puntos);
+
+        btnTabPrecios.setOnClickListener(v -> mostrarSeccion("PRECIOS"));
+        btnTabRecompensas.setOnClickListener(v -> mostrarSeccion("RECOMPENSAS"));
+        btnTabVehiculos.setOnClickListener(v -> mostrarSeccion("VEHICULOS"));
+        btnTabHistorial.setOnClickListener(v -> mostrarSeccion("HISTORIAL"));
+
+        mostrarSeccion("PRECIOS");
 
         // Spinner de filtro
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -86,6 +117,9 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
 
         btnPrecios.setOnClickListener(v ->
                 startActivity(new Intent(this, ConsultarPrecioActivity.class)));
+
+        btnRecompensas.setOnClickListener(v ->
+                startActivity(new Intent(this, RecompensasActivity.class)));
 
         btnLogout.setOnClickListener(v -> {
             ApiClient.clearToken();
@@ -128,6 +162,26 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onFailure(Call<ApiResponse<List<VentaResponse>>> call, Throwable t) {}
+                });
+
+        ApiClient.getApiService().getSaldoPuntos()
+                .enqueue(new Callback<ApiResponse<PuntosResponse>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse<PuntosResponse>> call,
+                                           Response<ApiResponse<PuntosResponse>> response) {
+                        if (response.isSuccessful() && response.body() != null
+                                && response.body().isSuccess()) {
+                            PuntosResponse puntosResponse = response.body().getData();
+                            int saldo = puntosResponse != null && puntosResponse.getPuntosAcumulados() != null
+                                    ? puntosResponse.getPuntosAcumulados() : 0;
+                            tvPuntosResumen.setText("Puntos: " + saldo);
+                            prefs.edit().putInt("puntos", saldo).apply();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ApiResponse<PuntosResponse>> call,
+                                          Throwable t) {}
                 });
     }
 
@@ -174,6 +228,35 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
             for (Vehiculo v : filtrados) {
                 agregarTarjetaVehiculo(v);
             }
+        }
+    }
+
+    private void mostrarSeccion(String seccion) {
+        headerAcciones.setVisibility(View.GONE);
+        headerVehiculos.setVisibility(View.GONE);
+        headerHistorial.setVisibility(View.GONE);
+        cardPrecios.setVisibility(View.GONE);
+        cardRecompensas.setVisibility(View.GONE);
+        cardVehiculos.setVisibility(View.GONE);
+        cardHistorial.setVisibility(View.GONE);
+
+        switch (seccion) {
+            case "PRECIOS":
+                headerAcciones.setVisibility(View.VISIBLE);
+                cardPrecios.setVisibility(View.VISIBLE);
+                break;
+            case "RECOMPENSAS":
+                headerAcciones.setVisibility(View.VISIBLE);
+                cardRecompensas.setVisibility(View.VISIBLE);
+                break;
+            case "VEHICULOS":
+                headerVehiculos.setVisibility(View.VISIBLE);
+                cardVehiculos.setVisibility(View.VISIBLE);
+                break;
+            case "HISTORIAL":
+                headerHistorial.setVisibility(View.VISIBLE);
+                cardHistorial.setVisibility(View.VISIBLE);
+                break;
         }
     }
 

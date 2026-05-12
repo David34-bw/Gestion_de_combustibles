@@ -22,13 +22,16 @@ public class VentaService {
     private static final double CAPACIDAD_MAX = 500.0;
     private static final double UMBRAL_ALERTA = CAPACIDAD_MAX * 0.25; 
     private final VehiculoRepository vehiculoRepository;
+    private final PuntosService puntosService;
 
     public VentaService(VentaRepository ventaRepository,
                     EstacionRepository estacionRepository,
-                    VehiculoRepository vehiculoRepository) {
+                    VehiculoRepository vehiculoRepository,
+                    PuntosService puntosService) {
     this.ventaRepository    = ventaRepository;
     this.estacionRepository = estacionRepository;
     this.vehiculoRepository = vehiculoRepository;
+    this.puntosService = puntosService;
 }
 
     @Transactional
@@ -84,7 +87,9 @@ public VentaResponse registrar(Long usuarioId, VentaRequest request) {
             .usuario(comprador)
             .build();
 
-    return toResponse(ventaRepository.save(venta), alertaGas || alertaDiesel);
+    Venta guardada = ventaRepository.save(venta);
+    puntosService.acumularPuntosPorCompra(comprador, request.getCantidad());
+    return toResponse(guardada, alertaGas || alertaDiesel);
 }
 
     public List<VentaResponse> listarPorEstacion(Long usuarioId) {
