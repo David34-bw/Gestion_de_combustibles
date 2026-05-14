@@ -58,6 +58,9 @@ public class EstacionService {
     Estacion estacion = buscarPorId(id);
 
     if (gasolina != null) {
+        if (gasolina < 0) {
+            throw new BadRequestException("La cantidad de gasolina debe ser positiva");
+        }
         double nuevoStock = estacion.getStockGasolina() + gasolina;
         if (nuevoStock > CAPACIDAD_MAX) {
             throw new BadRequestException(
@@ -67,6 +70,9 @@ public class EstacionService {
         estacion.setStockGasolina(nuevoStock);
     }
     if (diesel != null) {
+        if (diesel < 0) {
+            throw new BadRequestException("La cantidad de diesel debe ser positiva");
+        }
         double nuevoStock = estacion.getStockDiesel() + diesel;
         if (nuevoStock > CAPACIDAD_MAX) {
             throw new BadRequestException(

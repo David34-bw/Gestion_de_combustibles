@@ -45,6 +45,10 @@ public VentaResponse registrar(Long usuarioId, VentaRequest request) {
         throw new BadRequestException("Tipo de combustible inválido. Use GASOLINA o DIESEL");
     }
 
+    if (request.getCantidad() == null || request.getCantidad() <= 0) {
+        throw new BadRequestException("La cantidad debe ser mayor a 0");
+    }
+
     if (tipo.equals("GASOLINA") && estacion.getStockGasolina() < request.getCantidad()) {
         throw new BadRequestException("Stock de gasolina insuficiente. Disponible: "
                 + estacion.getStockGasolina() + " galones");
@@ -72,12 +76,8 @@ public VentaResponse registrar(Long usuarioId, VentaRequest request) {
     }
     estacionRepository.save(estacion);
 
-    boolean alertaGas    = estacion.getCapacidadGasolina() != null
-            && estacion.getCapacidadGasolina() > 0
-            && estacion.getStockGasolina() < (estacion.getCapacidadGasolina() * 0.25);
-    boolean alertaDiesel = estacion.getCapacidadDiesel() != null
-            && estacion.getCapacidadDiesel() > 0
-            && estacion.getStockDiesel() < (estacion.getCapacidadDiesel() * 0.25);
+    boolean alertaGas = estacion.getStockGasolina() < UMBRAL_ALERTA;
+    boolean alertaDiesel = estacion.getStockDiesel() < UMBRAL_ALERTA;
 
     Venta venta = Venta.builder()
             .tipoCombustible(tipo)

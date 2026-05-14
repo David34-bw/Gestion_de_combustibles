@@ -24,22 +24,17 @@ public class Distribuidor {
     @Column(nullable = false, unique = true)
     private String nit;
 
-    @Column(name = "telefono_contacto")
-    private String telefonoContacto;
-
-    @Column(name = "email_contacto")
-    private String emailContacto;
-
+    @Column(name = "ciudad")
     private String ciudad;
 
-    @Column(name = "capacidad_tanque")
-    private Double capacidadTanque;
+    @Column(name = "departamento")
+    private String departamento;
 
-    @Column(name = "stock_gasolina")
-    private Double stockGasolina = 0.0;
+    @Column(name = "venta_gasolina")
+    private Double venta_gasolina = 0.0;
 
-    @Column(name = "stock_diesel")
-    private Double stockDiesel = 0.0;
+    @Column(name = "venta_diesel")
+    private Double venta_diesel = 0.0;
 
     private Boolean activo = true;
 
@@ -68,23 +63,17 @@ public class Distribuidor {
     public String getNit() { return nit; }
     public void setNit(String nit) { this.nit = nit; }
 
-    public String getTelefonoContacto() { return telefonoContacto; }
-    public void setTelefonoContacto(String v) { this.telefonoContacto = v; }
-
-    public String getEmailContacto() { return emailContacto; }
-    public void setEmailContacto(String v) { this.emailContacto = v; }
-
     public String getCiudad() { return ciudad; }
     public void setCiudad(String ciudad) { this.ciudad = ciudad; }
 
-    public Double getCapacidadTanque() { return capacidadTanque; }
-    public void setCapacidadTanque(Double v) { this.capacidadTanque = v; }
+    public Double getVentaGasolina() { return venta_gasolina; }
+    public void setVentaGasolina(Double v) { this.venta_gasolina = v; }
 
-    public Double getStockGasolina() { return stockGasolina; }
-    public void setStockGasolina(Double v) { this.stockGasolina = v; }
-
-    public Double getStockDiesel() { return stockDiesel; }
-    public void setStockDiesel(Double v) { this.stockDiesel = v; }
+    public Double getVentaDiesel() { return venta_diesel; }
+    public void setVentaDiesel(Double v) { this.venta_diesel = v; }
+    
+    public String getDepartamento() { return departamento; }
+    public void setDepartamento(String v) { this.departamento = v; }
 
     public Boolean getActivo() { return activo; }
     public void setActivo(Boolean activo) { this.activo = activo; }

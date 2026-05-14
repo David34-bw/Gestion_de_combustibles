@@ -46,9 +46,11 @@ public class EntregaService {
 
         // Descontar stock del distribuidor
         if (tipo.equals("GASOLINA")) {
-            distribuidor.setStockGasolina(distribuidor.getStockGasolina() - request.getVolumen());
+            double nuevaVenta = safe(distribuidor.getVentaGasolina()) + request.getVolumen();
+            distribuidor.setVentaGasolina(nuevaVenta);
         } else {
-            distribuidor.setStockDiesel(distribuidor.getStockDiesel() - request.getVolumen());
+            double nuevaVenta = safe(distribuidor.getVentaDiesel()) + request.getVolumen();
+            distribuidor.setVentaDiesel(nuevaVenta);
         }
         distribuidorRepository.save(distribuidor);
 
@@ -82,6 +84,10 @@ public class EntregaService {
                 .build();
 
         return toResponse(entregaRepository.save(entrega));
+    }
+
+    private double safe(Double valor) {
+        return valor == null ? 0.0 : valor;
     }
 
     public List<EntregaResponse> listarPorDistribuidor(Long distribuidorId) {

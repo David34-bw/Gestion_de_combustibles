@@ -41,8 +41,6 @@ public class Usuario implements UserDetails {
     @Column(nullable = false)
     private Boolean activo = true;
 
-    @Column(name = "puntos_acumulados", nullable = false, columnDefinition = "integer default 0")
-    private Integer puntosAcumulados = 0;
 
     // ── Getters y Setters ────────────────────────────
     public Long getId()                      { return id; }
@@ -58,8 +56,6 @@ public class Usuario implements UserDetails {
     public void setRol(Rol v)                { this.rol = v; }
     public Boolean getActivo()               { return activo; }
     public void setActivo(Boolean v)         { this.activo = v; }
-    public Integer getPuntosAcumulados()     { return puntosAcumulados; }
-    public void setPuntosAcumulados(Integer v) { this.puntosAcumulados = v; }
 
     // ── Builder ──────────────────────────────────────
     public static Builder builder() { return new Builder(); }
@@ -72,7 +68,6 @@ public class Usuario implements UserDetails {
         public Builder numeroDocumento(String v) { u.numeroDocumento = v; return this; }
         public Builder rol(Rol v)                { u.rol = v; return this; }
         public Builder activo(Boolean v)         { u.activo = v; return this; }
-        public Builder puntosAcumulados(Integer v) { u.puntosAcumulados = v; return this; }
         public Usuario build()                   { return u; }
     }
 

@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textfield.TextInputEditText;
 
 import co.edu.unipiloto.aplicaciondestiondecombustibles.R;
@@ -30,6 +31,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     // Campos base
     private TextInputEditText etEmail, etPassword, etConfirmPassword;
+    private TextInputEditText etDocumentoUsuario;
+    private TextInputLayout tilDocumentoUsuario;
     private RadioGroup rgRole;
 
     // Cards dinámicas
@@ -63,6 +66,8 @@ public class RegisterActivity extends AppCompatActivity {
         etEmail           = findViewById(R.id.et_email);
         etPassword        = findViewById(R.id.et_password);
         etConfirmPassword = findViewById(R.id.et_confirm_password);
+        etDocumentoUsuario = findViewById(R.id.et_documento_usuario);
+        tilDocumentoUsuario = findViewById(R.id.til_documento_usuario);
         rgRole            = findViewById(R.id.rg_role);
 
         cardEstacion     = findViewById(R.id.card_estacion);
@@ -109,6 +114,10 @@ public class RegisterActivity extends AppCompatActivity {
             cardRegulador.setVisibility(View.GONE);
             cardAdministrador.setVisibility(View.GONE);  // ← agregar
 
+            if (tilDocumentoUsuario != null) {
+                tilDocumentoUsuario.setVisibility(View.GONE);
+            }
+
             if (checkedId == R.id.rb_estacion) {
                 cardEstacion.setVisibility(View.VISIBLE);
             } else if (checkedId == R.id.rb_distribuidor) {
@@ -117,6 +126,10 @@ public class RegisterActivity extends AppCompatActivity {
                 cardRegulador.setVisibility(View.VISIBLE);
             } else if (checkedId == R.id.rb_administrador) {  // ← agregar
                 cardAdministrador.setVisibility(View.VISIBLE);
+            } else if (checkedId == R.id.rb_usuario) {
+                if (tilDocumentoUsuario != null) {
+                    tilDocumentoUsuario.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
@@ -125,6 +138,8 @@ public class RegisterActivity extends AppCompatActivity {
         String email   = etEmail.getText().toString().trim();
         String pass    = etPassword.getText().toString().trim();
         String confirm = etConfirmPassword.getText().toString().trim();
+        String documento = etDocumentoUsuario.getText().toString().trim();
+        int rolId = rgRole.getCheckedRadioButtonId();
 
         if (email.isEmpty()) {
             etEmail.requestFocus();
@@ -157,14 +172,26 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        int rolId = rgRole.getCheckedRadioButtonId();
         if (rolId == -1) {
             Toast.makeText(this, "Selecciona un tipo de usuario", Toast.LENGTH_SHORT).show();
             return;
         }
 
+
         if (rolId == R.id.rb_usuario) {
-            RegisterRequest request = new RegisterRequest(email, pass, "USUARIO");
+            if (documento.isEmpty()) {
+                etDocumentoUsuario.requestFocus();
+                Toast.makeText(this, "Ingresa tu número de documento", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        if (rolId == R.id.rb_usuario) {
+            RegisterRequest request = new RegisterRequest(
+                    email,
+                    pass,
+                    "USUARIO",
+                    documento);
             enviarRegistro(request, "USUARIO");
 
         } else if (rolId == R.id.rb_estacion) {
@@ -174,6 +201,9 @@ public class RegisterActivity extends AppCompatActivity {
                     email, pass,
                     etNitEstacion.getText().toString().trim(),
                     "ESTACION");
+            request.setDireccion(etDireccionEstacion.getText().toString().trim());
+            request.setCiudad(etCiudadEstacion.getText().toString().trim());
+            request.setDepartamento(etDepartamentoEstacion.getText().toString().trim());
             enviarRegistro(request, "ESTACION");
 
         } else if (rolId == R.id.rb_distribuidor) {
@@ -183,6 +213,8 @@ public class RegisterActivity extends AppCompatActivity {
                     email, pass,
                     etNitDist.getText().toString().trim(),
                     "DISTRIBUIDOR");
+            request.setCiudad(etCiudadDist.getText().toString().trim());
+            request.setDepartamento(etDepartamentoDist.getText().toString().trim());
             enviarRegistro(request, "DISTRIBUIDOR");
 
         } else if (rolId == R.id.rb_regulador) {
@@ -192,13 +224,16 @@ public class RegisterActivity extends AppCompatActivity {
                     email, pass,
                     etNitReg.getText().toString().trim(),
                     "REGULADOR");
+            request.setCodigoEntidad(etCodigoEntidad.getText().toString().trim());
+            request.setCargo(etCargo.getText().toString().trim());
+            request.setDependencia(etDependencia.getText().toString().trim());
             enviarRegistro(request, "REGULADOR");
         }else if (rolId == R.id.rb_administrador) {
             if (!validarAdministrador()) return;
             RegisterRequest request = new RegisterRequest(
                     "Administrador",   // nombre genérico, ajusta si tienes campo nombre
                     email, pass,
-                    null,              // NIT no aplica, ajusta según tu constructor
+                    null,
                     "ADMINISTRADOR");
             request.setCodigoAdmin(etCodigoAdmin.getText().toString().trim());
             enviarRegistro(request, "ADMINISTRADOR");
@@ -285,6 +320,10 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(this, "Ingresa la ciudad", Toast.LENGTH_SHORT).show();
             return false;
         }
+        if (etDepartamentoEstacion.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, "Ingresa el departamento", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 
@@ -301,6 +340,10 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(this, "Ingresa la ciudad", Toast.LENGTH_SHORT).show();
             return false;
         }
+        if (etDepartamentoDist.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, "Ingresa el departamento", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 
@@ -315,6 +358,10 @@ public class RegisterActivity extends AppCompatActivity {
         }
         if (etDependencia.getText().toString().trim().isEmpty()) {
             Toast.makeText(this, "Ingresa la dependencia", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (etCodigoEntidad.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, "Ingresa el código de la entidad", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

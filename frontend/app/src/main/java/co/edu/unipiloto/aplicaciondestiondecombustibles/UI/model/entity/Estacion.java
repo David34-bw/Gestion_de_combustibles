@@ -9,9 +9,8 @@ public class Estacion {
     private Double stockGasolina;
     private Double stockDiesel;
     private Boolean activa;
+    private String Departamento;
 
-    private Double capacidadGasolina;
-    private Double capacidadDiesel;
 
     public Long getId()              { return id; }
 
@@ -21,8 +20,7 @@ public class Estacion {
     public String getNit()           { return nit; }
     public Double getStockGasolina() { return stockGasolina; }
     public Double getStockDiesel()   { return stockDiesel; }
-    public Double getCapacidadGasolina() { return capacidadGasolina; }
+    public String getDepartamento()  { return Departamento; }
 
-    public Double getCapacidadDiesel() { return capacidadDiesel; }
     public Boolean getActiva()       { return activa; }
 }

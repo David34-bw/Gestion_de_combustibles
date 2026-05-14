@@ -4,7 +4,6 @@ public class Usuario {
     private Long id;
     private String nombre, apellido, email, telefono, rol,numeroDocumento;
     private Boolean activo;
-    private Integer puntosAcumulados;
 
     public String getNumeroDocumento() {
         return numeroDocumento;
@@ -14,13 +13,6 @@ public class Usuario {
         this.numeroDocumento = numeroDocumento;
     }
 
-    public Integer getPuntosAcumulados() {
-        return puntosAcumulados;
-    }
-
-    public void setPuntosAcumulados(Integer puntosAcumulados) {
-        this.puntosAcumulados = puntosAcumulados;
-    }
 
     public Long getId() {
         return id;

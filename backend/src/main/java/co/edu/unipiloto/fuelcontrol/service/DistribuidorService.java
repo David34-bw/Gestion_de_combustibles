@@ -46,16 +46,8 @@ public class DistribuidorService {
     public Distribuidor actualizar(Long id, Distribuidor datos) {
         Distribuidor dist = buscarPorId(id);
         if (datos.getNombre() != null)           dist.setNombre(datos.getNombre());
-        if (datos.getTelefonoContacto() != null) dist.setTelefonoContacto(datos.getTelefonoContacto());
-        if (datos.getEmailContacto() != null)    dist.setEmailContacto(datos.getEmailContacto());
         if (datos.getCiudad() != null)           dist.setCiudad(datos.getCiudad());
-        return distribuidorRepository.save(dist);
-    }
-
-    public Distribuidor actualizarStock(Long id, Double gasolina, Double diesel) {
-        Distribuidor dist = buscarPorId(id);
-        if (gasolina != null) dist.setStockGasolina(dist.getStockGasolina() + gasolina);
-        if (diesel != null)   dist.setStockDiesel(dist.getStockDiesel() + diesel);
+        if (datos.getDepartamento() != null)     dist.setDepartamento(datos.getDepartamento());
         return distribuidorRepository.save(dist);
     }
 

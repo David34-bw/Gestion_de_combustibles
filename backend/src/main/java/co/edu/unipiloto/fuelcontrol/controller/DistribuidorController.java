@@ -56,21 +56,6 @@ public class DistribuidorController {
                 distribuidorService.actualizar(id, datos)));
     }
 
-    /**
-     * PATCH /api/distribuidores/{id}/stock
-     * Body: { "gasolina": 500.0, "diesel": 300.0 }
-     */
-    @PatchMapping("/{id}/stock")
-    @PreAuthorize("hasAnyRole('DISTRIBUIDOR', 'REGULADOR')")
-    public ResponseEntity<ApiResponse<Distribuidor>> actualizarStock(
-            @PathVariable Long id,
-            @RequestBody Map<String, Double> stock) {
-        return ResponseEntity.ok(ApiResponse.ok("Stock actualizado",
-                distribuidorService.actualizarStock(id,
-                        stock.get("gasolina"),
-                        stock.get("diesel"))));
-    }
-
     /** DELETE /api/distribuidores/{id} */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('REGULADOR')")

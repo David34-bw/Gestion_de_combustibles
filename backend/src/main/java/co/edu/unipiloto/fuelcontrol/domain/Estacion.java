@@ -24,17 +24,13 @@ public class Estacion {
     @Column(nullable = false)
     private String direccion;
 
+    @Column(name = "ciudad")
     private String ciudad;
+    @Column(name = "departamento")
     private String departamento;
 
     @Column(name = "nit", unique = true)
     private String nit;
-
-    @Column(name = "capacidad_gasolina")
-    private Double capacidadGasolina;
-
-    @Column(name = "capacidad_diesel")
-    private Double capacidadDiesel;
 
     @Column(name = "stock_gasolina")
     private Double stockGasolina = 0.0;
@@ -77,12 +73,6 @@ public class Estacion {
 
     public String getNit() { return nit; }
     public void setNit(String nit) { this.nit = nit; }
-
-    public Double getCapacidadGasolina() { return capacidadGasolina; }
-    public void setCapacidadGasolina(Double v) { this.capacidadGasolina = v; }
-
-    public Double getCapacidadDiesel() { return capacidadDiesel; }
-    public void setCapacidadDiesel(Double v) { this.capacidadDiesel = v; }
 
     public Double getStockGasolina() { return stockGasolina; }
     public void setStockGasolina(Double v) { this.stockGasolina = v; }
