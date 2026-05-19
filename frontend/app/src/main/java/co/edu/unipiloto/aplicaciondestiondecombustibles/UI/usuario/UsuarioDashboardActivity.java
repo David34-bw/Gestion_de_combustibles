@@ -29,6 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.Ventas.VentaResponse;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.usuario.EstacionesCercanasActivity;
 
 public class UsuarioDashboardActivity extends AppCompatActivity {
 
@@ -39,9 +40,11 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
     private View cardRecompensas;
     private View cardVehiculos;
     private View cardHistorial;
+    private View cardEstaciones;
     private View headerAcciones;
     private View headerVehiculos;
     private View headerHistorial;
+    private View headerEstaciones;
 
     private List<Vehiculo> todosLosVehiculos = new ArrayList<>();
 
@@ -65,13 +68,17 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
         cardRecompensas = findViewById(R.id.card_recompensas);
         cardVehiculos = findViewById(R.id.card_vehiculos);
         cardHistorial = findViewById(R.id.card_historial_compras);
+        cardEstaciones = findViewById(R.id.card_estaciones);
         headerAcciones = findViewById(R.id.tv_acciones_header);
         headerVehiculos = findViewById(R.id.tv_vehiculos_header);
         headerHistorial = findViewById(R.id.tv_historial_header);
+        headerEstaciones = findViewById(R.id.tv_estaciones_header);
         View btnTabPrecios = findViewById(R.id.btn_tab_precios);
         View btnTabRecompensas = findViewById(R.id.btn_tab_recompensas);
         View btnTabVehiculos = findViewById(R.id.btn_tab_vehiculos);
         View btnTabHistorial = findViewById(R.id.btn_tab_historial);
+        View btnTabEstaciones = findViewById(R.id.btn_tab_estaciones);
+        Button btnVerEstaciones = findViewById(R.id.btn_ver_estaciones_cercanas);
         Button btnLogout   = findViewById(R.id.btn_logout);
         Button btnVehiculo = findViewById(R.id.btn_registrar_vehiculo);
         Button btnPrecios  = findViewById(R.id.btn_ver_precios);
@@ -88,6 +95,7 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
         btnTabRecompensas.setOnClickListener(v -> mostrarSeccion("RECOMPENSAS"));
         btnTabVehiculos.setOnClickListener(v -> mostrarSeccion("VEHICULOS"));
         btnTabHistorial.setOnClickListener(v -> mostrarSeccion("HISTORIAL"));
+        btnTabEstaciones.setOnClickListener(v -> mostrarSeccion("ESTACIONES"));
 
         mostrarSeccion("PRECIOS");
 
@@ -120,6 +128,9 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
 
         btnRecompensas.setOnClickListener(v ->
                 startActivity(new Intent(this, RecompensasActivity.class)));
+
+        btnVerEstaciones.setOnClickListener(v ->
+                startActivity(new Intent(this, EstacionesCercanasActivity.class)));
 
         btnLogout.setOnClickListener(v -> {
             ApiClient.clearToken();
@@ -235,10 +246,12 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
         headerAcciones.setVisibility(View.GONE);
         headerVehiculos.setVisibility(View.GONE);
         headerHistorial.setVisibility(View.GONE);
+        headerEstaciones.setVisibility(View.GONE);
         cardPrecios.setVisibility(View.GONE);
         cardRecompensas.setVisibility(View.GONE);
         cardVehiculos.setVisibility(View.GONE);
         cardHistorial.setVisibility(View.GONE);
+        cardEstaciones.setVisibility(View.GONE);
 
         switch (seccion) {
             case "PRECIOS":
@@ -256,6 +269,10 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
             case "HISTORIAL":
                 headerHistorial.setVisibility(View.VISIBLE);
                 cardHistorial.setVisibility(View.VISIBLE);
+                break;
+            case "ESTACIONES":
+                headerEstaciones.setVisibility(View.VISIBLE);
+                cardEstaciones.setVisibility(View.VISIBLE);
                 break;
         }
     }

@@ -58,6 +58,7 @@
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
         <activity android:name=".UI.administrador.AdministradorDashboardActivity" android:exported="false"/>
         <activity android:name=".UI.usuario.RecompensasActivity" android:exported="false"/>
+        <activity android:name=".UI.usuario.EstacionesCercanasActivity" android:exported="false"/>
     </application>
 
 </manifest>

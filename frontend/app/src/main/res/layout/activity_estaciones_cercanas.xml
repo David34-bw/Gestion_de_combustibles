@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fuel_dark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Estaciones cercanas"
+            android:textColor="@color/fuel_white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingBottom="6dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Selecciona una estación para planear tu recorrido."
+            android:textColor="@color/fuel_gray"
+            android:textSize="13sp"
+            android:paddingBottom="16dp" />
+
+        <TextView
+            android:id="@+id/tv_sin_estaciones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No hay estaciones disponibles cerca."
+            android:textColor="@color/fuel_gray"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:paddingVertical="12dp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/ll_estaciones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_planear_recorrido"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:text="Planear recorrido"
+            android:textSize="14sp"
+            android:enabled="false"
+            app:backgroundTint="@color/fuel_orange"
+            android:textColor="@color/fuel_white"
+            app:cornerRadius="8dp" />
+
+    </LinearLayout>
+</ScrollView>

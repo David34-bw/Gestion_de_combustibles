@@ -1,16 +1,25 @@
 package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.auth;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 
 import co.edu.unipiloto.aplicaciondestiondecombustibles.R;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.distribuidor.DistribuidorDashboardActivity;
@@ -27,6 +36,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 public class RegisterActivity extends AppCompatActivity {
 
     // Campos base
@@ -34,6 +47,13 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText etDocumentoUsuario;
     private TextInputLayout tilDocumentoUsuario;
     private RadioGroup rgRole;
+    private MaterialButton btnUbicacionRegistro;
+    private TextInputLayout tilDireccionUsuario;
+    private TextInputEditText etDireccionUsuario;
+    private FusedLocationProviderClient fusedLocationClient;
+    private static final int LOCATION_PERMISSION_CODE = 101;
+    private String ciudadUsuario;
+    private String departamentoUsuario;
 
     // Cards dinámicas
     private MaterialCardView cardEstacion, cardDistribuidor, cardRegulador;
@@ -57,9 +77,13 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
         initViews();
         setupRolListener();
+        actualizarVisibilidadUsuario(rgRole.getCheckedRadioButtonId());
         findViewById(R.id.btn_register).setOnClickListener(v -> validarYRegistrar());
+        btnUbicacionRegistro.setOnClickListener(v -> obtenerUbicacionUsuario());
     }
 
     private void initViews() {
@@ -68,6 +92,9 @@ public class RegisterActivity extends AppCompatActivity {
         etConfirmPassword = findViewById(R.id.et_confirm_password);
         etDocumentoUsuario = findViewById(R.id.et_documento_usuario);
         tilDocumentoUsuario = findViewById(R.id.til_documento_usuario);
+        btnUbicacionRegistro = findViewById(R.id.btn_obtener_ubicacion_registro);
+        tilDireccionUsuario = findViewById(R.id.til_direccion_usuario);
+        etDireccionUsuario = findViewById(R.id.et_direccion_usuario);
         rgRole            = findViewById(R.id.rg_role);
 
         cardEstacion     = findViewById(R.id.card_estacion);
@@ -112,11 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
             cardEstacion.setVisibility(View.GONE);
             cardDistribuidor.setVisibility(View.GONE);
             cardRegulador.setVisibility(View.GONE);
-            cardAdministrador.setVisibility(View.GONE);  // ← agregar
-
-            if (tilDocumentoUsuario != null) {
-                tilDocumentoUsuario.setVisibility(View.GONE);
-            }
+            cardAdministrador.setVisibility(View.GONE);
 
             if (checkedId == R.id.rb_estacion) {
                 cardEstacion.setVisibility(View.VISIBLE);
@@ -124,14 +147,25 @@ public class RegisterActivity extends AppCompatActivity {
                 cardDistribuidor.setVisibility(View.VISIBLE);
             } else if (checkedId == R.id.rb_regulador) {
                 cardRegulador.setVisibility(View.VISIBLE);
-            } else if (checkedId == R.id.rb_administrador) {  // ← agregar
+            } else if (checkedId == R.id.rb_administrador) {
                 cardAdministrador.setVisibility(View.VISIBLE);
-            } else if (checkedId == R.id.rb_usuario) {
-                if (tilDocumentoUsuario != null) {
-                    tilDocumentoUsuario.setVisibility(View.VISIBLE);
-                }
             }
+
+            actualizarVisibilidadUsuario(checkedId);
         });
+    }
+
+    private void actualizarVisibilidadUsuario(int checkedId) {
+        boolean esUsuario = checkedId == R.id.rb_usuario;
+        if (tilDocumentoUsuario != null) {
+            tilDocumentoUsuario.setVisibility(esUsuario ? View.VISIBLE : View.GONE);
+        }
+        if (btnUbicacionRegistro != null) {
+            btnUbicacionRegistro.setVisibility(esUsuario ? View.VISIBLE : View.GONE);
+        }
+        if (tilDireccionUsuario != null) {
+            tilDireccionUsuario.setVisibility(esUsuario ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void validarYRegistrar() {
@@ -192,6 +226,16 @@ public class RegisterActivity extends AppCompatActivity {
                     pass,
                     "USUARIO",
                     documento);
+            String direccion = etDireccionUsuario.getText().toString().trim();
+            if (!direccion.isEmpty()) {
+                request.setDireccion(direccion);
+                if (ciudadUsuario != null) {
+                    request.setCiudad(ciudadUsuario);
+                }
+                if (departamentoUsuario != null) {
+                    request.setDepartamento(departamentoUsuario);
+                }
+            }
             enviarRegistro(request, "USUARIO");
 
         } else if (rolId == R.id.rb_estacion) {
@@ -231,7 +275,7 @@ public class RegisterActivity extends AppCompatActivity {
         }else if (rolId == R.id.rb_administrador) {
             if (!validarAdministrador()) return;
             RegisterRequest request = new RegisterRequest(
-                    "Administrador",   // nombre genérico, ajusta si tienes campo nombre
+                    "Administrador",
                     email, pass,
                     null,
                     "ADMINISTRADOR");
@@ -379,5 +423,55 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private void obtenerUbicacionUsuario() {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_CODE);
+            return;
+        }
+
+        fusedLocationClient.getCurrentLocation(
+                        com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY, null)
+                .addOnSuccessListener(location -> {
+                    if (location != null) {
+                        try {
+                            Geocoder geocoder = new Geocoder(this, new Locale("es", "CO"));
+                            List<Address> addresses = geocoder.getFromLocation(
+                                    location.getLatitude(), location.getLongitude(), 1);
+                            if (addresses != null && !addresses.isEmpty()) {
+                                Address address = addresses.get(0);
+                                etDireccionUsuario.setText(address.getAddressLine(0));
+                                ciudadUsuario = address.getLocality();
+                                departamentoUsuario = address.getAdminArea();
+                            } else {
+                                etDireccionUsuario.setText(location.getLatitude()
+                                        + ", " + location.getLongitude());
+                            }
+                        } catch (IOException e) {
+                            etDireccionUsuario.setText(location.getLatitude()
+                                    + ", " + location.getLongitude());
+                        }
+                    } else {
+                        etDireccionUsuario.setText("Activa el GPS en el emulador");
+                    }
+                })
+                .addOnFailureListener(e -> etDireccionUsuario.setText(e.getMessage()));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_CODE
+                && grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            obtenerUbicacionUsuario();
+        } else if (requestCode == LOCATION_PERMISSION_CODE) {
+            Toast.makeText(this, "Permiso de ubicación denegado", Toast.LENGTH_SHORT).show();
+        }
     }
 }
