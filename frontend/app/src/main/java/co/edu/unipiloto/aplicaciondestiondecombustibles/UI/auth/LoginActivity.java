@@ -26,45 +26,24 @@ import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.administrador.Adminis
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import android.Manifest;
-import android.content.pm.PackageManager;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-
-import android.location.Address;
-import android.location.Geocoder;
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
     private RadioGroup rgRole;
-    private Button btnLogin, btnUbicacion;
+    private Button btnLogin;
     private TextView tvGoRegister;
-    private com.google.android.material.textfield.TextInputEditText etDireccion;  // ← tvUbicacion, no etDireccion
-    private FusedLocationProviderClient fusedLocationClient;
-    private static final int LOCATION_PERMISSION_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
         etEmail      = findViewById(R.id.et_email);
         etPassword   = findViewById(R.id.et_password);
         rgRole       = findViewById(R.id.rg_role);
         btnLogin     = findViewById(R.id.btn_login);
-        btnUbicacion = findViewById(R.id.btn_obtener_ubicacion); // ← inicializar ANTES de usar
-        etDireccion = findViewById(R.id.et_direccion);
         tvGoRegister = findViewById(R.id.tv_go_register);
-
-        btnUbicacion.setOnClickListener(v -> obtenerUbicacion());
 
         btnLogin.setOnClickListener(v -> {
             String email    = etEmail.getText().toString().trim();
@@ -172,56 +151,4 @@ public class LoginActivity extends AppCompatActivity {
             default:             return "Usuario particular";
         }
     }
-    private void obtenerUbicacion() {
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    LOCATION_PERMISSION_CODE);
-            return;
-        }
-
-        fusedLocationClient.getCurrentLocation(
-                        com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY, null)
-                .addOnSuccessListener(location -> {
-                    if (location != null) {
-                        try {
-                            Geocoder geocoder = new Geocoder(this, new Locale("es", "CO"));
-                            List<Address> addresses = geocoder.getFromLocation(
-                                    location.getLatitude(), location.getLongitude(), 1);
-                            if (addresses != null && !addresses.isEmpty()) {
-                                etDireccion.setText(addresses.get(0).getAddressLine(0));
-                            } else {
-                                etDireccion.setText(location.getLatitude()
-                                        + ", " + location.getLongitude());
-                            }
-                        } catch (IOException e) {
-                            etDireccion.setText( location.getLatitude()
-                                    + ", " + location.getLongitude());
-                        }
-                        etDireccion.setVisibility(View.VISIBLE);
-                    } else {
-                        etDireccion.setText("Activa el GPS en el emulador");
-                        etDireccion.setVisibility(View.VISIBLE);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    etDireccion.setText(e.getMessage());
-                    etDireccion.setVisibility(View.VISIBLE);
-                });
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_PERMISSION_CODE
-                && grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            obtenerUbicacion();
-        } else {
-            Toast.makeText(this, "Permiso de ubicación denegado", Toast.LENGTH_SHORT).show();
-        }
-    }
-
 }

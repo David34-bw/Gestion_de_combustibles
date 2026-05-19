@@ -16,6 +16,20 @@
         android:padding="16dp">
 
         <TextView
+            android:id="@+id/tv_estacion_seleccionada"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Seleccionada"
+            android:textColor="@color/fuel_white"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:background="@drawable/badge_selected"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
+
+        <TextView
             android:id="@+id/tv_estacion_nombre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.android.material.textfield.TextInputEditText;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,9 +46,12 @@ public class EstacionesCercanasActivity extends AppCompatActivity {
     private LinearLayout llEstaciones;
     private TextView tvSinEstaciones;
     private Button btnPlanear;
+    private Button btnUbicacion;
+    private TextInputEditText etDireccion;
 
     private Location ubicacionActual;
     private Estacion estacionSeleccionada;
+    private View itemSeleccionado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +62,11 @@ public class EstacionesCercanasActivity extends AppCompatActivity {
         llEstaciones = findViewById(R.id.ll_estaciones);
         tvSinEstaciones = findViewById(R.id.tv_sin_estaciones);
         btnPlanear = findViewById(R.id.btn_planear_recorrido);
+        btnUbicacion = findViewById(R.id.btn_obtener_ubicacion_estaciones);
+        etDireccion = findViewById(R.id.et_direccion_estaciones);
 
         btnPlanear.setOnClickListener(v -> abrirRecorrido());
+        btnUbicacion.setOnClickListener(v -> cargarUbicacion());
 
         cargarUbicacion();
     }
@@ -78,6 +85,7 @@ public class EstacionesCercanasActivity extends AppCompatActivity {
                 .addOnSuccessListener(location -> {
                     if (location != null) {
                         ubicacionActual = location;
+                        actualizarDireccionActual(location);
                         cargarEstacionesCercanas();
                     } else {
                         Toast.makeText(this, "Activa el GPS para buscar estaciones", Toast.LENGTH_SHORT).show();
@@ -88,6 +96,21 @@ public class EstacionesCercanasActivity extends AppCompatActivity {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     mostrarSinEstaciones();
                 });
+    }
+
+    private void actualizarDireccionActual(Location location) {
+        try {
+            Geocoder geocoder = new Geocoder(this, new Locale("es", "CO"));
+            List<Address> addresses = geocoder.getFromLocation(
+                    location.getLatitude(), location.getLongitude(), 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                etDireccion.setText(addresses.get(0).getAddressLine(0));
+            } else {
+                etDireccion.setText(location.getLatitude() + ", " + location.getLongitude());
+            }
+        } catch (IOException e) {
+            etDireccion.setText(location.getLatitude() + ", " + location.getLongitude());
+        }
     }
 
     private void cargarEstacionesCercanas() {
@@ -150,8 +173,8 @@ public class EstacionesCercanasActivity extends AppCompatActivity {
 
             item.setOnClickListener(v -> {
                 estacionSeleccionada = estacion;
+                marcarSeleccion(item);
                 btnPlanear.setEnabled(true);
-                Toast.makeText(this, "Seleccionaste " + estacion.getNombre(), Toast.LENGTH_SHORT).show();
             });
 
             llEstaciones.addView(item);
@@ -159,6 +182,16 @@ public class EstacionesCercanasActivity extends AppCompatActivity {
         }
 
         tvSinEstaciones.setVisibility(mostradas == 0 ? View.VISIBLE : View.GONE);
+    }
+
+    private void marcarSeleccion(View item) {
+        if (itemSeleccionado != null) {
+            View badge = itemSeleccionado.findViewById(R.id.tv_estacion_seleccionada);
+            badge.setVisibility(View.GONE);
+        }
+        itemSeleccionado = item;
+        View badge = item.findViewById(R.id.tv_estacion_seleccionada);
+        badge.setVisibility(View.VISIBLE);
     }
 
     private String formatearDireccion(Estacion estacion) {
@@ -205,6 +238,8 @@ public class EstacionesCercanasActivity extends AppCompatActivity {
         llEstaciones.removeAllViews();
         tvSinEstaciones.setVisibility(View.VISIBLE);
         btnPlanear.setEnabled(false);
+        itemSeleccionado = null;
+        estacionSeleccionada = null;
     }
 
     private void abrirRecorrido() {
