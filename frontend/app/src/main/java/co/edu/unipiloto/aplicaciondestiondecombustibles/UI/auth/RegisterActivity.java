@@ -1,25 +1,16 @@
 package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.auth;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 
 import co.edu.unipiloto.aplicaciondestiondecombustibles.R;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.distribuidor.DistribuidorDashboardActivity;
@@ -36,10 +27,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-
 public class RegisterActivity extends AppCompatActivity {
 
     // Campos base
@@ -47,13 +34,6 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText etDocumentoUsuario;
     private TextInputLayout tilDocumentoUsuario;
     private RadioGroup rgRole;
-    private MaterialButton btnUbicacionRegistro;
-    private TextInputLayout tilDireccionUsuario;
-    private TextInputEditText etDireccionUsuario;
-    private FusedLocationProviderClient fusedLocationClient;
-    private static final int LOCATION_PERMISSION_CODE = 101;
-    private String ciudadUsuario;
-    private String departamentoUsuario;
 
     // Cards dinámicas
     private MaterialCardView cardEstacion, cardDistribuidor, cardRegulador;
@@ -77,13 +57,10 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
         initViews();
         setupRolListener();
         actualizarVisibilidadUsuario(rgRole.getCheckedRadioButtonId());
         findViewById(R.id.btn_register).setOnClickListener(v -> validarYRegistrar());
-        btnUbicacionRegistro.setOnClickListener(v -> obtenerUbicacionUsuario());
     }
 
     private void initViews() {
@@ -92,9 +69,6 @@ public class RegisterActivity extends AppCompatActivity {
         etConfirmPassword = findViewById(R.id.et_confirm_password);
         etDocumentoUsuario = findViewById(R.id.et_documento_usuario);
         tilDocumentoUsuario = findViewById(R.id.til_documento_usuario);
-        btnUbicacionRegistro = findViewById(R.id.btn_obtener_ubicacion_registro);
-        tilDireccionUsuario = findViewById(R.id.til_direccion_usuario);
-        etDireccionUsuario = findViewById(R.id.et_direccion_usuario);
         rgRole            = findViewById(R.id.rg_role);
 
         cardEstacion     = findViewById(R.id.card_estacion);
@@ -160,12 +134,6 @@ public class RegisterActivity extends AppCompatActivity {
         if (tilDocumentoUsuario != null) {
             tilDocumentoUsuario.setVisibility(esUsuario ? View.VISIBLE : View.GONE);
         }
-        if (btnUbicacionRegistro != null) {
-            btnUbicacionRegistro.setVisibility(esUsuario ? View.VISIBLE : View.GONE);
-        }
-        if (tilDireccionUsuario != null) {
-            tilDireccionUsuario.setVisibility(esUsuario ? View.VISIBLE : View.GONE);
-        }
     }
 
     private void validarYRegistrar() {
@@ -211,7 +179,6 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-
         if (rolId == R.id.rb_usuario) {
             if (documento.isEmpty()) {
                 etDocumentoUsuario.requestFocus();
@@ -226,16 +193,6 @@ public class RegisterActivity extends AppCompatActivity {
                     pass,
                     "USUARIO",
                     documento);
-            String direccion = etDireccionUsuario.getText().toString().trim();
-            if (!direccion.isEmpty()) {
-                request.setDireccion(direccion);
-                if (ciudadUsuario != null) {
-                    request.setCiudad(ciudadUsuario);
-                }
-                if (departamentoUsuario != null) {
-                    request.setDepartamento(departamentoUsuario);
-                }
-            }
             enviarRegistro(request, "USUARIO");
 
         } else if (rolId == R.id.rb_estacion) {
@@ -272,7 +229,7 @@ public class RegisterActivity extends AppCompatActivity {
             request.setCargo(etCargo.getText().toString().trim());
             request.setDependencia(etDependencia.getText().toString().trim());
             enviarRegistro(request, "REGULADOR");
-        }else if (rolId == R.id.rb_administrador) {
+        } else if (rolId == R.id.rb_administrador) {
             if (!validarAdministrador()) return;
             RegisterRequest request = new RegisterRequest(
                     "Administrador",
@@ -335,7 +292,7 @@ public class RegisterActivity extends AppCompatActivity {
                 intent = new Intent(this, DistribuidorDashboardActivity.class); break;
             case "ESTACION":
                 intent = new Intent(this, EstacionDashboardActivity.class); break;
-            case "ADMINISTRADOR":                                                    // ← nuevo
+            case "ADMINISTRADOR":
                 intent = new Intent(this, AdministradorDashboardActivity.class); break;
             default:
                 intent = new Intent(this, ReguladorDashboardActivity.class); break;
@@ -423,55 +380,5 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         }
         return true;
-    }
-
-    private void obtenerUbicacionUsuario() {
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    LOCATION_PERMISSION_CODE);
-            return;
-        }
-
-        fusedLocationClient.getCurrentLocation(
-                        com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY, null)
-                .addOnSuccessListener(location -> {
-                    if (location != null) {
-                        try {
-                            Geocoder geocoder = new Geocoder(this, new Locale("es", "CO"));
-                            List<Address> addresses = geocoder.getFromLocation(
-                                    location.getLatitude(), location.getLongitude(), 1);
-                            if (addresses != null && !addresses.isEmpty()) {
-                                Address address = addresses.get(0);
-                                etDireccionUsuario.setText(address.getAddressLine(0));
-                                ciudadUsuario = address.getLocality();
-                                departamentoUsuario = address.getAdminArea();
-                            } else {
-                                etDireccionUsuario.setText(location.getLatitude()
-                                        + ", " + location.getLongitude());
-                            }
-                        } catch (IOException e) {
-                            etDireccionUsuario.setText(location.getLatitude()
-                                    + ", " + location.getLongitude());
-                        }
-                    } else {
-                        etDireccionUsuario.setText("Activa el GPS en el emulador");
-                    }
-                })
-                .addOnFailureListener(e -> etDireccionUsuario.setText(e.getMessage()));
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_PERMISSION_CODE
-                && grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            obtenerUbicacionUsuario();
-        } else if (requestCode == LOCATION_PERMISSION_CODE) {
-            Toast.makeText(this, "Permiso de ubicación denegado", Toast.LENGTH_SHORT).show();
-        }
     }
 }
