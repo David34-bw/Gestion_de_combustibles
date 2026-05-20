@@ -6,6 +6,13 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
+import android.content.Intent;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,13 +30,14 @@ import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.network.ApiClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import com.google.android.material.button.MaterialButton;
 
 public class RegistrarEntregaActivity extends AppCompatActivity {
 
     private RadioGroup rgCombustible;
     private TextInputEditText etVolumen, etObservaciones;
     private Spinner spinnerEstacion;
-    private Button btnRegistrar;
+    private MaterialButton btnRegistrar;
 
     private List<Estacion> estaciones = new ArrayList<>();
 
@@ -47,6 +55,16 @@ public class RegistrarEntregaActivity extends AppCompatActivity {
         cargarEstaciones();
 
         btnRegistrar.setOnClickListener(v -> registrar());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        100);
+            }
+        }
     }
 
     private void cargarEstaciones() {
@@ -104,9 +122,26 @@ public class RegistrarEntregaActivity extends AppCompatActivity {
                                            Response<ApiResponse<EntregaResponse>> response) {
                         if (response.isSuccessful() && response.body() != null
                                 && response.body().isSuccess()) {
+
+                            // Obtener datos para la notificación
+                            String estacionNombre = estaciones
+                                    .get(spinnerEstacion.getSelectedItemPosition())
+                                    .getNombre();
+
+                            // Iniciar el servicio en background
+                            Intent serviceIntent = new Intent(
+                                    RegistrarEntregaActivity.this,
+                                    FuelRegistrationService.class
+                            );
+                            serviceIntent.putExtra(FuelRegistrationService.EXTRA_TIPO, tipo);
+                            serviceIntent.putExtra(FuelRegistrationService.EXTRA_VOLUMEN, volumen);
+                            serviceIntent.putExtra(FuelRegistrationService.EXTRA_ESTACION, estacionNombre);
+                            startService(serviceIntent);
+
                             Toast.makeText(RegistrarEntregaActivity.this,
                                     "Entrega registrada", Toast.LENGTH_SHORT).show();
                             finish();
+
                         } else {
                             String msg = response.body() != null
                                     ? response.body().getMessage() : "Error al registrar";
