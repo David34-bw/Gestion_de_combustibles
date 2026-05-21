@@ -84,6 +84,9 @@
         <service
             android:name=".UI.distribuidor.FuelRegistrationService"
             android:exported="false" />
+        <service
+            android:name=".UI.usuario.OdometerService"
+            android:exported="false" />
 
     </application>
 

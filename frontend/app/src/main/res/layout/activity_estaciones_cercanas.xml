@@ -73,6 +73,73 @@
             android:layout_marginBottom="16dp"/>
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Configuración de seguimiento"
+            android:textColor="@color/fuel_orange"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_precision"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Precisión (metros)"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:textColorHint="@color/fuel_gray_light"
+            app:boxStrokeColor="@color/fuel_orange"
+            app:hintTextColor="@color/fuel_gray"
+            android:layout_marginBottom="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_precision"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fuel_white"
+                android:textSize="13sp"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_intervalo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tiempo de actualización (segundos)"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:textColorHint="@color/fuel_gray_light"
+            app:boxStrokeColor="@color/fuel_orange"
+            app:hintTextColor="@color/fuel_gray"
+            android:layout_marginBottom="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_intervalo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fuel_white"
+                android:textSize="13sp"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_odometro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Distancia recorrida: 0 m"
+            android:textColor="@color/fuel_white"
+            android:textSize="14sp"
+            android:layout_marginBottom="6dp" />
+
+        <TextView
+            android:id="@+id/tv_ubicacion_actual"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ubicación actual: -"
+            android:textColor="@color/fuel_gray"
+            android:textSize="13sp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
             android:id="@+id/tv_sin_estaciones"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

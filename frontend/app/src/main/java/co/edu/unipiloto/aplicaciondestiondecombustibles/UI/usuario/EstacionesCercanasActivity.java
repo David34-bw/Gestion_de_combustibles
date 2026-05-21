@@ -1,13 +1,16 @@
 package co.edu.unipiloto.aplicaciondestiondecombustibles.UI.usuario;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -48,10 +51,46 @@ public class EstacionesCercanasActivity extends AppCompatActivity {
     private Button btnPlanear;
     private Button btnUbicacion;
     private TextInputEditText etDireccion;
+    private TextInputEditText etPrecision;
+    private TextInputEditText etIntervalo;
+    private TextView tvOdometro;
+    private TextView tvUbicacionActual;
 
     private Location ubicacionActual;
     private Estacion estacionSeleccionada;
     private View itemSeleccionado;
+
+    private OdometerService odometerService;
+    private boolean isBound = false;
+
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            OdometerService.LocalBinder binder = (OdometerService.LocalBinder) service;
+            odometerService = binder.getService();
+            isBound = true;
+            odometerService.setListener(new OdometerService.Listener() {
+                @Override
+                public void onUpdate(double sessionMeters, Location location) {
+                    tvOdometro.setText("Distancia recorrida: " + Math.round(sessionMeters) + " m");
+                    if (location != null) {
+                        tvUbicacionActual.setText("Ubicación actual: "
+                                + location.getLatitude() + ", " + location.getLongitude());
+                    }
+                }
+
+                @Override
+                public void onStatusChanged(boolean tracking) {
+                }
+            });
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            isBound = false;
+            odometerService = null;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +103,35 @@ public class EstacionesCercanasActivity extends AppCompatActivity {
         btnPlanear = findViewById(R.id.btn_planear_recorrido);
         btnUbicacion = findViewById(R.id.btn_obtener_ubicacion_estaciones);
         etDireccion = findViewById(R.id.et_direccion_estaciones);
+        etPrecision = findViewById(R.id.et_precision);
+        etIntervalo = findViewById(R.id.et_intervalo);
+        tvOdometro = findViewById(R.id.tv_odometro);
+        tvUbicacionActual = findViewById(R.id.tv_ubicacion_actual);
 
         btnPlanear.setOnClickListener(v -> abrirRecorrido());
         btnUbicacion.setOnClickListener(v -> cargarUbicacion());
 
         cargarUbicacion();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = new Intent(this, OdometerService.class);
+        bindService(intent, serviceConnection, BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (isBound) {
+            if (odometerService != null) {
+                odometerService.setListener(null);
+                odometerService.stopTracking();
+            }
+            unbindService(serviceConnection);
+            isBound = false;
+        }
     }
 
     private void cargarUbicacion() {
@@ -192,6 +255,20 @@ public class EstacionesCercanasActivity extends AppCompatActivity {
         itemSeleccionado = item;
         View badge = item.findViewById(R.id.tv_estacion_seleccionada);
         badge.setVisibility(View.VISIBLE);
+        iniciarSeguimiento();
+    }
+
+    private void iniciarSeguimiento() {
+        if (!isBound || odometerService == null) return;
+        float precision = parseFloat(etPrecision, 10f);
+        long intervalo = parseLong(etIntervalo, 5L);
+        String destino = estacionSeleccionada != null
+                ? formatearDireccion(estacionSeleccionada)
+                : "";
+        boolean started = odometerService.startTracking(precision, intervalo, destino);
+        if (!started) {
+            Toast.makeText(this, "Permiso de ubicación requerido", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private String formatearDireccion(Estacion estacion) {
@@ -256,6 +333,28 @@ public class EstacionesCercanasActivity extends AppCompatActivity {
             startActivity(intent);
         } else {
             startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        }
+    }
+
+    private float parseFloat(TextInputEditText editText, float fallback) {
+        if (editText == null || editText.getText() == null) return fallback;
+        String value = editText.getText().toString().trim();
+        if (value.isEmpty()) return fallback;
+        try {
+            return Float.parseFloat(value);
+        } catch (NumberFormatException e) {
+            return fallback;
+        }
+    }
+
+    private long parseLong(TextInputEditText editText, long fallback) {
+        if (editText == null || editText.getText() == null) return fallback;
+        String value = editText.getText().toString().trim();
+        if (value.isEmpty()) return fallback;
+        try {
+            return Long.parseLong(value);
+        } catch (NumberFormatException e) {
+            return fallback;
         }
     }
 
