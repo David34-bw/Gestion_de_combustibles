@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import co.edu.unipiloto.fuelcontrol.repository.VehiculoRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VentaService {
@@ -23,6 +24,9 @@ public class VentaService {
     private static final double UMBRAL_ALERTA = CAPACIDAD_MAX * 0.25; 
     private final VehiculoRepository vehiculoRepository;
     private final PuntosService puntosService;
+
+    private static final String TIPO_GASOLINA = "GASOLINA";
+    private static final String TIPO_DIESEL = "DIESEL";
 
     public VentaService(VentaRepository ventaRepository,
                     EstacionRepository estacionRepository,
@@ -35,62 +39,82 @@ public class VentaService {
 }
 
     @Transactional
-public VentaResponse registrar(Long usuarioId, VentaRequest request) {
-    Estacion estacion = estacionRepository.findByAdministradorId(usuarioId)
-            .orElseThrow(() -> new BadRequestException(
-                    "No tienes una estación asociada a tu cuenta"));
+    public VentaResponse registrar(Long usuarioId, VentaRequest request) {
+        Estacion estacion = estacionRepository.findByAdministradorId(usuarioId)
+                .orElseThrow(() -> new BadRequestException(
+                        "No tienes una estación asociada a tu cuenta"));
 
-    String tipo = request.getTipoCombustible().toUpperCase();
-    if (!tipo.equals("GASOLINA") && !tipo.equals("DIESEL")) {
-        throw new BadRequestException("Tipo de combustible inválido. Use GASOLINA o DIESEL");
+        String tipo = request.getTipoCombustible().toUpperCase();
+        validarTipo(tipo);
+        validarCantidad(request.getCantidad());
+        validarStock(estacion, tipo, request.getCantidad());
+
+        Usuario comprador = resolveComprador(request.getPlacaVehiculo());
+
+        descontarStock(estacion, tipo, request.getCantidad());
+        estacionRepository.save(estacion);
+
+        Venta venta = Venta.builder()
+                .tipoCombustible(tipo)
+                .cantidad(request.getCantidad())
+                .observaciones(request.getObservaciones())
+                .estacion(estacion)
+                .usuario(comprador)
+                .build();
+
+        Venta guardada = ventaRepository.save(venta);
+        if (comprador != null) {
+            puntosService.acumularPuntosPorCompra(comprador, request.getCantidad());
+        }
+
+        return toResponse(guardada, isStockBajo(estacion));
     }
 
-    if (request.getCantidad() == null || request.getCantidad() <= 0) {
-        throw new BadRequestException("La cantidad debe ser mayor a 0");
+    private void validarTipo(String tipo) {
+        if (!tipo.equals(TIPO_GASOLINA) && !tipo.equals(TIPO_DIESEL)) {
+            throw new BadRequestException("Tipo de combustible inválido. Use GASOLINA o DIESEL");
+        }
     }
 
-    if (tipo.equals("GASOLINA") && estacion.getStockGasolina() < request.getCantidad()) {
-        throw new BadRequestException("Stock de gasolina insuficiente. Disponible: "
-                + estacion.getStockGasolina() + " galones");
-    }
-    if (tipo.equals("DIESEL") && estacion.getStockDiesel() < request.getCantidad()) {
-        throw new BadRequestException("Stock de diesel insuficiente. Disponible: "
-                + estacion.getStockDiesel() + " galones");
+    private void validarCantidad(Double cantidad) {
+        if (cantidad == null || cantidad <= 0) {
+            throw new BadRequestException("La cantidad debe ser mayor a 0");
+        }
     }
 
-    Usuario comprador = null;
-    String placaFinal = null;
-    if (request.getPlacaVehiculo() != null && !request.getPlacaVehiculo().isEmpty()) {
-        String placa = request.getPlacaVehiculo().toUpperCase().trim();
-        placaFinal = placa;
-        comprador = vehiculoRepository.findByPlaca(placa)
-                .map(vehiculo -> vehiculo.getUsuario())
+    private void validarStock(Estacion estacion, String tipo, Double cantidad) {
+        if (tipo.equals(TIPO_GASOLINA) && estacion.getStockGasolina() < cantidad) {
+            throw new BadRequestException("Stock de gasolina insuficiente. Disponible: "
+                    + estacion.getStockGasolina() + " galones");
+        }
+        if (tipo.equals(TIPO_DIESEL) && estacion.getStockDiesel() < cantidad) {
+            throw new BadRequestException("Stock de diesel insuficiente. Disponible: "
+                    + estacion.getStockDiesel() + " galones");
+        }
+    }
+
+    private Usuario resolveComprador(String placaVehiculo) {
+        if (placaVehiculo == null || placaVehiculo.isBlank()) {
+            return null;
+        }
+        String placa = placaVehiculo.toUpperCase().trim();
+        return vehiculoRepository.findByPlaca(placa)
+                .map(co.edu.unipiloto.fuelcontrol.domain.Vehiculo::getUsuario)
                 .orElseThrow(() -> new BadRequestException(
                         "No se encontró ningún usuario con la placa: " + placa));
     }
 
-    if (tipo.equals("GASOLINA")) {
-        estacion.setStockGasolina(estacion.getStockGasolina() - request.getCantidad());
-    } else {
-        estacion.setStockDiesel(estacion.getStockDiesel() - request.getCantidad());
+    private void descontarStock(Estacion estacion, String tipo, Double cantidad) {
+        if (tipo.equals(TIPO_GASOLINA)) {
+            estacion.setStockGasolina(estacion.getStockGasolina() - cantidad);
+        } else {
+            estacion.setStockDiesel(estacion.getStockDiesel() - cantidad);
+        }
     }
-    estacionRepository.save(estacion);
 
-    boolean alertaGas = estacion.getStockGasolina() < UMBRAL_ALERTA;
-    boolean alertaDiesel = estacion.getStockDiesel() < UMBRAL_ALERTA;
-
-    Venta venta = Venta.builder()
-            .tipoCombustible(tipo)
-            .cantidad(request.getCantidad())
-            .observaciones(request.getObservaciones())
-            .estacion(estacion)
-            .usuario(comprador)
-            .build();
-
-    Venta guardada = ventaRepository.save(venta);
-    puntosService.acumularPuntosPorCompra(comprador, request.getCantidad());
-    return toResponse(guardada, alertaGas || alertaDiesel);
-}
+    private boolean isStockBajo(Estacion estacion) {
+        return estacion.getStockGasolina() < UMBRAL_ALERTA || estacion.getStockDiesel() < UMBRAL_ALERTA;
+    }
 
     public List<VentaResponse> listarPorEstacion(Long usuarioId) {
         Estacion estacion = estacionRepository.findByAdministradorId(usuarioId)
@@ -106,28 +130,22 @@ public VentaResponse registrar(Long usuarioId, VentaRequest request) {
 }
 
     private VentaResponse toResponse(Venta v, boolean alerta) {
-    // Buscar placa del vehículo del comprador
-    String placa = null;
-    if (v.getUsuario() != null) {
-        placa = vehiculoRepository.findByUsuarioId(v.getUsuario().getId())
-                .stream()
-                .findFirst()
-                .map(veh -> veh.getPlaca())
-                .orElse(null);
-    }
+        Optional<String> placa = Optional.ofNullable(v.getUsuario())
+                .flatMap(u -> vehiculoRepository.findByUsuarioId(u.getId()).stream().findFirst())
+                .map(co.edu.unipiloto.fuelcontrol.domain.Vehiculo::getPlaca);
 
-    return VentaResponse.builder()
-            .id(v.getId())
-            .tipoCombustible(v.getTipoCombustible())
-            .cantidad(v.getCantidad())
-            .fechaVenta(v.getFechaVenta())
-            .observaciones(v.getObservaciones())
-            .estacionId(v.getEstacion().getId())
-            .estacionNombre(v.getEstacion().getNombre())
-            .usuarioId(v.getUsuario() != null ? v.getUsuario().getId() : null)
-            .usuarioNombre(v.getUsuario() != null ? v.getUsuario().getNombre() : "Anónimo")
-            .placaVehiculo(placa)
-            .alertaStockBajo(alerta)
-            .build();
-}
+        return VentaResponse.builder()
+                .id(v.getId())
+                .tipoCombustible(v.getTipoCombustible())
+                .cantidad(v.getCantidad())
+                .fechaVenta(v.getFechaVenta())
+                .observaciones(v.getObservaciones())
+                .estacionId(v.getEstacion().getId())
+                .estacionNombre(v.getEstacion().getNombre())
+                .usuarioId(v.getUsuario() != null ? v.getUsuario().getId() : null)
+                .usuarioNombre(v.getUsuario() != null ? v.getUsuario().getNombre() : "Anónimo")
+                .placaVehiculo(placa.orElse(null))
+                .alertaStockBajo(alerta)
+                .build();
+    }
 }

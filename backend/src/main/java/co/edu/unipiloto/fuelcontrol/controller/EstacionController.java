@@ -2,7 +2,10 @@ package co.edu.unipiloto.fuelcontrol.controller;
 
 import co.edu.unipiloto.fuelcontrol.domain.Estacion;
 import co.edu.unipiloto.fuelcontrol.dto.response.ApiResponse;
+import co.edu.unipiloto.fuelcontrol.dto.request.EstacionCreateRequest;
+import co.edu.unipiloto.fuelcontrol.dto.request.EstacionUpdateRequest;
 import co.edu.unipiloto.fuelcontrol.service.EstacionService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -45,8 +48,14 @@ public class EstacionController {
     @PostMapping
     @PreAuthorize("hasRole('REGULADOR')")
     public ResponseEntity<ApiResponse<Estacion>> crear(
-            @RequestBody Estacion estacion,
+            @Valid @RequestBody EstacionCreateRequest request,
             @RequestParam(required = false) Long administradorId) {
+        Estacion estacion = new Estacion();
+        estacion.setNombre(request.getNombre());
+        estacion.setDireccion(request.getDireccion());
+        estacion.setCiudad(request.getCiudad());
+        estacion.setDepartamento(request.getDepartamento());
+        estacion.setNit(request.getNit());
         return ResponseEntity.status(201).body(
                 ApiResponse.ok("Estación creada", estacionService.crear(estacion, administradorId)));
     }
@@ -56,9 +65,14 @@ public class EstacionController {
     @PreAuthorize("hasAnyRole('REGULADOR', 'ESTACION')")
     public ResponseEntity<ApiResponse<Estacion>> actualizar(
             @PathVariable Long id,
-            @RequestBody Estacion datos) {
+            @RequestBody EstacionUpdateRequest datos) {
+        Estacion estacion = new Estacion();
+        estacion.setNombre(datos.getNombre());
+        estacion.setDireccion(datos.getDireccion());
+        estacion.setCiudad(datos.getCiudad());
+        estacion.setDepartamento(datos.getDepartamento());
         return ResponseEntity.ok(ApiResponse.ok("Estación actualizada",
-                estacionService.actualizar(id, datos)));
+                estacionService.actualizar(id, estacion)));
     }
 
     /**
