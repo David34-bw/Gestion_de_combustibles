@@ -22,6 +22,11 @@ public class SolicitudCombustibleService {
     private final EstacionRepository estacionRepository;
     private final DistribuidorRepository distribuidorRepository;
 
+    private static final String TIPO_GASOLINA = "GASOLINA";
+    private static final String TIPO_DIESEL = "DIESEL";
+
+    private static final String ENTIDAD_SOLICITUD = "Solicitud";
+
     public SolicitudCombustibleService(SolicitudCombustibleRepository solicitudRepository,
                                        UsuarioRepository usuarioRepository,
                                        EstacionRepository estacionRepository,
@@ -39,7 +44,7 @@ public class SolicitudCombustibleService {
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario", usuarioId));
 
         String tipo = request.getTipoCombustible().toUpperCase();
-        if (!tipo.equals("GASOLINA") && !tipo.equals("DIESEL")) {
+        if (!tipo.equals(TIPO_GASOLINA) && !tipo.equals(TIPO_DIESEL)) {
             throw new BadRequestException("Tipo de combustible inválido. Use GASOLINA o DIESEL");
         }
 
@@ -65,7 +70,7 @@ public class SolicitudCombustibleService {
     public SolicitudResponse resolverSolicitud(Long solicitudId, Long reguladorId,
                                                ResolucionRequest request) {
         SolicitudCombustible solicitud = solicitudRepository.findById(solicitudId)
-                .orElseThrow(() -> new ResourceNotFoundException("Solicitud", solicitudId));
+                .orElseThrow(() -> new ResourceNotFoundException(ENTIDAD_SOLICITUD, solicitudId));
 
         if (solicitud.getEstado() != EstadoSolicitud.PENDIENTE) {
             throw new BadRequestException("La solicitud ya fue resuelta");
@@ -104,7 +109,7 @@ public class SolicitudCombustibleService {
     @Transactional
     public SolicitudResponse marcarEntregada(Long solicitudId) {
         SolicitudCombustible solicitud = solicitudRepository.findById(solicitudId)
-                .orElseThrow(() -> new ResourceNotFoundException("Solicitud", solicitudId));
+                .orElseThrow(() -> new ResourceNotFoundException(ENTIDAD_SOLICITUD, solicitudId));
 
         if (solicitud.getEstado() != EstadoSolicitud.APROBADA) {
             throw new BadRequestException("Solo se pueden marcar como entregadas solicitudes aprobadas");
@@ -141,7 +146,7 @@ public class SolicitudCombustibleService {
 
     public SolicitudResponse buscarPorId(Long id) {
         return toResponse(solicitudRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Solicitud", id)));
+                .orElseThrow(() -> new ResourceNotFoundException(ENTIDAD_SOLICITUD, id)));
     }
 
     // ─── Mapper ───────────────────────────────────────────────

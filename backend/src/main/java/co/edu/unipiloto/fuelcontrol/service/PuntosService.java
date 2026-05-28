@@ -21,6 +21,8 @@ import java.util.List;
 @Service
 public class PuntosService {
 
+    private static final String MSG_USUARIO_PARTICULAR_NO_ENCONTRADO = "Usuario particular no encontrado";
+
     private final UsuarioRepository usuarioRepository;
     private final RecompensaRepository recompensaRepository;
     private final CanjeRecompensaRepository canjeRepository;
@@ -40,7 +42,7 @@ public class PuntosService {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
         UsuarioParticular particular = usuarioParticularRepository.findByUsuarioId(usuarioId)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario particular no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException(MSG_USUARIO_PARTICULAR_NO_ENCONTRADO));
         return PuntosResponse.builder()
                 .usuarioId(usuario.getId())
                 .puntosAcumulados(particular.getPuntosAcumulados())
@@ -62,7 +64,7 @@ public class PuntosService {
             throw new BadRequestException("Recompensa no disponible");
         }
         UsuarioParticular particular = usuarioParticularRepository.findByUsuarioId(usuarioId)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario particular no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException(MSG_USUARIO_PARTICULAR_NO_ENCONTRADO));
         int puntosActuales = particular.getPuntosAcumulados() != null
                 ? particular.getPuntosAcumulados() : 0;
         if (puntosActuales < recompensa.getCostoPuntos()) {
@@ -89,7 +91,7 @@ public class PuntosService {
             return;
         }
         UsuarioParticular particular = usuarioParticularRepository.findByUsuarioId(usuario.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario particular no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException(MSG_USUARIO_PARTICULAR_NO_ENCONTRADO));
         int actuales = particular.getPuntosAcumulados() != null
                 ? particular.getPuntosAcumulados() : 0;
         particular.setPuntosAcumulados(actuales + puntos);

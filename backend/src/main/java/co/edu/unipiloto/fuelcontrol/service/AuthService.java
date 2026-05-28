@@ -65,78 +65,126 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest request) {
-        if (Rol.ADMINISTRADOR.name().equals(request.getRol())) {
-    if (request.getCodigoAdmin() == null || 
-        !CODIGO_ADMIN.equals(request.getCodigoAdmin())) {
-        throw new RuntimeException("Código de administrador incorrecto");
-        // o usa tu clase de excepción personalizada si tienes una
+        validarCodigoAdmin(request);
+        validarUnicidadEmail(request.getEmail());
+        validarUnicidadDocumento(request.getNumeroDocumento());
+
+        String nombre = resolveNombre(request);
+        Usuario usuario = buildUsuario(request, nombre);
+        usuarioRepository.save(usuario);
+
+        crearEntidadPorRol(request, usuario, nombre);
+        return buildResponse(jwtUtil.generateToken(usuario), usuario);
     }
-}
-        if (usuarioRepository.existsByEmail(request.getEmail())) {
+
+    private void validarCodigoAdmin(RegisterRequest request) {
+        if (request.getRol() != Rol.ADMINISTRADOR) {
+            return;
+        }
+        String codigo = request.getCodigoAdmin();
+        if (codigo == null || !CODIGO_ADMIN.equals(codigo)) {
+            throw new BadRequestException("Código de administrador incorrecto");
+        }
+    }
+
+    private void validarUnicidadEmail(String email) {
+        if (usuarioRepository.existsByEmail(email)) {
             throw new BadRequestException("El email ya está registrado");
         }
-        if (request.getNumeroDocumento() != null && !request.getNumeroDocumento().isEmpty()
-                && usuarioRepository.existsByNumeroDocumento(request.getNumeroDocumento())) {
+    }
+
+    private void validarUnicidadDocumento(String numeroDocumento) {
+        if (numeroDocumento == null || numeroDocumento.isBlank()) {
+            return;
+        }
+        if (usuarioRepository.existsByNumeroDocumento(numeroDocumento)) {
             throw new BadRequestException("El número de documento ya está registrado");
         }
+    }
 
-        // Nombre por defecto si no viene
-        String nombre   = (request.getNombre() != null && !request.getNombre().isEmpty())
-                ? request.getNombre()
-                : request.getEmail().split("@")[0];
+    private String resolveNombre(RegisterRequest request) {
+        if (request.getNombre() != null && !request.getNombre().isBlank()) {
+            return request.getNombre();
+        }
+        String email = request.getEmail();
+        int at = email.indexOf('@');
+        return at > 0 ? email.substring(0, at) : email;
+    }
 
-        Usuario usuario = Usuario.builder()
-            .nombre(nombre)
-            .email(request.getEmail())
-            .password(passwordEncoder.encode(request.getPassword()))
-            .numeroDocumento(request.getNumeroDocumento())
-            .rol(request.getRol())
-            .activo(true)
-            .build();
+    private Usuario buildUsuario(RegisterRequest request, String nombre) {
+        return Usuario.builder()
+                .nombre(nombre)
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .numeroDocumento(request.getNumeroDocumento())
+                .rol(request.getRol())
+                .activo(true)
+                .build();
+    }
 
-        usuarioRepository.save(usuario);
-        if (request.getRol() == Rol.USUARIO) {
-            UsuarioParticular particular = new UsuarioParticular();
-            particular.setUsuario(usuario);
-            particular.setActivo(true);
-            usuarioParticularRepository.save(particular);
+    private void crearEntidadPorRol(RegisterRequest request, Usuario usuario, String nombre) {
+        Rol rol = request.getRol();
+        if (rol == Rol.USUARIO) {
+            crearUsuarioParticular(usuario);
+            return;
         }
-        if (request.getRol() == Rol.ESTACION) {
-            Estacion estacion = new Estacion();
-            estacion.setNombre(nombre);
-            estacion.setNit(request.getNumeroDocumento());
-            String direccion = request.getDireccion();
-            estacion.setDireccion((direccion != null && !direccion.isBlank())
-                    ? direccion : "Por definir");
-            estacion.setCiudad(request.getCiudad());
-            estacion.setDepartamento(request.getDepartamento());
-            estacion.setActiva(true);
-            estacion.setAdministrador(usuario);
-            estacionRepository.save(estacion);
+        if (rol == Rol.ESTACION) {
+            crearEstacion(request, usuario, nombre);
+            return;
         }
+        if (rol == Rol.DISTRIBUIDOR) {
+            crearDistribuidor(request, usuario, nombre);
+            return;
+        }
+        if (rol == Rol.REGULADOR) {
+            crearRegulador(request, usuario);
+        }
+    }
 
-        if (request.getRol() == Rol.DISTRIBUIDOR) {
-            Distribuidor distribuidor = new Distribuidor();
-            distribuidor.setNombre(nombre);
-            distribuidor.setNit(request.getNumeroDocumento() != null
-                    ? request.getNumeroDocumento() : request.getEmail());
-            distribuidor.setCiudad(request.getCiudad());
-            distribuidor.setDepartamento(request.getDepartamento());
-            distribuidor.setActivo(true);
-            distribuidor.setRepresentante(usuario);
-            distribuidorRepository.save(distribuidor);
-        }
-        if (request.getRol() == Rol.REGULADOR) {
-            Regulador regulador = new Regulador();
-            regulador.setNit(request.getNumeroDocumento());
-            regulador.setCodigoEntidad(request.getCodigoEntidad());
-            regulador.setCargo(request.getCargo());
-            regulador.setDependencia(request.getDependencia());
-            regulador.setActivo(true);
-            regulador.setUsuario(usuario);
-            reguladorRepository.save(regulador);
-        }
-        return buildResponse(jwtUtil.generateToken(usuario), usuario);
+    private void crearUsuarioParticular(Usuario usuario) {
+        UsuarioParticular particular = new UsuarioParticular();
+        particular.setUsuario(usuario);
+        particular.setActivo(true);
+        usuarioParticularRepository.save(particular);
+    }
+
+    private void crearEstacion(RegisterRequest request, Usuario usuario, String nombre) {
+        Estacion estacion = new Estacion();
+        estacion.setNombre(nombre);
+        estacion.setNit(request.getNumeroDocumento());
+
+        String direccion = request.getDireccion();
+        estacion.setDireccion((direccion != null && !direccion.isBlank())
+                ? direccion : "Por definir");
+
+        estacion.setCiudad(request.getCiudad());
+        estacion.setDepartamento(request.getDepartamento());
+        estacion.setActiva(true);
+        estacion.setAdministrador(usuario);
+        estacionRepository.save(estacion);
+    }
+
+    private void crearDistribuidor(RegisterRequest request, Usuario usuario, String nombre) {
+        Distribuidor distribuidor = new Distribuidor();
+        distribuidor.setNombre(nombre);
+        distribuidor.setNit(request.getNumeroDocumento() != null
+                ? request.getNumeroDocumento() : request.getEmail());
+        distribuidor.setCiudad(request.getCiudad());
+        distribuidor.setDepartamento(request.getDepartamento());
+        distribuidor.setActivo(true);
+        distribuidor.setRepresentante(usuario);
+        distribuidorRepository.save(distribuidor);
+    }
+
+    private void crearRegulador(RegisterRequest request, Usuario usuario) {
+        Regulador regulador = new Regulador();
+        regulador.setNit(request.getNumeroDocumento());
+        regulador.setCodigoEntidad(request.getCodigoEntidad());
+        regulador.setCargo(request.getCargo());
+        regulador.setDependencia(request.getDependencia());
+        regulador.setActivo(true);
+        regulador.setUsuario(usuario);
+        reguladorRepository.save(regulador);
     }
 
     private AuthResponse buildResponse(String token, Usuario usuario) {

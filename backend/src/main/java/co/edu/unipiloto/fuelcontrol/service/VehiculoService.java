@@ -34,7 +34,7 @@ public class VehiculoService {
         Vehiculo vehiculo = Vehiculo.builder()
                 .placa(request.getPlaca().toUpperCase())
                 .tipoVehiculo(request.getTipoVehiculo())
-                .aplicaSubsidio(request.getAplicaSubsidio() != null ? request.getAplicaSubsidio() : false)
+                .aplicaSubsidio(Boolean.TRUE.equals(request.getAplicaSubsidio()))
                 .numeroRunt(request.getNumeroRunt())
                 .marca(request.getMarca())
                 .modelo(request.getModelo())

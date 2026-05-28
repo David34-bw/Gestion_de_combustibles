@@ -23,6 +23,9 @@ public class EntregaService {
     private final EstacionRepository estacionRepository;
     private static final double CAPACIDAD_MAX = 500.0;
 
+    private static final String TIPO_GASOLINA = "GASOLINA";
+    private static final String TIPO_DIESEL = "DIESEL";
+
     public EntregaService(EntregaRepository entregaRepository,
                           DistribuidorRepository distribuidorRepository,
                           EstacionRepository estacionRepository) {
@@ -31,7 +34,6 @@ public class EntregaService {
         this.estacionRepository     = estacionRepository;
     }
 
-    @Transactional
     public EntregaResponse registrar(Long distribuidorId, EntregaRequest request) {
         Distribuidor distribuidor = distribuidorRepository.findById(distribuidorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Distribuidor", distribuidorId));
@@ -40,12 +42,12 @@ public class EntregaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Estación", request.getEstacionId()));
 
         String tipo = request.getTipoCombustible().toUpperCase();
-        if (!tipo.equals("GASOLINA") && !tipo.equals("DIESEL")) {
+        if (!tipo.equals(TIPO_GASOLINA) && !tipo.equals(TIPO_DIESEL)) {
             throw new BadRequestException("Tipo de combustible inválido. Use GASOLINA o DIESEL");
         }
 
         // Descontar stock del distribuidor
-        if (tipo.equals("GASOLINA")) {
+        if (tipo.equals(TIPO_GASOLINA)) {
             double nuevaVenta = safe(distribuidor.getVentaGasolina()) + request.getVolumen();
             distribuidor.setVentaGasolina(nuevaVenta);
         } else {
@@ -56,7 +58,7 @@ public class EntregaService {
 
         // Sumar stock a la estación
         // Sumar stock a la estación con validación de capacidad máxima
-        if (tipo.equals("GASOLINA")) {
+        if (tipo.equals(TIPO_GASOLINA)) {
             double nuevoStock = estacion.getStockGasolina() + request.getVolumen();
             if (nuevoStock > CAPACIDAD_MAX) {
                 throw new BadRequestException(
@@ -115,8 +117,9 @@ public class EntregaService {
                 .estacionNombre(e.getEstacion().getNombre())
                 .build();
     }
-        // Busca el distribuidor cuyo representante es el usuario autenticado
-        @Transactional
+
+    // Busca el distribuidor cuyo representante es el usuario autenticado
+    @Transactional
     public EntregaResponse registrarPorUsuario(Long usuarioId, EntregaRequest request) {
         Distribuidor distribuidor = distribuidorRepository.findByRepresentanteId(usuarioId)
                 .orElseThrow(() -> new BadRequestException(

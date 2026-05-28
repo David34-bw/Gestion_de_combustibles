@@ -1,14 +1,16 @@
 package co.edu.unipiloto.fuelcontrol.controller;
 
 import co.edu.unipiloto.fuelcontrol.domain.Distribuidor;
+import co.edu.unipiloto.fuelcontrol.dto.request.DistribuidorCreateRequest;
+import co.edu.unipiloto.fuelcontrol.dto.request.DistribuidorUpdateRequest;
 import co.edu.unipiloto.fuelcontrol.dto.response.ApiResponse;
 import co.edu.unipiloto.fuelcontrol.service.DistribuidorService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/distribuidores")
@@ -39,8 +41,13 @@ public class DistribuidorController {
     @PostMapping
     @PreAuthorize("hasRole('REGULADOR')")
     public ResponseEntity<ApiResponse<Distribuidor>> crear(
-            @RequestBody Distribuidor distribuidor,
+            @Valid @RequestBody DistribuidorCreateRequest request,
             @RequestParam(required = false) Long representanteId) {
+        Distribuidor distribuidor = new Distribuidor();
+        distribuidor.setNombre(request.getNombre());
+        distribuidor.setNit(request.getNit());
+        distribuidor.setCiudad(request.getCiudad());
+        distribuidor.setDepartamento(request.getDepartamento());
         return ResponseEntity.status(201).body(
                 ApiResponse.ok("Distribuidor creado",
                         distribuidorService.crear(distribuidor, representanteId)));
@@ -51,9 +58,13 @@ public class DistribuidorController {
     @PreAuthorize("hasAnyRole('REGULADOR', 'DISTRIBUIDOR')")
     public ResponseEntity<ApiResponse<Distribuidor>> actualizar(
             @PathVariable Long id,
-            @RequestBody Distribuidor datos) {
+            @RequestBody DistribuidorUpdateRequest datos) {
+        Distribuidor distribuidor = new Distribuidor();
+        distribuidor.setNombre(datos.getNombre());
+        distribuidor.setCiudad(datos.getCiudad());
+        distribuidor.setDepartamento(datos.getDepartamento());
         return ResponseEntity.ok(ApiResponse.ok("Distribuidor actualizado",
-                distribuidorService.actualizar(id, datos)));
+                distribuidorService.actualizar(id, distribuidor)));
     }
 
     /** DELETE /api/distribuidores/{id} */

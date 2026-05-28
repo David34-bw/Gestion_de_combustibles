@@ -29,6 +29,8 @@ public class PrecioController {
     // Usamos ConcurrentHashMap mutable para poder actualizar precios a nivel de instancia
     private final Map<String, Map<String, Double>> preciosActuales = new ConcurrentHashMap<>();
 
+    private static final String COMBUSTIBLE_GASOLINA = "GASOLINA";
+
     private static final Map<String, Double> DESCUENTO_SUBSIDIO = new HashMap<>();
     static {
         DESCUENTO_SUBSIDIO.put("PARTICULAR",  0.0);
@@ -46,15 +48,15 @@ public class PrecioController {
     @PostConstruct
     public void init() {
         // Inicializar con valores base
-        preciosActuales.put("CENTRO",       new ConcurrentHashMap<>(Map.of("GASOLINA", 16491.0, "ACPM", 11276.0)));
-        preciosActuales.put("ANTIOQUIA",    new ConcurrentHashMap<>(Map.of("GASOLINA", 16412.0, "ACPM", 11301.0)));
-        preciosActuales.put("PACIFICA",     new ConcurrentHashMap<>(Map.of("GASOLINA", 16502.0, "ACPM", 11424.0)));
-        preciosActuales.put("CARIBE",       new ConcurrentHashMap<>(Map.of("GASOLINA", 16126.0, "ACPM", 10951.0)));
-        preciosActuales.put("EJE_CAFETERO", new ConcurrentHashMap<>(Map.of("GASOLINA", 16439.0, "ACPM", 11363.0)));
-        preciosActuales.put("ORINOQUIA",    new ConcurrentHashMap<>(Map.of("GASOLINA", 16591.0, "ACPM", 11376.0)));
-        preciosActuales.put("SANTANDERES",  new ConcurrentHashMap<>(Map.of("GASOLINA", 16248.0, "ACPM", 11025.0)));
-        preciosActuales.put("SUR_ANDINA",   new ConcurrentHashMap<>(Map.of("GASOLINA", 14247.0, "ACPM", 10338.0)));
-        preciosActuales.put("FRONTERA",     new ConcurrentHashMap<>(Map.of("GASOLINA", 14400.0, "ACPM",  9032.0)));
+        preciosActuales.put("CENTRO",       new ConcurrentHashMap<>(Map.of(COMBUSTIBLE_GASOLINA, 16491.0, "ACPM", 11276.0)));
+        preciosActuales.put("ANTIOQUIA",    new ConcurrentHashMap<>(Map.of(COMBUSTIBLE_GASOLINA, 16412.0, "ACPM", 11301.0)));
+        preciosActuales.put("PACIFICA",     new ConcurrentHashMap<>(Map.of(COMBUSTIBLE_GASOLINA, 16502.0, "ACPM", 11424.0)));
+        preciosActuales.put("CARIBE",       new ConcurrentHashMap<>(Map.of(COMBUSTIBLE_GASOLINA, 16126.0, "ACPM", 10951.0)));
+        preciosActuales.put("EJE_CAFETERO", new ConcurrentHashMap<>(Map.of(COMBUSTIBLE_GASOLINA, 16439.0, "ACPM", 11363.0)));
+        preciosActuales.put("ORINOQUIA",    new ConcurrentHashMap<>(Map.of(COMBUSTIBLE_GASOLINA, 16591.0, "ACPM", 11376.0)));
+        preciosActuales.put("SANTANDERES",  new ConcurrentHashMap<>(Map.of(COMBUSTIBLE_GASOLINA, 16248.0, "ACPM", 11025.0)));
+        preciosActuales.put("SUR_ANDINA",   new ConcurrentHashMap<>(Map.of(COMBUSTIBLE_GASOLINA, 14247.0, "ACPM", 10338.0)));
+        preciosActuales.put("FRONTERA",     new ConcurrentHashMap<>(Map.of(COMBUSTIBLE_GASOLINA, 14400.0, "ACPM",  9032.0)));
 
         // Cargar últimos precios de la base de datos si existen (sobrescribe valores base)
         List<HistorialPrecios> historialDesc = historialRepository.findAllByOrderByFechaCambioDesc();

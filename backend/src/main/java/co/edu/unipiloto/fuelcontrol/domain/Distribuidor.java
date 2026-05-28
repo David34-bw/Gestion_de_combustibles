@@ -31,10 +31,10 @@ public class Distribuidor {
     private String departamento;
 
     @Column(name = "venta_gasolina")
-    private Double venta_gasolina = 0.0;
+    private Double ventaGasolina = 0.0;
 
     @Column(name = "venta_diesel")
-    private Double venta_diesel = 0.0;
+    private Double ventaDiesel = 0.0;
 
     private Boolean activo = true;
 
@@ -66,11 +66,11 @@ public class Distribuidor {
     public String getCiudad() { return ciudad; }
     public void setCiudad(String ciudad) { this.ciudad = ciudad; }
 
-    public Double getVentaGasolina() { return venta_gasolina; }
-    public void setVentaGasolina(Double v) { this.venta_gasolina = v; }
+    public Double getVentaGasolina() { return ventaGasolina; }
+    public void setVentaGasolina(Double v) { this.ventaGasolina = v; }
 
-    public Double getVentaDiesel() { return venta_diesel; }
-    public void setVentaDiesel(Double v) { this.venta_diesel = v; }
+    public Double getVentaDiesel() { return ventaDiesel; }
+    public void setVentaDiesel(Double v) { this.ventaDiesel = v; }
     
     public String getDepartamento() { return departamento; }
     public void setDepartamento(String v) { this.departamento = v; }
