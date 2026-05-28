@@ -14,6 +14,8 @@ public class VentaResponse {
     private Long usuarioId;
     private String usuarioNombre;
     private String placaVehiculo;
+    private Double precioGalon;
+    private Double totalVenta;
 
     public static Builder builder() { return new Builder(); }
 
@@ -31,6 +33,8 @@ public class VentaResponse {
         public Builder usuarioId(Long v)       { r.usuarioId = v; return this; }
         public Builder usuarioNombre(String v) { r.usuarioNombre = v; return this; }
         public Builder placaVehiculo(String v) { r.placaVehiculo = v; return this; }
+        public Builder precioGalon(Double v)   { r.precioGalon = v; return this; }
+        public Builder totalVenta(Double v)    { r.totalVenta = v; return this; }
     }
 
     public Long getId()                    { return id; }
@@ -44,4 +48,6 @@ public class VentaResponse {
     public Long getUsuarioId()         { return usuarioId; }
     public String getUsuarioNombre()   { return usuarioNombre; }
     public String getPlacaVehiculo()   { return placaVehiculo; }
+    public Double getPrecioGalon()     { return precioGalon; }
+    public Double getTotalVenta()      { return totalVenta; }
 }

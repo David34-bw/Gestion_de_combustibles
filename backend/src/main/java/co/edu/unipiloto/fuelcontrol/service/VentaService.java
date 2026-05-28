@@ -23,22 +23,32 @@ public class VentaService {
     private static final double UMBRAL_ALERTA = CAPACIDAD_MAX * 0.25; 
     private final VehiculoRepository vehiculoRepository;
     private final PuntosService puntosService;
+    private final PrecioService precioService;
 
     public VentaService(VentaRepository ventaRepository,
                     EstacionRepository estacionRepository,
                     VehiculoRepository vehiculoRepository,
-                    PuntosService puntosService) {
+                    PuntosService puntosService,
+                    PrecioService precioService) {
     this.ventaRepository    = ventaRepository;
     this.estacionRepository = estacionRepository;
     this.vehiculoRepository = vehiculoRepository;
     this.puntosService = puntosService;
+    this.precioService = precioService;
 }
 
     @Transactional
 public VentaResponse registrar(Long usuarioId, VentaRequest request) {
-    Estacion estacion = estacionRepository.findByAdministradorId(usuarioId)
-            .orElseThrow(() -> new BadRequestException(
-                    "No tienes una estación asociada a tu cuenta"));
+    Estacion estacion = null;
+    if (request.getEstacionId() != null) {
+        estacion = estacionRepository.findById(request.getEstacionId())
+                .orElseThrow(() -> new BadRequestException(
+                        "No se encontró la estación seleccionada"));
+    } else {
+        estacion = estacionRepository.findByAdministradorId(usuarioId)
+                .orElseThrow(() -> new BadRequestException(
+                        "No tienes una estación asociada a tu cuenta"));
+    }
 
     String tipo = request.getTipoCombustible().toUpperCase();
     if (!tipo.equals("GASOLINA") && !tipo.equals("DIESEL")) {
@@ -58,16 +68,21 @@ public VentaResponse registrar(Long usuarioId, VentaRequest request) {
                 + estacion.getStockDiesel() + " galones");
     }
 
-    Usuario comprador = null;
-    String placaFinal = null;
-    if (request.getPlacaVehiculo() != null && !request.getPlacaVehiculo().isEmpty()) {
-        String placa = request.getPlacaVehiculo().toUpperCase().trim();
-        placaFinal = placa;
-        comprador = vehiculoRepository.findByPlaca(placa)
-                .map(vehiculo -> vehiculo.getUsuario())
-                .orElseThrow(() -> new BadRequestException(
-                        "No se encontró ningún usuario con la placa: " + placa));
+    if (request.getPlacaVehiculo() == null || request.getPlacaVehiculo().trim().isEmpty()) {
+        throw new BadRequestException("La placa del vehículo es requerida");
     }
+    String placa = request.getPlacaVehiculo().toUpperCase().trim();
+    var vehiculo = vehiculoRepository.findByPlaca(placa)
+            .orElseThrow(() -> new BadRequestException(
+                    "No se encontró ningún usuario con la placa: " + placa));
+    Usuario comprador = vehiculo.getUsuario();
+    if (request.getEstacionId() != null && comprador.getId() != null
+            && !comprador.getId().equals(usuarioId)) {
+        throw new BadRequestException("El vehículo no pertenece al usuario autenticado");
+    }
+    String tipoVehiculo = vehiculo.getTipoVehiculo() != null
+            ? vehiculo.getTipoVehiculo()
+            : "PARTICULAR";
 
     if (tipo.equals("GASOLINA")) {
         estacion.setStockGasolina(estacion.getStockGasolina() - request.getCantidad());
@@ -79,10 +94,17 @@ public VentaResponse registrar(Long usuarioId, VentaRequest request) {
     boolean alertaGas = estacion.getStockGasolina() < UMBRAL_ALERTA;
     boolean alertaDiesel = estacion.getStockDiesel() < UMBRAL_ALERTA;
 
+    String zona = obtenerZonaDesdeDepartamento(estacion.getDepartamento());
+    String combustiblePrecio = tipo.equals("DIESEL") ? "ACPM" : "GASOLINA";
+    double precioGalon = precioService.obtenerPrecioFinal(zona, combustiblePrecio, tipoVehiculo);
+    double totalVenta = precioGalon * request.getCantidad();
+
     Venta venta = Venta.builder()
             .tipoCombustible(tipo)
             .cantidad(request.getCantidad())
             .observaciones(request.getObservaciones())
+            .precioGalon(precioGalon)
+            .totalVenta(totalVenta)
             .estacion(estacion)
             .usuario(comprador)
             .build();
@@ -122,6 +144,8 @@ public VentaResponse registrar(Long usuarioId, VentaRequest request) {
             .cantidad(v.getCantidad())
             .fechaVenta(v.getFechaVenta())
             .observaciones(v.getObservaciones())
+            .precioGalon(v.getPrecioGalon())
+            .totalVenta(v.getTotalVenta())
             .estacionId(v.getEstacion().getId())
             .estacionNombre(v.getEstacion().getNombre())
             .usuarioId(v.getUsuario() != null ? v.getUsuario().getId() : null)
@@ -130,4 +154,58 @@ public VentaResponse registrar(Long usuarioId, VentaRequest request) {
             .alertaStockBajo(alerta)
             .build();
 }
+
+    private String obtenerZonaDesdeDepartamento(String departamento) {
+        if (departamento == null) {
+            return "CENTRO";
+        }
+        String dep = departamento.trim().toUpperCase();
+        switch (dep) {
+            case "ANTIOQUIA":
+                return "ANTIOQUIA";
+            case "VALLE DEL CAUCA":
+            case "CAUCA":
+            case "NARINO":
+            case "CHOCÓ":
+            case "CHOCO":
+                return "PACIFICA";
+            case "ATLANTICO":
+            case "ATLÁNTICO":
+            case "BOLIVAR":
+            case "BOLÍVAR":
+            case "MAGDALENA":
+            case "CESAR":
+            case "LA GUAJIRA":
+            case "SUCRE":
+            case "CORDOBA":
+            case "CÓRDOBA":
+                return "CARIBE";
+            case "CALDAS":
+            case "RISARALDA":
+            case "QUINDIO":
+            case "QUINDÍO":
+                return "EJE_CAFETERO";
+            case "META":
+            case "CASANARE":
+            case "ARAUCA":
+            case "VICHADA":
+                return "ORINOQUIA";
+            case "SANTANDER":
+            case "NORTE DE SANTANDER":
+                return "SANTANDERES";
+            case "HUILA":
+            case "TOLIMA":
+            case "CAQUETA":
+            case "CAQUETÁ":
+            case "PUTUMAYO":
+                return "SUR_ANDINA";
+            case "NARINO FRONTERA":
+            case "NARINO - FRONTERA":
+            case "NARINO/FRONTERA":
+            case "FRONTERA":
+                return "FRONTERA";
+            default:
+                return "CENTRO";
+        }
+    }
 }

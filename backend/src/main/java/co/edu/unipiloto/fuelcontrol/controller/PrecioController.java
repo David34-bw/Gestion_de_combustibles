@@ -5,6 +5,7 @@ import co.edu.unipiloto.fuelcontrol.domain.Usuario;
 import co.edu.unipiloto.fuelcontrol.dto.request.PrecioUpdateRequest;
 import co.edu.unipiloto.fuelcontrol.dto.response.ApiResponse;
 import co.edu.unipiloto.fuelcontrol.repository.HistorialPreciosRepository;
+import co.edu.unipiloto.fuelcontrol.service.PrecioService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PrecioController {
 
     private final HistorialPreciosRepository historialRepository;
+    private final PrecioService precioService;
 
     // Usamos ConcurrentHashMap mutable para poder actualizar precios a nivel de instancia
     private final Map<String, Map<String, Double>> preciosActuales = new ConcurrentHashMap<>();
@@ -35,8 +37,10 @@ public class PrecioController {
         DESCUENTO_SUBSIDIO.put("CARGA",      10.0);
     }
 
-    public PrecioController(HistorialPreciosRepository historialRepository) {
+    public PrecioController(HistorialPreciosRepository historialRepository,
+                            PrecioService precioService) {
         this.historialRepository = historialRepository;
+        this.precioService = precioService;
     }
 
     @PostConstruct
@@ -89,7 +93,7 @@ public class PrecioController {
 
         double precioBase  = preciosActuales.get(zonaKey).get(combustibleKey);
         double descuento   = DESCUENTO_SUBSIDIO.getOrDefault(tipoVehiculo.toUpperCase(), 0.0);
-        double precioFinal = precioBase * (1 - descuento / 100);
+        double precioFinal = precioService.obtenerPrecioFinal(zonaKey, combustibleKey, tipoVehiculo);
 
         // Verificar si hubo cambio reciente
         boolean huboCambio = historialRepository
@@ -102,7 +106,7 @@ public class PrecioController {
         resultado.put("tipoVehiculo",    tipoVehiculo);
         resultado.put("precioBase",      precioBase);
         resultado.put("descuentoPct",    descuento);
-        resultado.put("precioFinal",     Math.round(precioFinal));
+        resultado.put("precioFinal",     precioFinal);
         resultado.put("unidad",          "COP/galón");
         resultado.put("huboCambioReciente", huboCambio);
 
@@ -131,6 +135,7 @@ public class PrecioController {
 
         // Actualizar precio en memoria
         preciosActuales.get(zonaKey).put(combustibleKey, request.getPrecio());
+        precioService.actualizarPrecio(zonaKey, combustibleKey, request.getPrecio());
 
         // Guardar en historial
         HistorialPrecios historial = HistorialPrecios.builder()

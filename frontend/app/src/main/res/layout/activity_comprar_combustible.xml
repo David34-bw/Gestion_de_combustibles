@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fuel_dark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Comprar Combustible"
+            android:textColor="@color/fuel_orange"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Estacion"
+            android:textColor="@color/fuel_orange"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <Spinner
+            android:id="@+id/spinner_estacion"
+            style="@style/CustomSpinnerStyle"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vehiculo"
+            android:textColor="@color/fuel_orange"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <Spinner
+            android:id="@+id/spinner_vehiculo"
+            style="@style/CustomSpinnerStyle"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tipo de combustible"
+            android:textColor="@color/fuel_orange"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <RadioGroup
+            android:id="@+id/rg_combustible_compra"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <RadioButton
+                android:id="@+id/rb_gasolina_compra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gasolina"
+                android:textColor="@color/fuel_white"
+                android:checked="true"
+                android:buttonTint="@color/fuel_orange"
+                android:layout_marginEnd="24dp"/>
+
+            <RadioButton
+                android:id="@+id/rb_diesel_compra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Diésel"
+                android:textColor="@color/fuel_white"
+                android:buttonTint="@color/fuel_orange"/>
+        </RadioGroup>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Cantidad (galones)"
+            style="@style/FuelInput"
+            app:boxStrokeColor="@color/fuel_orange"
+            app:hintTextColor="@color/fuel_gray"
+            android:layout_marginBottom="16dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_cantidad_compra"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fuel_white"
+                android:inputType="numberDecimal"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Observaciones (opcional)"
+            style="@style/FuelInput"
+            app:boxStrokeColor="@color/fuel_orange"
+            app:hintTextColor="@color/fuel_gray"
+            android:layout_marginBottom="20dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_observaciones_compra"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fuel_white"
+                android:inputType="textMultiLine"
+                android:lines="3"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_confirmar_compra"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Confirmar compra"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/fuel_orange"
+            android:textColor="@color/fuel_white"
+            app:cornerRadius="12dp"/>
+
+    </LinearLayout>
+</ScrollView>

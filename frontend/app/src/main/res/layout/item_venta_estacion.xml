@@ -57,6 +57,14 @@
                 android:layout_marginBottom="2dp"/>
 
             <TextView
+                android:id="@+id/tv_precio_venta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fuel_gray_light"
+                android:textSize="12sp"
+                android:layout_marginBottom="2dp"/>
+
+            <TextView
                 android:id="@+id/tv_fecha_venta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

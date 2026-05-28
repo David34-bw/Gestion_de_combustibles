@@ -24,6 +24,12 @@ public class Venta {
     @Column(name = "observaciones")
     private String observaciones;
 
+    @Column(name = "precio_galon")
+    private Double precioGalon;
+
+    @Column(name = "total_venta")
+    private Double totalVenta;
+
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
@@ -47,6 +53,10 @@ public class Venta {
     public void setFechaVenta(LocalDateTime v){ this.fechaVenta = v; }
     public String getObservaciones()         { return observaciones; }
     public void setObservaciones(String v)   { this.observaciones = v; }
+    public Double getPrecioGalon()           { return precioGalon; }
+    public void setPrecioGalon(Double v)     { this.precioGalon = v; }
+    public Double getTotalVenta()            { return totalVenta; }
+    public void setTotalVenta(Double v)      { this.totalVenta = v; }
     public Estacion getEstacion()            { return estacion; }
     public void setEstacion(Estacion v)      { this.estacion = v; }
     public Usuario getUsuario()         { return usuario; }
@@ -60,6 +70,8 @@ public class Venta {
         public Builder tipoCombustible(String x)  { v.tipoCombustible = x; return this; }
         public Builder cantidad(Double x)          { v.cantidad = x; return this; }
         public Builder observaciones(String x)     { v.observaciones = x; return this; }
+        public Builder precioGalon(Double x)       { v.precioGalon = x; return this; }
+        public Builder totalVenta(Double x)        { v.totalVenta = x; return this; }
         public Builder estacion(Estacion x)        { v.estacion = x; return this; }
         public Venta build()                       { return v; }
         public Builder usuario(Usuario x)   { v.usuario = x; return this; }

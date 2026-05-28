@@ -11,6 +11,8 @@ public class VentaResponse {
     private Long estacionId;
     private String estacionNombre;
     private Boolean alertaStockBajo;
+    private Double precioGalon;
+    private Double totalVenta;
 
     public Long getId()                  { return id; }
     public String getTipoCombustible()   { return tipoCombustible; }
@@ -21,6 +23,8 @@ public class VentaResponse {
     public String getEstacionNombre()    { return estacionNombre; }
     public Boolean getAlertaStockBajo()  { return alertaStockBajo; }
     public String getPlacaVehiculo()     { return placaVehiculo; }
+    public Double getPrecioGalon()       { return precioGalon; }
+    public Double getTotalVenta()        { return totalVenta; }
 
     public String getUsuarioNombre() { return usuarioNombre; }
 }

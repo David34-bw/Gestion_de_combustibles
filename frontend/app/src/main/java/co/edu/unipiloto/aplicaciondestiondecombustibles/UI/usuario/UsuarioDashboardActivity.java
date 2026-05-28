@@ -16,11 +16,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.text.NumberFormat;
+import java.util.Locale;
 import com.google.android.material.card.MaterialCardView;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.R;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.auth.LoginActivity;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.estacion.ConsultarPrecioActivity;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.usuario.RecompensasActivity;
+import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.usuario.ComprarCombustibleActivity;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.common.ApiResponse;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.dto.puntos.PuntosResponse;
 import co.edu.unipiloto.aplicaciondestiondecombustibles.UI.model.entity.Vehiculo;
@@ -45,6 +48,8 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
     private View headerVehiculos;
     private View headerHistorial;
     private View headerEstaciones;
+    private View headerComprar;
+    private View cardComprar;
 
     private List<Vehiculo> todosLosVehiculos = new ArrayList<>();
 
@@ -69,20 +74,24 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
         cardVehiculos = findViewById(R.id.card_vehiculos);
         cardHistorial = findViewById(R.id.card_historial_compras);
         cardEstaciones = findViewById(R.id.card_estaciones);
+        cardComprar = findViewById(R.id.card_comprar);
         headerAcciones = findViewById(R.id.tv_acciones_header);
         headerVehiculos = findViewById(R.id.tv_vehiculos_header);
         headerHistorial = findViewById(R.id.tv_historial_header);
         headerEstaciones = findViewById(R.id.tv_estaciones_header);
+        headerComprar = findViewById(R.id.tv_comprar_header);
         View btnTabPrecios = findViewById(R.id.btn_tab_precios);
         View btnTabRecompensas = findViewById(R.id.btn_tab_recompensas);
         View btnTabVehiculos = findViewById(R.id.btn_tab_vehiculos);
         View btnTabHistorial = findViewById(R.id.btn_tab_historial);
+        View btnTabComprar = findViewById(R.id.btn_tab_comprar);
         View btnTabEstaciones = findViewById(R.id.btn_tab_estaciones);
         Button btnVerEstaciones = findViewById(R.id.btn_ver_estaciones_cercanas);
         Button btnLogout   = findViewById(R.id.btn_logout);
         Button btnVehiculo = findViewById(R.id.btn_registrar_vehiculo);
         Button btnPrecios  = findViewById(R.id.btn_ver_precios);
         Button btnRecompensas = findViewById(R.id.btn_recompensas);
+        Button btnComprar = findViewById(R.id.btn_comprar_combustible);
         llVehiculos        = findViewById(R.id.ll_vehiculos);
         tvSinVehiculos     = findViewById(R.id.tv_sin_vehiculos);
         spinnerFiltro      = findViewById(R.id.spinner_filtro);
@@ -95,6 +104,7 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
         btnTabRecompensas.setOnClickListener(v -> mostrarSeccion("RECOMPENSAS"));
         btnTabVehiculos.setOnClickListener(v -> mostrarSeccion("VEHICULOS"));
         btnTabHistorial.setOnClickListener(v -> mostrarSeccion("HISTORIAL"));
+        btnTabComprar.setOnClickListener(v -> mostrarSeccion("COMPRAR"));
         btnTabEstaciones.setOnClickListener(v -> mostrarSeccion("ESTACIONES"));
 
         mostrarSeccion("PRECIOS");
@@ -132,6 +142,9 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
         btnVerEstaciones.setOnClickListener(v ->
                 startActivity(new Intent(this, EstacionesCercanasActivity.class)));
 
+        btnComprar.setOnClickListener(v ->
+                startActivity(new Intent(this, ComprarCombustibleActivity.class)));
+
         btnLogout.setOnClickListener(v -> {
             ApiClient.clearToken();
             prefs.edit().clear().apply();
@@ -166,6 +179,15 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
                                     ((TextView) item.findViewById(R.id.tv_placa_compra))
                                             .setText(compra.getPlacaVehiculo() != null
                                                     ? "🚗 " + compra.getPlacaVehiculo() : "");
+                                    TextView tvPrecio = item.findViewById(R.id.tv_precio_compra);
+                                    if (compra.getPrecioGalon() != null && compra.getTotalVenta() != null) {
+                                        NumberFormat fmt = NumberFormat.getNumberInstance(new Locale("es", "CO"));
+                                        tvPrecio.setText("$" + fmt.format(compra.getPrecioGalon()) + "/gal" +
+                                                " • Total $" + fmt.format(compra.getTotalVenta()));
+                                        tvPrecio.setVisibility(View.VISIBLE);
+                                    } else {
+                                        tvPrecio.setVisibility(View.GONE);
+                                    }
                                     llCompras.addView(item);
                                 }
                             }
@@ -247,11 +269,13 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
         headerVehiculos.setVisibility(View.GONE);
         headerHistorial.setVisibility(View.GONE);
         headerEstaciones.setVisibility(View.GONE);
+        headerComprar.setVisibility(View.GONE);
         cardPrecios.setVisibility(View.GONE);
         cardRecompensas.setVisibility(View.GONE);
         cardVehiculos.setVisibility(View.GONE);
         cardHistorial.setVisibility(View.GONE);
         cardEstaciones.setVisibility(View.GONE);
+        cardComprar.setVisibility(View.GONE);
 
         switch (seccion) {
             case "PRECIOS":
@@ -269,6 +293,10 @@ public class UsuarioDashboardActivity extends AppCompatActivity {
             case "HISTORIAL":
                 headerHistorial.setVisibility(View.VISIBLE);
                 cardHistorial.setVisibility(View.VISIBLE);
+                break;
+            case "COMPRAR":
+                headerComprar.setVisibility(View.VISIBLE);
+                cardComprar.setVisibility(View.VISIBLE);
                 break;
             case "ESTACIONES":
                 headerEstaciones.setVisibility(View.VISIBLE);

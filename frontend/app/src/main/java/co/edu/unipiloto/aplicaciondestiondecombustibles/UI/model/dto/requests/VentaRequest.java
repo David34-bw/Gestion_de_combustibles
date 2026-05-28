@@ -5,6 +5,7 @@ public class VentaRequest {
     private Double cantidad;
     private String observaciones;
     private String placaVehiculo;
+    private Long estacionId;
 
     public VentaRequest(String tipoCombustible, Double cantidad,
                         String observaciones, String placaVehiculo) {
@@ -14,8 +15,18 @@ public class VentaRequest {
         this.placaVehiculo   = placaVehiculo;
     }
 
+    public VentaRequest(String tipoCombustible, Double cantidad,
+                        String observaciones, String placaVehiculo, Long estacionId) {
+        this.tipoCombustible = tipoCombustible;
+        this.cantidad        = cantidad;
+        this.observaciones   = observaciones;
+        this.placaVehiculo   = placaVehiculo;
+        this.estacionId      = estacionId;
+    }
+
     public String getTipoCombustible()       { return tipoCombustible; }
     public Double getCantidad()              { return cantidad; }
     public String getObservaciones()         { return observaciones; }
     public String getPlacaVehiculo()         { return placaVehiculo; }
+    public Long getEstacionId()              { return estacionId; }
 }

@@ -309,6 +309,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_generar_estadistica"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:text="Generar estadistica PDF"
+                        android:textSize="14sp"
+                        app:backgroundTint="@color/fuel_orange"
+                        android:textColor="@color/fuel_white"
+                        app:cornerRadius="8dp"
+                        android:layout_marginTop="16dp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

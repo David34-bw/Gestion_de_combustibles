@@ -15,6 +15,8 @@ public class VentaRequest {
     // Agrega este campo:
     private String placaVehiculo;
 
+    private Long estacionId;
+
 
     private String observaciones;
 
@@ -26,4 +28,6 @@ public class VentaRequest {
     public void setObservaciones(String v)   { this.observaciones = v; }
     public String getPlacaVehiculo()       { return placaVehiculo; }
 public void setPlacaVehiculo(String v) { this.placaVehiculo = v; }
+    public Long getEstacionId()              { return estacionId; }
+    public void setEstacionId(Long v)        { this.estacionId = v; }
 }

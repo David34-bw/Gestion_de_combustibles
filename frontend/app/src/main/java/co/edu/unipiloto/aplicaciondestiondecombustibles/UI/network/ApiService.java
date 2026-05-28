@@ -128,6 +128,9 @@ public interface ApiService {
     @POST("api/ventas")
     Call<ApiResponse<VentaResponse>> registrarVenta(@Body VentaRequest request);
 
+    @POST("api/ventas/compra")
+    Call<ApiResponse<VentaResponse>> registrarCompra(@Body VentaRequest request);
+
     @GET("api/ventas/mis-ventas")
     Call<ApiResponse<List<VentaResponse>>> getMisVentas();
 

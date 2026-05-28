@@ -138,6 +138,17 @@
                         app:cornerRadius="8dp"/>
 
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_tab_comprar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="8dp"
+                        android:text="Comprar"
+                        android:textSize="12sp"
+                        android:backgroundTint="@color/fuel_dark_card"
+                        android:textColor="@color/fuel_white"
+                        app:cornerRadius="8dp"/>
+
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_tab_estaciones"
                         android:layout_width="wrap_content"
                         android:layout_height="36dp"
@@ -346,6 +357,17 @@
                 android:paddingBottom="8dp"/>
 
             <TextView
+                android:id="@+id/tv_comprar_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Comprar"
+                android:textColor="@color/fuel_white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:paddingTop="4dp"
+                android:paddingBottom="8dp"/>
+
+            <TextView
                 android:id="@+id/tv_estaciones_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -396,6 +418,50 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_comprar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/fuel_dark_card"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="⛽ Comprar combustible"
+                        android:textColor="@color/fuel_orange"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="6dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Selecciona la estación, tu vehículo y registra la compra."
+                        android:textColor="@color/fuel_gray"
+                        android:textSize="13sp"
+                        android:layout_marginBottom="16dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_comprar_combustible"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:text="Comprar ahora"
+                        android:textSize="14sp"
+                        app:backgroundTint="@color/fuel_orange"
+                        android:textColor="@color/fuel_white"
+                        app:cornerRadius="8dp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

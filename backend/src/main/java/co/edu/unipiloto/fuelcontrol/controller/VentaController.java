@@ -38,6 +38,24 @@ public class VentaController {
     }
 
     /**
+     * POST /api/ventas/compra
+     * El usuario registra una compra
+     */
+    @PostMapping("/compra")
+    @PreAuthorize("hasRole('USUARIO')")
+    public ResponseEntity<ApiResponse<VentaResponse>> compra(
+            @AuthenticationPrincipal Usuario usuario,
+            @Valid @RequestBody VentaRequest request) {
+        if (request.getEstacionId() == null) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Debes seleccionar una estación"));
+        }
+        return ResponseEntity.status(201).body(
+                ApiResponse.ok("Compra registrada",
+                        ventaService.registrar(usuario.getId(), request)));
+    }
+
+    /**
      * GET /api/ventas/mis-ventas
      * La estación ve su historial de ventas
      */
